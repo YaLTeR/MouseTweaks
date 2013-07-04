@@ -1,6 +1,6 @@
 package MouseTweaks;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.GuiScreen;
 
 import com.mumfrey.liteloader.RenderListener;

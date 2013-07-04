@@ -2,7 +2,7 @@ package MouseTweaks;
 
 import java.io.File;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.GuiContainer;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.ItemStack;
@@ -49,7 +49,7 @@ public class Main extends DeobfuscationLayer {
 
         mc = Minecraft.getMinecraft();
 
-        mainConfig = new Config(Minecraft.getMinecraftDir() + File.separator + "config"
+        mainConfig = new Config(mc.mcDataDir + File.separator + "config"
                 + File.separator + "MouseTweaks.cfg");
         readConfigFile();
 

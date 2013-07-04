@@ -3,7 +3,7 @@ package MouseTweaks;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.src.Minecraft;
 import net.minecraft.src.GameSettings;
 import net.minecraft.src.Profiler;
 
