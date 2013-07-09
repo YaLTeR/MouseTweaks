@@ -9,7 +9,6 @@ import net.minecraft.src.Profiler;
 
 public class ProfilerCustom extends Profiler
 {
-    private LinkedList<String> sectionStack = new LinkedList<String>();
     private Minecraft minecraft;
     
     public ProfilerCustom()
@@ -20,11 +19,10 @@ public class ProfilerCustom extends Profiler
     @Override
     public void startSection(String sectionName)
     {
-        if ("gameRenderer".equals(sectionName) && "root".equals(sectionStack.getLast())) {
+        if ("gameRenderer".equals(sectionName)) {
             Main.onUpdateInGame();
         }
         
-        this.sectionStack.add(sectionName);
         super.startSection(sectionName);
 
         if (Main.optifine) {
@@ -37,9 +35,5 @@ public class ProfilerCustom extends Profiler
     @Override
     public void endSection() {
         super.endSection();
-        
-        if (sectionStack.size() > 0) {
-            sectionStack.removeLast();
-        }
     }
 }
