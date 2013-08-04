@@ -22,7 +22,7 @@ public class Reflection {
         guiContainerClass.storeClass(GuiContainer.class);
 
         Method isMouseOverSlot = getMethod(GuiContainer.class,
-                getObfuscatedName("isMouseOverSlot", "func_74186_a", "a"), Slot.class, int.class,
+                getObfuscatedName("isMouseOverSlot", "func_74186_a", Constants.ISMOUSEOVERSLOT_NAME), Slot.class, int.class,
                 int.class);
 
         if (isMouseOverSlot == null) {
@@ -34,7 +34,7 @@ public class Reflection {
 
         Field field;
         field = getField(GuiContainer.class,
-                getObfuscatedName("field_94068_E", "field_94068_E", "E"));
+                getObfuscatedName("field_94068_E", "field_94068_E", Constants.FIELDE_NAME));
 
         if (field == null) {
             Logger.Log("Failed to retrieve field_94068_E, disabling RMBTweak");
@@ -43,7 +43,7 @@ public class Reflection {
             guiContainerClass.storeField("field_94068_E", field);
 
             field = getField(GuiContainer.class,
-                    getObfuscatedName("field_94076_q", "field_94076_q", "q"));
+                    getObfuscatedName("field_94076_q", "field_94076_q", Constants.FIELDq_NAME));
 
             if (field == null) {
                 Logger.Log("Failed to retreive field_94076_q, disabling RMBTweak");
@@ -135,7 +135,7 @@ public class Reflection {
         minecraft = new ReflectedClass();
         minecraft.storeClass(Minecraft.class);
         
-        Field profilerField = getFinalField(Minecraft.class, getObfuscatedName("mcProfiler", "field_71424_I", "J"));
+        Field profilerField = getFinalField(Minecraft.class, getObfuscatedName("mcProfiler", "field_71424_I", Constants.MCPROFILER_NAME));
         if (profilerField != null) {
             minecraft.storeField("mcProfiler", profilerField);
             return true;
