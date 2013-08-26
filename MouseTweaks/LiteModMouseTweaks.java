@@ -1,51 +1,62 @@
 package MouseTweaks;
 
-import net.minecraft.client.Minecraft;
+import java.io.File;
+
 import net.minecraft.src.GuiScreen;
 
 import com.mumfrey.liteloader.RenderListener;
 
-public class LiteModMouseTweaks implements RenderListener {
+public class LiteModMouseTweaks implements RenderListener
+{
     
     private static LiteModMouseTweaks instance;
     
-    public static LiteModMouseTweaks getInstance() {
-        if (instance == null) {
+    public static LiteModMouseTweaks getInstance()
+    {
+        if ( instance == null )
+        {
             instance = new LiteModMouseTweaks();
         }
         
         return instance;
     }
-
+    
     @Override
-    public String getName() {
+    public String getName()
+    {
         return Constants.NAME;
     }
-
+    
     @Override
-    public String getVersion() {
+    public String getVersion()
+    {
         return Constants.VERSION;
     }
-
+    
     @Override
-    public void init() {
-        Main.initialise();
-    }
-
-    @Override
-    public void onRender() {
+    public void onRender()
+    {
         Main.onUpdateInGame();
     }
-
+    
     @Override
-    public void onRenderGui(GuiScreen currentScreen) {
+    public void onRenderGui( GuiScreen currentScreen )
+    {
     }
-
+    
     @Override
-    public void onRenderWorld() {
+    public void onRenderWorld()
+    {
     }
-
+    
     @Override
-    public void onSetupCameraTransform() {
+    public void onSetupCameraTransform()
+    {
+    }
+    
+    @Override
+    public void init()
+    {
+        Main.initialise();
     }
 }
