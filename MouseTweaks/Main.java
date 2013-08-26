@@ -185,7 +185,7 @@ public class Main extends DeobfuscationLayer
             disableWheelForThisContainer = false;
             readConfig = true;
             
-            guiContainerID = -1;
+            guiContainerID = Constants.NOTASSIGNED;
         }
         else
         {
@@ -201,20 +201,22 @@ public class Main extends DeobfuscationLayer
                 guiContainerID = getGuiContainerID( currentScreen );
             }
             
-            onUpdateInGui( currentScreen, guiContainerID );
+            onUpdateInGui( currentScreen );
             
         }
     }
     
-    public static void onUpdateInGui( GuiScreen currentScreen, int guiContainerID )
+    public static void onUpdateInGui( GuiScreen currentScreen )
     {
-        
-        if ( guiContainerID == Constants.NOTGUICONTAINER )
-            return;
         
         if ( oldGuiScreen != currentScreen )
         {
             oldGuiScreen = currentScreen;
+            
+            // If we opened an inventory from another inventory (for example, NEI's options menu).
+            guiContainerID = getGuiContainerID( currentScreen );
+            if ( guiContainerID == Constants.NOTGUICONTAINER )
+                return;
             
             container = getContainerWithID( currentScreen );
             slotCount = getSlotCountWithID( currentScreen );
@@ -233,6 +235,9 @@ public class Main extends DeobfuscationLayer
             disableWheelForThisContainer = isWheelDisabledForThisContainer( currentScreen );
         }
         
+        if ( guiContainerID == Constants.NOTGUICONTAINER )
+            return;
+        
         if ( ( Main.DisableRMBTweak || ( Main.RMBTweak == 0 ) ) && ( Main.LMBTweakWithoutItem == 0 ) && ( Main.LMBTweakWithItem == 0 )
                 && ( Main.WheelTweak == 0 ) )
             return;
@@ -245,6 +250,7 @@ public class Main extends DeobfuscationLayer
         if ( !Mouse.isButtonDown( 1 ) )
         {
             firstSlotClicked = false;
+            firstSlot = null;
             shouldClick = true;
         }
         
@@ -314,6 +320,11 @@ public class Main extends DeobfuscationLayer
                             firstSlotClicked = true;
                             disableRMBDragWithID( currentScreen );
                             firstSlot = null;
+                        }
+                        else
+                        {
+                            shouldClick = false;
+                            disableRMBDragWithID( currentScreen );
                         }
                         
                         clickSlot( currentScreen, selectedSlot, 1, false );
@@ -558,6 +569,7 @@ public class Main extends DeobfuscationLayer
                 }
             }
         }
+        
     }
     
     public static int getGuiContainerID( GuiScreen currentScreen )
