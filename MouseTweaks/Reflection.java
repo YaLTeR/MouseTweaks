@@ -4,9 +4,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.GameSettings;
 import net.minecraft.src.GuiContainer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.src.Slot;
 import net.minecraft.src.Tessellator;
 
@@ -19,6 +19,8 @@ public class Reflection
     public static ReflectionCache minecraft;
     
     public static ReflectionCache forestry;
+    public static ReflectionCache codechickencore;
+    public static ReflectionCache NEI;
     
     public static boolean reflectGuiContainer()
     {
@@ -226,6 +228,44 @@ public class Reflection
         }
         
         return forestry.compatible;
+    }
+    
+    public static boolean reflectCodeChickenCore()
+    {
+        codechickencore = new ReflectionCache();
+        
+        Class guiContainerWidgetClass = getClass( "codechicken.core.inventory.GuiContainerWidget" );
+        if ( guiContainerWidgetClass != null )
+        {
+            codechickencore.storeClass( "GuiContainerWidget", guiContainerWidgetClass );
+            
+            codechickencore.available = true;
+            codechickencore.compatible = true;
+        }
+        
+        return codechickencore.compatible;
+    }
+    
+    public static boolean reflectNEI()
+    {
+        NEI = new ReflectionCache();
+        
+        Class guiRecipeClass = getClass( "codechicken.nei.recipe.GuiRecipe" );
+        if ( guiRecipeClass != null )
+        {
+            NEI.storeClass( "GuiRecipe", guiRecipeClass );
+            NEI.available = true;
+            
+            Class guiEnchantmentModifierClass = getClass( "codechicken.nei.GuiEnchantmentModifier" );
+            if ( guiEnchantmentModifierClass != null )
+            {
+                NEI.storeClass( "GuiEnchantmentModifier", guiEnchantmentModifierClass );
+                
+                NEI.compatible = true;
+            }
+        }
+        
+        return NEI.compatible;
     }
     
     public static boolean is( Object object, String name )
