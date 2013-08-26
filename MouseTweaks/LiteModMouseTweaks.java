@@ -59,11 +59,9 @@ public class LiteModMouseTweaks implements RenderListener
     {
         Main.initialise();
     }
-    
+
     @Override
-    public void upgradeSettings( String version, File configPath,
-            File oldConfigPath )
+    public void upgradeSettings( String version, File configPath, File oldConfigPath )
     {
-        
     }
 }
