@@ -2,9 +2,9 @@ package MouseTweaks;
 
 import java.io.File;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.ItemStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.src.Slot;
 
 import org.lwjgl.input.Keyboard;
@@ -18,6 +18,10 @@ public class Main extends DeobfuscationLayer
     private static Slot      oldSelectedSlot              = null;
     private static Slot      firstSlot                    = null;
     private static int       slotCount                    = 0;
+    private static boolean   firstSlotClicked             = false;
+    private static boolean   shouldClick                  = true;
+    private static boolean   oldRMBDown                   = false;
+    private static boolean   RMBStateChanged              = false;
     private static boolean   disableForThisContainer      = false;
     private static boolean   disableWheelForThisContainer = false;
     
@@ -173,6 +177,10 @@ public class Main extends DeobfuscationLayer
             oldSelectedSlot = null;
             firstSlot = null;
             slotCount = 0;
+            firstSlotClicked = false;
+            shouldClick = true;
+            oldRMBDown = false;
+            RMBStateChanged = false;
             disableForThisContainer = false;
             disableWheelForThisContainer = false;
             readConfig = true;
@@ -234,6 +242,21 @@ public class Main extends DeobfuscationLayer
         
         int wheel = ( ( Main.WheelTweak == 1 ) && !disableWheelForThisContainer ) ? Mouse.getDWheel() / 120 : 0;
         
+        if ( !Mouse.isButtonDown( 1 ) )
+        {
+            firstSlotClicked = false;
+            shouldClick = true;
+        }
+        
+        if ( Mouse.isButtonDown( 1 ) != oldRMBDown )
+        {
+            RMBStateChanged = true;
+        }
+        else
+        {
+            RMBStateChanged = false;
+        }
+        
         Slot selectedSlot = getSelectedSlotWithID( currentScreen );
         
         // Copy the stacks, so that they don't change while we do our stuff.
@@ -243,14 +266,32 @@ public class Main extends DeobfuscationLayer
         if ( oldSelectedSlot != selectedSlot )
         {
             // To correctly determine, when the default RMB drag needs to be disabled, we need a bunch of conditions.
-            if ( Mouse.isButtonDown( 1 ) && ( firstSlot == null ) && ( oldSelectedSlot != null ) && ( getSlotStack( oldSelectedSlot ) == null ) )
+            if ( Mouse.isButtonDown( 1 ) && !firstSlotClicked && ( firstSlot == null ) && ( oldSelectedSlot != null ) )
             {
+                if ( !areStacksCompatible( stackOnMouse, getSlotStack( oldSelectedSlot ) ) )
+                {
+                    shouldClick = false;
+                }
+                
                 firstSlot = oldSelectedSlot;
+            }
+            
+            if ( RMBStateChanged && ( oldSelectedSlot == null ) && !firstSlotClicked && ( firstSlot == null ) )
+            {
+                shouldClick = false;
             }
             
             if ( selectedSlot == null )
             {
                 oldSelectedSlot = selectedSlot;
+                
+                if ( ( firstSlot != null ) && !firstSlotClicked )
+                {
+                    firstSlotClicked = true;
+                    disableRMBDragWithID( currentScreen );
+                    firstSlot = null;
+                }
+                
                 return;
             }
             
@@ -268,8 +309,9 @@ public class Main extends DeobfuscationLayer
                     
                     if ( ( stackOnMouse != null ) && areStacksCompatible( stackOnMouse, targetStack ) )
                     {
-                        if ( firstSlot != null )
+                        if ( ( firstSlot != null ) && !firstSlotClicked )
                         {
+                            firstSlotClicked = true;
                             disableRMBDragWithID( currentScreen );
                             firstSlot = null;
                         }
@@ -607,7 +649,11 @@ public class Main extends DeobfuscationLayer
         if ( guiContainerID == Constants.MINECRAFT )
         {
             disableVanillaRMBDrag( asGuiContainer( currentScreen ) );
-            clickSlot( currentScreen, firstSlot, 1, false );
+            
+            if ( shouldClick )
+            {
+                clickSlot( currentScreen, firstSlot, 1, false );
+            }
         }
         else
         {
