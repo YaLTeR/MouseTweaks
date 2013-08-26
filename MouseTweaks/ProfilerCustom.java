@@ -1,10 +1,6 @@
 package MouseTweaks;
 
-import java.lang.reflect.Field;
-import java.util.LinkedList;
-
 import net.minecraft.src.Minecraft;
-import net.minecraft.src.GameSettings;
 import net.minecraft.src.Profiler;
 
 public class ProfilerCustom extends Profiler
@@ -17,23 +13,27 @@ public class ProfilerCustom extends Profiler
     }
     
     @Override
-    public void startSection(String sectionName)
+    public void startSection( String sectionName )
     {
-        if ("gameRenderer".equals(sectionName)) {
+        if ( "gameRenderer".equals( sectionName ) )
+        {
             Main.onUpdateInGame();
         }
         
-        super.startSection(sectionName);
-
-        if (Main.optifine) {
-            if (!Reflection.gameSettings.setFieldValue(minecraft.gameSettings, "ofProfiler", true)) {
+        super.startSection( sectionName );
+        
+        if ( Main.optifine )
+        {
+            if ( !Reflection.gameSettings.setFieldValue( minecraft.gameSettings, "ofProfiler", true ) )
+            {
                 Main.optifine = false;
             }
         }
     }
     
     @Override
-    public void endSection() {
+    public void endSection()
+    {
         super.endSection();
     }
 }
