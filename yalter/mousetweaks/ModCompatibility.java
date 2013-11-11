@@ -94,7 +94,7 @@ public class ModCompatibility extends DeobfuscationLayer
         switch ( modGuiContainerID )
         {
         	case Constants.MTMODGUICONTAINER:
-        		return ((IMTModGuiContainer) guiScreen).getModSlot( modContainer, slotNumber );
+        		return asSlot( ((IMTModGuiContainer) guiScreen).getModSlot( modContainer, slotNumber ) );
         		
             case Constants.FORESTRY:
                 return getSlot( asContainer( modContainer ), slotNumber );
@@ -152,7 +152,7 @@ public class ModCompatibility extends DeobfuscationLayer
         switch ( modGuiContainerID )
         {
         	case Constants.MTMODGUICONTAINER:
-        		return ((IMTModGuiContainer) guiScreen).getModSelectedSlot( modContainer, slotCount );
+        		return asSlot( ((IMTModGuiContainer) guiScreen).getModSelectedSlot( modContainer, slotCount ) );
         		
             case Constants.FORESTRY:
                 return asSlot( Reflection.forestry.invokeMethod( guiScreen, "getSlotAtPosition", getRequiredMouseX(), getRequiredMouseY() ) );

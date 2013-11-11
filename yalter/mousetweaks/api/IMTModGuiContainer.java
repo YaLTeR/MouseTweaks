@@ -1,7 +1,5 @@
 package yalter.mousetweaks.api;
 
-import net.minecraft.src.Slot;
-
 public interface IMTModGuiContainer {
 	
 	/**
@@ -33,7 +31,7 @@ public interface IMTModGuiContainer {
 	 * 
 	 * @return True, if the given slot is a crafting output slot, false otherwise.
 	 */
-	public boolean isCraftingOutputSlot(Object modContainer, Slot slot);
+	public boolean isCraftingOutputSlot(Object modContainer, Object slot);
 	
 	/**
 	 * Returns the container of this GuiContainer. If multiple containers are used, returns the one that is used at the moment of the method execution.
@@ -59,7 +57,7 @@ public interface IMTModGuiContainer {
 	 * 
 	 * @return The slot from the given container with the given slot number.
 	 */
-	public Slot getModSlot(Object modContainer, int slotNumber);
+	public Object getModSlot(Object modContainer, int slotNumber);
 	
 	/**
 	 * Returns the currently selected slot (the one under the player's mouse cursor) of the given container, which has the given number of slots.
@@ -69,7 +67,7 @@ public interface IMTModGuiContainer {
 	 * 
 	 * @return The slot that is currently selected. Null, if none are.
 	 */
-	public Slot getModSelectedSlot(Object modContainer, int slotCount);
+	public Object getModSelectedSlot(Object modContainer, int slotCount);
 	
 	/**
 	 * The method that clicks the given slot of the given container with the given mouse button and shift key state.
@@ -79,7 +77,7 @@ public interface IMTModGuiContainer {
 	 * @param mouseButton The mouse button. 0 is the left one, 1 is the right one.
 	 * @param shiftPressed True if the shift key is pressed, false otherwise.
 	 */
-	public void clickModSlot(Object modContainer, Slot slot, int mouseButton, boolean shiftPressed);
+	public void clickModSlot(Object modContainer, Object slot, int mouseButton, boolean shiftPressed);
 	
 	/**
 	 * The method that disables the built-in RMB drag mechanic, if required, in this GuiContainer, with the given first slot in the given container to click if shouldClick is set to true (in vanilla circumstances - your RMB dragging mechanic might work differently).
@@ -88,6 +86,6 @@ public interface IMTModGuiContainer {
 	 * @param firstSlot The first slot.
 	 * @param shouldClick True, if the first slot is to be clicked.
 	 */
-	public void disableRMBDragIfRequired(Object modContainer, Slot firstSlot, boolean shouldClick);
+	public void disableRMBDragIfRequired(Object modContainer, Object firstSlot, boolean shouldClick);
 
 }
