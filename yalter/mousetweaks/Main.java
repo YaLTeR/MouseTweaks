@@ -1,4 +1,4 @@
-package MouseTweaks;
+package yalter.mousetweaks;
 
 import java.io.File;
 
@@ -219,7 +219,7 @@ public class Main extends DeobfuscationLayer
             
             if ( Constants.DEBUG )
             {
-                Logger.Log( new StringBuilder().append( "You have just opened a " ).append( getGuiContainerNameFromID() ).append( " container (" ).append( currentScreen.getClass().getSimpleName() ).append( ( container == null ) ? "" : "; " ).append( ( container == null ) ? "" : container.getClass().getSimpleName() ).append( "), which has " ).append( getSlotCountWithID( currentScreen ) ).append( " slots!" ).toString() );
+                Logger.Log( new StringBuilder().append( "You have just opened a " ).append( getGuiContainerNameFromID( currentScreen ) ).append( " container (" ).append( currentScreen.getClass().getSimpleName() ).append( ( container == null ) ? "" : "; " ).append( ( container == null ) ? "" : container.getClass().getSimpleName() ).append( "), which has " ).append( getSlotCountWithID( currentScreen ) ).append( " slots!" ).toString() );
             }
             
             disableWheelForThisContainer = isWheelDisabledForThisContainer( currentScreen );
@@ -591,7 +591,7 @@ public class Main extends DeobfuscationLayer
             return ModCompatibility.getModSlotCount( guiContainerID, currentScreen, container );
     }
     
-    public static String getGuiContainerNameFromID()
+    public static String getGuiContainerNameFromID( GuiScreen currentScreen )
     {
         switch ( guiContainerID )
         {
@@ -603,7 +603,7 @@ public class Main extends DeobfuscationLayer
                 return "Vanilla Minecraft";
                 
             default:
-                return ModCompatibility.getModNameFromModGuiContainerID( guiContainerID );
+                return ModCompatibility.getModNameFromModGuiContainerID( guiContainerID, currentScreen );
         }
     }
     

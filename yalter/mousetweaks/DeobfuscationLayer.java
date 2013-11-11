@@ -1,4 +1,4 @@
-package MouseTweaks;
+package yalter.mousetweaks;
 
 import java.util.List;
 
@@ -199,7 +199,12 @@ public class DeobfuscationLayer
         return null;
     }
     
-    protected static void disableVanillaRMBDrag( GuiContainer guiContainer )
+    /**
+     * Disables the vanilla RMB drag mechanic in the given GuiContainer. If your guiContainer is based on the vanilla GuiContainer, you can use this method to disable the RMB drag.
+     * 
+     * @param guiContainer The guiContainer to disable RMB drag in.
+     */
+    public static void disableVanillaRMBDrag( GuiContainer guiContainer )
     {
         Reflection.guiContainerClass.setFieldValue( guiContainer, "field_94068_E", true );
         Reflection.guiContainerClass.setFieldValue( guiContainer, "field_94076_q", false );

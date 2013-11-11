@@ -1,4 +1,4 @@
-package MouseTweaks;
+package yalter.mousetweaks;
 
 public class Logger
 {

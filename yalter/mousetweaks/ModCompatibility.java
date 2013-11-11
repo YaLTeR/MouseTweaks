@@ -1,5 +1,6 @@
-package MouseTweaks;
+package yalter.mousetweaks;
 
+import yalter.mousetweaks.api.IMTModGuiContainer;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.Slot;
 
@@ -40,6 +41,9 @@ public class ModCompatibility extends DeobfuscationLayer
     
     public static int getModGuiContainerID( GuiScreen guiScreen )
     {
+    	if ( guiScreen instanceof IMTModGuiContainer )
+    		return Constants.MTMODGUICONTAINER;
+    	
         if ( forestryInstalled && Reflection.forestry.isInstance( "GuiForestry", guiScreen ) )
             return Constants.FORESTRY;
         
@@ -54,10 +58,13 @@ public class ModCompatibility extends DeobfuscationLayer
         return Constants.NOTGUICONTAINER;
     }
     
-    public static String getModNameFromModGuiContainerID( int id )
+    public static String getModNameFromModGuiContainerID( int id, GuiScreen guiScreen )
     {
         switch ( id )
         {
+        	case Constants.MTMODGUICONTAINER:
+        		return ((IMTModGuiContainer) guiScreen).getModName();
+
             case Constants.FORESTRY:
                 return "Forestry";
             case Constants.CODECHICKENCORE:
@@ -74,6 +81,9 @@ public class ModCompatibility extends DeobfuscationLayer
     {
         switch ( modGuiContainerID )
         {
+        	case Constants.MTMODGUICONTAINER:
+        		return ((IMTModGuiContainer) guiScreen).isWheelTweakDisabled();
+        	
             default:
                 return false;
         }
@@ -83,6 +93,9 @@ public class ModCompatibility extends DeobfuscationLayer
     {
         switch ( modGuiContainerID )
         {
+        	case Constants.MTMODGUICONTAINER:
+        		return ((IMTModGuiContainer) guiScreen).getModSlot( modContainer, slotNumber );
+        		
             case Constants.FORESTRY:
                 return getSlot( asContainer( modContainer ), slotNumber );
             case Constants.NEI:
@@ -97,6 +110,9 @@ public class ModCompatibility extends DeobfuscationLayer
     {
         switch ( modGuiContainerID )
         {
+        	case Constants.MTMODGUICONTAINER:
+        		return ((IMTModGuiContainer) guiScreen).isCraftingOutputSlot( modContainer, selectedSlot );
+
             case Constants.FORESTRY:
                 return ( Reflection.is( modContainer, "ContainerSqueezer" ) && ( ( getSlotNumber( selectedSlot ) == 9 ) || ( getSlotNumber( selectedSlot ) == 11 ) ) )
                         || ( Reflection.is( modContainer, "ContainerMoistener" ) && ( getSlotNumber( selectedSlot ) == 9 ) )
@@ -114,6 +130,10 @@ public class ModCompatibility extends DeobfuscationLayer
     {
         switch ( modGuiContainerID )
         {
+        	case Constants.MTMODGUICONTAINER:
+        		((IMTModGuiContainer) guiScreen).clickModSlot( modContainer, targetSlot, mouseButton, shiftPressed );
+        		return;
+        		
             case Constants.FORESTRY:
                 Reflection.forestry.invokeMethod( guiScreen, "handleMouseClick", targetSlot, 0, mouseButton, shiftPressed ? 1 : 0 );
                 return;
@@ -131,6 +151,9 @@ public class ModCompatibility extends DeobfuscationLayer
     {
         switch ( modGuiContainerID )
         {
+        	case Constants.MTMODGUICONTAINER:
+        		return ((IMTModGuiContainer) guiScreen).getModSelectedSlot( modContainer, slotCount );
+        		
             case Constants.FORESTRY:
                 return asSlot( Reflection.forestry.invokeMethod( guiScreen, "getSlotAtPosition", getRequiredMouseX(), getRequiredMouseY() ) );
             case Constants.NEI:
@@ -145,6 +168,9 @@ public class ModCompatibility extends DeobfuscationLayer
     {
         switch ( modGuiContainerID )
         {
+        	case Constants.MTMODGUICONTAINER:
+        		return ((IMTModGuiContainer) guiScreen).getModSlotCount( modContainer );
+        		
             case Constants.FORESTRY:
                 return getSlots( asContainer( modContainer ) ).size();
             case Constants.NEI:
@@ -159,6 +185,9 @@ public class ModCompatibility extends DeobfuscationLayer
     {
         switch ( modGuiContainerID )
         {
+        	case Constants.MTMODGUICONTAINER:
+        		return ((IMTModGuiContainer) guiScreen).getModContainer();
+        	
             case Constants.FORESTRY:
                 return Reflection.forestry.getFieldValue( "inventorySlots", guiScreen );
             case Constants.NEI:
@@ -173,6 +202,11 @@ public class ModCompatibility extends DeobfuscationLayer
     {
         switch ( guiContainerID )
         {
+        	case Constants.MTMODGUICONTAINER:
+        		((IMTModGuiContainer) guiScreen).disableRMBDragIfRequired( modContainer, firstSlot, shouldClick );
+        		
+        		return;
+        		
             case Constants.NEI:
                 disableVanillaRMBDrag( asGuiContainer( guiScreen ) );
                 
@@ -192,6 +226,9 @@ public class ModCompatibility extends DeobfuscationLayer
     {
         switch ( guiContainerID )
         {
+        	case Constants.MTMODGUICONTAINER:
+        		return ((IMTModGuiContainer) guiScreen).isMouseTweaksDisabled();
+        		
             case Constants.CODECHICKENCORE:
                 return true;
             case Constants.NEI:

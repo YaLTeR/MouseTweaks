@@ -1,4 +1,4 @@
-package MouseTweaks;
+package yalter.mousetweaks;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

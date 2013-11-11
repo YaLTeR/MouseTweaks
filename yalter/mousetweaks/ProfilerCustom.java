@@ -1,4 +1,4 @@
-package MouseTweaks;
+package yalter.mousetweaks;
 
 import net.minecraft.src.Minecraft;
 import net.minecraft.src.Profiler;
