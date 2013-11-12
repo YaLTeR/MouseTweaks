@@ -1,10 +1,8 @@
 package net.minecraft.src;
 
-import net.minecraft.src.Minecraft;
-import MouseTweaks.Constants;
-import MouseTweaks.Logger;
-import MouseTweaks.Main;
-import MouseTweaks.Reflection;
+import net.minecraft.client.Minecraft;
+import yalter.mousetweaks.Constants;
+import yalter.mousetweaks.Main;
 
 public class mod_MouseTweaks extends BaseMod {
 
