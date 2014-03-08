@@ -1,7 +1,14 @@
 package yalter.mousetweaks.api;
 
 public interface IMTModGuiContainer {
-	
+
+    /**
+     * Returns the API version.
+     *
+     * @return API version. Should return 1 for this version.
+     */
+    public int getAPIVersion();
+
 	/**
 	 * Returns a mod name to use in log messages.
 	 * 

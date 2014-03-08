@@ -4,11 +4,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.GameSettings;
-import net.minecraft.src.GuiContainer;
-import net.minecraft.src.Slot;
-import net.minecraft.src.Tessellator;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.client.renderer.Tessellator;
 
 public class Reflection
 {
@@ -21,6 +21,9 @@ public class Reflection
     public static ReflectionCache forestry;
     public static ReflectionCache codechickencore;
     public static ReflectionCache NEI;
+
+    private static boolean isObfuscated = false;
+    private static boolean checkObfuscation = true;
     
     public static boolean reflectGuiContainer()
     {
@@ -28,7 +31,7 @@ public class Reflection
         guiContainerClass.storeClass( "GuiContainer", GuiContainer.class );
         
         Method isMouseOverSlot = getMethod( GuiContainer.class,
-                getObfuscatedName( "isMouseOverSlot", "func_74186_a", Constants.ISMOUSEOVERSLOT_NAME ), Slot.class, int.class,
+                getObfuscatedName( "isMouseOverSlot", Constants.ISMOUSEOVERSLOT_FORGE_NAME, Constants.ISMOUSEOVERSLOT_NAME ), Slot.class, int.class,
                 int.class );
         
         if ( isMouseOverSlot == null )
@@ -41,28 +44,28 @@ public class Reflection
         
         Field field;
         field = getField( GuiContainer.class,
-                getObfuscatedName( "field_94068_E", "field_94068_E", Constants.FIELDE_NAME ) );
+                getObfuscatedName( Constants.FIELDE_FORGE_NAME, Constants.FIELDE_FORGE_NAME, Constants.FIELDE_NAME ) );
         
         if ( field == null )
         {
-            Logger.Log( "Failed to retrieve field_94068_E, disabling RMBTweak" );
+            Logger.Log( "Failed to retrieve the E field, disabling RMBTweak" );
             Main.DisableRMBTweak = true;
         }
         else
         {
-            guiContainerClass.storeField( "field_94068_E", field );
+            guiContainerClass.storeField( Constants.FIELDE_FORGE_NAME, field );
             
             field = getField( GuiContainer.class,
-                    getObfuscatedName( "field_94076_q", "field_94076_q", Constants.FIELDq_NAME ) );
+                    getObfuscatedName( Constants.FIELDq_FORGE_NAME, Constants.FIELDq_FORGE_NAME, Constants.FIELDq_NAME ) );
             
             if ( field == null )
             {
-                Logger.Log( "Failed to retreive field_94076_q, disabling RMBTweak" );
+                Logger.Log( "Failed to retreive the q field, disabling RMBTweak" );
                 Main.DisableRMBTweak = true;
             }
             else
             {
-                guiContainerClass.storeField( "field_94076_q", field );
+                guiContainerClass.storeField( Constants.FIELDq_FORGE_NAME, field );
             }
         }
         
@@ -96,7 +99,7 @@ public class Reflection
                         Object liteLoaderInstance = liteLoaderClass.invokeStaticMethod( "LiteLoader", "getInstance" );
                         if ( liteLoaderInstance != null )
                         {
-                            Class mouseTweaks = getClass( "MouseTweaks.LiteModMouseTweaks" );
+                            Class mouseTweaks = getClass( "yalter.mousetweaks.LiteModMouseTweaks" );
                             if ( mouseTweaks != null )
                             {
                                 liteModMouseTweaks = new ReflectionCache();
@@ -168,7 +171,7 @@ public class Reflection
         minecraft = new ReflectionCache();
         minecraft.storeClass( "Minecraft", Minecraft.class );
         
-        Field profilerField = getFinalField( Minecraft.class, getObfuscatedName( "mcProfiler", "field_71424_I", Constants.MCPROFILER_NAME ) );
+        Field profilerField = getFinalField( Minecraft.class, getObfuscatedName( "mcProfiler", Constants.MCPROFILER_FORGE_NAME, Constants.MCPROFILER_NAME ) );
         if ( profilerField != null )
         {
             minecraft.storeField( "mcProfiler", profilerField );
@@ -322,7 +325,11 @@ public class Reflection
             {
                 Logger.Log( "Could not retrieve field \"" + name + "\" from class \"" + clazz.getName()
                         + "\"" );
-                e.printStackTrace();
+
+                if ( Main.Debug == 1 )
+                {
+                    e.printStackTrace();
+                }
             }
         }
         
@@ -361,13 +368,17 @@ public class Reflection
         {
             Logger.Log( "Could not retrieve field \"" + name + "\" from class \"" + clazz.getName()
                     + "\"" );
-            e.printStackTrace();
+
+            if ( Main.Debug == 1 )
+            {
+                e.printStackTrace();
+            }
         }
         
         return null;
     }
     
-    public static Method getMethod( Class clazz, String name, Class... args )
+    public static Method getMethod( Class<?> clazz, String name, Class... args )
     {
         try
         {
@@ -401,7 +412,11 @@ public class Reflection
         {
             Logger.Log( "Could not retrieve method \"" + name + "\" from class \"" + clazz.getName()
                     + "\"" );
-            e.printStackTrace();
+
+            if ( Main.Debug == 1 )
+            {
+                e.printStackTrace();
+            }
         }
         
         return null;
@@ -409,13 +424,26 @@ public class Reflection
     
     public static String methodToString( Method method )
     {
-        return ( Modifier.toString( method.getModifiers() ) + " " + method.getReturnType() ) != null ? method
-                .getReturnType().getName() : "void" + " " + method.getName();
+        return Modifier.toString( method.getModifiers() ) + " " + ( ( method.getReturnType() != null ) ? method
+                .getReturnType().getName() : "void" ) + " " + method.getName();
     }
     
     public static String getObfuscatedName( String mcpName, String forgeName, String originalName )
     {
-        return Main.minecraftForge ? forgeName : Tessellator.instance.getClass().getSimpleName()
-                .equals( "Tessellator" ) ? mcpName : originalName;
+        if (checkObfuscation)
+        {
+            checkObfuscation();
+        }
+
+        return isObfuscated ? ( Main.minecraftForge ? forgeName : originalName ) : mcpName;
+}
+
+    public static void checkObfuscation()
+    {
+        checkObfuscation = false;
+
+        Logger.Log("Obfuscation check, please ignore the following isMouseOverSlot error (if it comes up).");
+        isObfuscated = getMethod( GuiContainer.class, "isMouseOverSlot", Slot.class, int.class, int.class ) == null;
+        Logger.Log("Obfuscation check completed.");
     }
 }

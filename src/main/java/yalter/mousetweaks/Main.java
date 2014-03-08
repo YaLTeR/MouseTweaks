@@ -2,10 +2,10 @@ package yalter.mousetweaks;
 
 import java.io.File;
 
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Slot;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.Slot;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -32,7 +32,7 @@ public class Main extends DeobfuscationLayer
     public static boolean    liteLoader                   = false;
     public static boolean    minecraftForge               = false;
     public static boolean    optifine                     = false;
-    public static boolean    modLoader                    = false;
+//    public static boolean    modLoader                    = false;
     public static boolean    useModLoader                 = false;
     
     public static boolean    DisableRMBTweak              = false;
@@ -43,6 +43,8 @@ public class Main extends DeobfuscationLayer
     public static int        WheelTweak                   = 0;
     public static int        ForceModLoader               = 0;
     public static int        WheelSearchOrder             = 1;
+
+    public static int        Debug                        = 0;
     
     public static Config     mainConfig;
     
@@ -62,27 +64,32 @@ public class Main extends DeobfuscationLayer
                 + File.separator + "MouseTweaks.cfg" );
         readConfigFile();
         
-        modLoader = Reflection.doesClassExist( "net.minecraft.src.ModLoader" );
+//        modLoader = Reflection.doesClassExist( "net.minecraft.src.ModLoader" );
         minecraftForge = Reflection
                 .doesClassExist( "net.minecraftforge.client.MinecraftForgeClient" );
         
         if ( ForceModLoader == 1 )
         {
-            if ( modLoader )
-            {
-                useModLoader = true;
-                Logger.Log( "ForceModLoader is set to 1, using ModLoader's onTick for mod operation..." );
-            }
-            else
-            {
-                Logger.Log( "ForceModLoader is set to 1, but ModLoader's main class is not present, quitting..." );
-                disabled = true;
-                return false;
-            }
+//            if ( modLoader )
+//            {
+//                useModLoader = true;
+//                Logger.Log( "ForceModLoader is set to 1, using ModLoader's onTick for mod operation..." );
+//            }
+//            else
+//            {
+//                Logger.Log( "ForceModLoader is set to 1, but ModLoader's main class is not present, quitting..." );
+//                disabled = true;
+//                return false;
+//            }
+
+            Logger.Log("ForceModLoader is not supported yet, quitting...");
+            disabled = true;
+            return false;
         }
         else
         {
-            liteLoader = Reflection.reflectLiteLoader();
+//            liteLoader = Reflection.reflectLiteLoader();
+            liteLoader = false;
             optifine = Reflection.reflectOptifine();
         }
         
@@ -102,23 +109,27 @@ public class Main extends DeobfuscationLayer
             {
                 if ( !Reflection.replaceProfiler() )
                 {
-                    if ( modLoader )
-                    {
-                        useModLoader = true;
-                        Logger.Log( "Using ModLoader for mod operation" );
-                    }
-                    else
-                    {
-                        Logger.Log( "Failed to replace Minecraft profiler, quitting" );
-                        
+//                    if ( modLoader )
+//                    {
+//                        useModLoader = true;
+//                        Logger.Log( "Using ModLoader for mod operation" );
+//                    }
+//                    else
+//                    {
+                        Logger.Log( "Failed to replace the Minecraft profiler, quitting..." );
+
                         disabled = true;
                         return false;
-                    }
+//                    }
                 }
             }
             else
             {
-                Logger.Log( "Using ModLoader for mod operation" );
+//                Logger.Log( "Using ModLoader for mod operation" );
+
+                Logger.Log("Failed to reflect Minecraft, quitting...");
+                disabled = true;
+                return false;
             }
         }
         
@@ -148,6 +159,7 @@ public class Main extends DeobfuscationLayer
             mainConfig.setPropertyValue( "WheelTweak", 1 );
             mainConfig.setPropertyValue( "WheelSearchOrder", 1 );
             mainConfig.setPropertyValue( "ForceModLoader", 0 );
+            mainConfig.setPropertyValue( "Debug", 0 );
             
             mainConfig.saveConfig();
             
@@ -160,6 +172,7 @@ public class Main extends DeobfuscationLayer
         WheelTweak = mainConfig.getOrCreatePropertyValue( "WheelTweak", 1 );
         WheelSearchOrder = mainConfig.getOrCreatePropertyValue( "WheelSearchOrder", 1 );
         ForceModLoader = mainConfig.getOrCreatePropertyValue( "ForceModLoader", 0 );
+        Debug = mainConfig.getOrCreatePropertyValue( "Debug", 0 );
         
         mainConfig.saveConfig();
     }
@@ -217,7 +230,7 @@ public class Main extends DeobfuscationLayer
             container = getContainerWithID( currentScreen );
             disableForThisContainer = isDisabledForThisContainer( currentScreen );
             
-            if ( Constants.DEBUG )
+            if ( Debug == 1 )
             {
                 Logger.Log( new StringBuilder().append( "You have just opened a " ).append( getGuiContainerNameFromID( currentScreen ) ).append( " container (" ).append( currentScreen.getClass().getSimpleName() ).append( ( container == null ) ? "" : "; " ).append( ( container == null ) ? "" : container.getClass().getSimpleName() ).append( "), which has " ).append( getSlotCountWithID( currentScreen ) ).append( " slots!" ).toString() );
             }
@@ -293,7 +306,7 @@ public class Main extends DeobfuscationLayer
                 return;
             }
             
-            if ( Constants.DEBUG )
+            if ( Debug == 1 )
             {
                 Logger.Log( new StringBuilder().append( "You have selected a new slot, it's slot number is " ).append( getSlotNumber( selectedSlot ) ).toString() );
             }

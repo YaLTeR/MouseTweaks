@@ -7,13 +7,19 @@ public class Constants
     public static final String  NAME                 = "Mouse Tweaks";
     
     // Mod version
-    public static final String  VERSION              = "2.3.5 (for Minecraft 1.6.4)";
+    public static final String  VERSION              = "2.4.0";
     
     // Obfuscated names
     public static final String  ISMOUSEOVERSLOT_NAME = "a";
-    public static final String  FIELDE_NAME          = "G";
-    public static final String  FIELDq_NAME          = "s";
-    public static final String  MCPROFILER_NAME      = "C";
+    public static final String  FIELDE_NAME          = "H";
+    public static final String  FIELDq_NAME          = "t";
+    public static final String  MCPROFILER_NAME      = "A";
+
+    // Forge obfuscated names
+    public static final String  ISMOUSEOVERSLOT_FORGE_NAME = "func_146981_a";
+    public static final String  FIELDE_FORGE_NAME          = "field_146995_H";
+    public static final String  FIELDq_FORGE_NAME          = "field_147007_t";
+    public static final String  MCPROFILER_FORGE_NAME      = "field_71424_I";
     
     // Inventory-related stuff
     public static final int     INVENTORY_SIZE       = 36;                           // Size of the player inventory
@@ -26,7 +32,5 @@ public class Constants
     public static final int     FORESTRY             = 3;                            // Forestry containers.
     public static final int     CODECHICKENCORE      = 4;                            // CodeChickenCore containers.
     public static final int     NEI                  = 5;                            // NotEnoughItems containers (like the crafting menu).
-                                                                                      
-    public static final boolean DEBUG                = false;                        // Debug mode (writing many stuff into STDOUT)
                                                                                       
 }

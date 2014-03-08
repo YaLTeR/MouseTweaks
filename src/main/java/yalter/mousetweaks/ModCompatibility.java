@@ -1,8 +1,8 @@
 package yalter.mousetweaks;
 
 import yalter.mousetweaks.api.IMTModGuiContainer;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.Slot;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.inventory.Slot;
 
 public class ModCompatibility extends DeobfuscationLayer
 {

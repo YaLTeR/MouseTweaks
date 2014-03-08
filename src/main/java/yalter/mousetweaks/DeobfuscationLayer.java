@@ -2,22 +2,23 @@ package yalter.mousetweaks;
 
 import java.util.List;
 
-import net.minecraft.src.Container;
-import net.minecraft.src.ContainerFurnace;
-import net.minecraft.src.ContainerPlayer;
-import net.minecraft.src.ContainerRepair;
-import net.minecraft.src.ContainerWorkbench;
-import net.minecraft.src.EntityClientPlayerMP;
-import net.minecraft.src.GameSettings;
-import net.minecraft.src.GuiContainer;
-import net.minecraft.src.GuiContainerCreative;
-import net.minecraft.src.GuiScreen;
-import net.minecraft.src.InventoryPlayer;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.PlayerControllerMP;
-import net.minecraft.src.ScaledResolution;
-import net.minecraft.src.Slot;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerFurnace;
+import net.minecraft.inventory.ContainerPlayer;
+import net.minecraft.inventory.ContainerRepair;
+import net.minecraft.inventory.ContainerWorkbench;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.inventory.Slot;
 
 import org.lwjgl.input.Mouse;
 
@@ -90,7 +91,7 @@ public class DeobfuscationLayer
     
     protected static int getItemStackID( ItemStack itemStack )
     {
-        return itemStack.itemID;
+        return Item.getIdFromItem( itemStack.getItem() );
     }
     
     protected static boolean hasSubtypesItemStack( ItemStack itemStack )
@@ -180,11 +181,8 @@ public class DeobfuscationLayer
     
     protected static boolean isMouseOverSlot( GuiContainer guiContainer, Slot slot )
     {
-        boolean returnValue = false;
-        returnValue = ( Boolean ) Reflection.guiContainerClass.invokeMethod( guiContainer,
+        return ( Boolean ) Reflection.guiContainerClass.invokeMethod( guiContainer,
                 "isMouseOverSlot", slot, getRequiredMouseX(), getRequiredMouseY() );
-        
-        return returnValue;
     }
     
     protected static Slot getSelectedSlot( GuiContainer guiContainer, Container container, int slotCount )
@@ -206,8 +204,8 @@ public class DeobfuscationLayer
      */
     public static void disableVanillaRMBDrag( GuiContainer guiContainer )
     {
-        Reflection.guiContainerClass.setFieldValue( guiContainer, "field_94068_E", true );
-        Reflection.guiContainerClass.setFieldValue( guiContainer, "field_94076_q", false );
+        Reflection.guiContainerClass.setFieldValue( guiContainer, Constants.FIELDE_FORGE_NAME, true );
+        Reflection.guiContainerClass.setFieldValue( guiContainer, Constants.FIELDq_FORGE_NAME, false );
     }
     
     protected static int getRequiredMouseX()
@@ -215,9 +213,7 @@ public class DeobfuscationLayer
         ScaledResolution var8 = new ScaledResolution( getGameSettings(), getDisplayWidth(),
                 getDisplayHeight() );
         int var9 = var8.getScaledWidth();
-        int var11 = ( Mouse.getX() * var9 ) / getDisplayWidth();
-        
-        return var11;
+        return ( Mouse.getX() * var9 ) / getDisplayWidth();
     }
     
     protected static int getRequiredMouseY()
@@ -225,9 +221,7 @@ public class DeobfuscationLayer
         ScaledResolution var8 = new ScaledResolution( getGameSettings(), getDisplayWidth(),
                 getDisplayHeight() );
         int var10 = var8.getScaledHeight();
-        int var13 = var10 - ( ( Mouse.getY() * var10 ) / getDisplayHeight() ) - 1;
-        
-        return var13;
+        return var10 - ( ( Mouse.getY() * var10 ) / getDisplayHeight() ) - 1;
     }
     
     protected static void sendClientMessage( String message )

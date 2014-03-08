@@ -1,7 +1,7 @@
 package yalter.mousetweaks;
 
-import net.minecraft.src.Minecraft;
-import net.minecraft.src.Profiler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.profiler.Profiler;
 
 public class ProfilerCustom extends Profiler
 {
@@ -29,11 +29,5 @@ public class ProfilerCustom extends Profiler
                 Main.optifine = false;
             }
         }
-    }
-    
-    @Override
-    public void endSection()
-    {
-        super.endSection();
     }
 }

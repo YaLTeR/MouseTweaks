@@ -11,7 +11,7 @@ import java.util.Iterator;
 public class Config
 {
     private String  fileName;
-    private HashMap Properties = new HashMap();
+    private HashMap<String, Integer> Properties = new HashMap<String, Integer>();
     
     public Config( String fileName )
     {

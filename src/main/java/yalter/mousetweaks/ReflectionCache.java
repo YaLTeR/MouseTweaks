@@ -8,9 +8,9 @@ public class ReflectionCache
 {
     public boolean available  = false;
     public boolean compatible = false;
-    public HashMap classes    = new HashMap();
-    public HashMap methods    = new HashMap();
-    public HashMap fields     = new HashMap();
+    public HashMap<String, Class> classes    = new HashMap<String, Class>();
+    public HashMap<String, Method> methods    = new HashMap<String, Method>();
+    public HashMap<String, Field> fields     = new HashMap<String, Field>();
     
     public ReflectionCache()
     {
