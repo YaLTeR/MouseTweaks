@@ -82,62 +82,80 @@ public class Reflection
             liteLoaderClass.storeClass( "LiteLoader", lL );
             
             liteLoaderClass.available = true;
-            
-            Class rL = getClass( "com.mumfrey.liteloader.RenderListener" );
-            if ( rL != null )
+
+            Class llEvents = getClass( "com.mumfrey.liteloader.core.Events" );
+            if ( llEvents != null )
             {
-                Method addRenderListener = getMethod( lL, "addRenderListener", rL );
-                if ( addRenderListener != null )
+                liteLoaderClass.storeClass( "Events", llEvents );
+
+                Field llEventsField = getField( lL, "events" );
+                if ( llEventsField != null )
                 {
-                    liteLoaderClass.storeMethod( "addRenderListener", addRenderListener );
-                    
-                    Method getInstance = getMethod( lL, "getInstance" );
-                    if ( getInstance != null )
+                    liteLoaderClass.storeField( "events", llEventsField );
+
+                    Class lM = getClass( "com.mumfrey.liteloader.LiteMod" );
+                    if ( lM != null )
                     {
-                        liteLoaderClass.storeMethod( "getInstance", getInstance );
-                        
-                        Object liteLoaderInstance = liteLoaderClass.invokeStaticMethod( "LiteLoader", "getInstance" );
-                        if ( liteLoaderInstance != null )
+                        liteLoaderClass.storeClass( "LiteMod", lM );
+
+                        Method addListener = getMethod( llEvents, "addListener", lM );
+                        if ( addListener != null )
                         {
-                            Class mouseTweaks = getClass( "yalter.mousetweaks.LiteModMouseTweaks" );
-                            if ( mouseTweaks != null )
+                            liteLoaderClass.storeMethod( "addListener", addListener );
+
+                            Method getInstance = getMethod( lL, "getInstance" );
+                            if ( getInstance != null )
                             {
-                                liteModMouseTweaks = new ReflectionCache();
-                                liteModMouseTweaks.storeClass( "LiteModMouseTweaks", mouseTweaks );
-                                
-                                Method getLMMTInstance = getMethod( mouseTweaks, "getInstance" );
-                                if ( getLMMTInstance != null )
+                                liteLoaderClass.storeMethod( "getInstance", getInstance );
+
+                                Object liteLoaderInstance = liteLoaderClass.invokeStaticMethod( "LiteLoader", "getInstance" );
+                                if ( liteLoaderInstance != null )
                                 {
-                                    liteModMouseTweaks.storeMethod( "getInstance", getLMMTInstance );
-                                    
-                                    Object LMMTInstance = liteModMouseTweaks.invokeStaticMethod( "LiteModMouseTweaks", "getInstance" );
-                                    if ( LMMTInstance != null )
+                                    Object llEventsInstance = liteLoaderClass.getFieldValue( "events", liteLoaderInstance );
+                                    if ( llEventsInstance != null )
                                     {
-                                        liteLoaderClass.invokeMethod( liteLoaderInstance, "addRenderListener", LMMTInstance );
-                                        
-                                        liteLoaderClass.compatible = true;
-                                        Logger.Log( "LiteLoader is installed and compatible" );
-                                        
-                                        return true;
-                                    }
-                                    else
-                                    {
-                                        Logger.Log( "Could not get instance from getInstance method of LiteModMouseTweaks class! Have you modified the class?" );
+                                        Class mouseTweaks = getClass( "yalter.mousetweaks.LiteModMouseTweaks" );
+                                        if ( mouseTweaks != null )
+                                        {
+                                            liteModMouseTweaks = new ReflectionCache();
+                                            liteModMouseTweaks.storeClass( "LiteModMouseTweaks", mouseTweaks );
+
+                                            Method getLMMTInstance = getMethod( mouseTweaks, "getInstance" );
+                                            if ( getLMMTInstance != null )
+                                            {
+                                                liteModMouseTweaks.storeMethod( "getInstance", getLMMTInstance );
+
+                                                Object LMMTInstance = liteModMouseTweaks.invokeStaticMethod( "LiteModMouseTweaks", "getInstance" );
+                                                if ( LMMTInstance != null )
+                                                {
+                                                    liteLoaderClass.invokeMethod( llEventsInstance, "addListener", LMMTInstance );
+
+                                                    liteLoaderClass.compatible = true;
+                                                    Logger.Log( "LiteLoader is installed and compatible" );
+
+                                                    return true;
+                                                }
+                                                else
+                                                {
+                                                    Logger.Log( "Could not get instance from getInstance method of LiteModMouseTweaks class! Have you modified the class?" );
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Logger.Log( "Could not get getInstance method from LiteModMouseTweaks class! Have you modified the class?" );
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Logger.Log( "Could not get LiteModMouseTweaks class! Have you deleted it accidentally?" );
+                                        }
                                     }
                                 }
                                 else
                                 {
-                                    Logger.Log( "Could not get getInstance method from LiteModMouseTweaks class! Have you modified the class?" );
+                                    Logger.Log( "Failed to retrieve LiteLoader instance!" );
                                 }
                             }
-                            else
-                            {
-                                Logger.Log( "Could not get LiteModMouseTweaks class! Have you deleted it accidentally?" );
-                            }
-                        }
-                        else
-                        {
-                            Logger.Log( "Failed to retrieve LiteLoader instance!" );
                         }
                     }
                 }

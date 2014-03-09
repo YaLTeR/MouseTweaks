@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "2.4.0"
+version = "2.4.1"
 group= "yalter.mousetweaks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MouseTweaks"
 
@@ -30,6 +30,7 @@ processResources
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
+        include 'litemod.json'
                 
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
@@ -38,23 +39,27 @@ processResources
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+        exclude 'litemod.json'
     }
 }
 
 // Thanks to the IronChest repository for those.
 
 jar {
+    exclude 'com/**'
     version = "${project.minecraft.version}-${project.version}"
 }
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allSource
+    exclude 'com/**'
     classifier = 'src'
     version = "${project.minecraft.version}-${project.version}"
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
+    exclude 'com/**'
     classifier = 'deobf'
     version = "${project.minecraft.version}-${project.version}"
 }

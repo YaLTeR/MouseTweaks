@@ -33,7 +33,7 @@ public class Main extends DeobfuscationLayer
     public static boolean    minecraftForge               = false;
     public static boolean    optifine                     = false;
 //    public static boolean    modLoader                    = false;
-    public static boolean    useModLoader                 = false;
+    public static boolean    useForge                     = false;
     
     public static boolean    DisableRMBTweak              = false;
     
@@ -41,7 +41,7 @@ public class Main extends DeobfuscationLayer
     public static int        LMBTweakWithItem             = 0;
     public static int        LMBTweakWithoutItem          = 0;
     public static int        WheelTweak                   = 0;
-    public static int        ForceModLoader               = 0;
+    public static int        ForceForgeOnRenderTick       = 0;
     public static int        WheelSearchOrder             = 1;
 
     public static int        Debug                        = 0;
@@ -67,32 +67,7 @@ public class Main extends DeobfuscationLayer
 //        modLoader = Reflection.doesClassExist( "net.minecraft.src.ModLoader" );
         minecraftForge = Reflection
                 .doesClassExist( "net.minecraftforge.client.MinecraftForgeClient" );
-        
-        if ( ForceModLoader == 1 )
-        {
-//            if ( modLoader )
-//            {
-//                useModLoader = true;
-//                Logger.Log( "ForceModLoader is set to 1, using ModLoader's onTick for mod operation..." );
-//            }
-//            else
-//            {
-//                Logger.Log( "ForceModLoader is set to 1, but ModLoader's main class is not present, quitting..." );
-//                disabled = true;
-//                return false;
-//            }
 
-            Logger.Log("ForceModLoader is not supported yet, quitting...");
-            disabled = true;
-            return false;
-        }
-        else
-        {
-//            liteLoader = Reflection.reflectLiteLoader();
-            liteLoader = false;
-            optifine = Reflection.reflectOptifine();
-        }
-        
         if ( minecraftForge )
         {
             Logger.Log( "Minecraft Forge is installed" );
@@ -101,35 +76,51 @@ public class Main extends DeobfuscationLayer
         {
             Logger.Log( "Minecraft Forge is not installed" );
         }
-        
-        if ( !liteLoader && ( ForceModLoader == 0 ) )
+
+        if ( ForceForgeOnRenderTick == 1 )
         {
-            useModLoader = !Reflection.reflectMinecraft();
-            if ( !useModLoader )
+            if ( minecraftForge )
+            {
+                useForge = true;
+                Logger.Log( "ForceForgeOnRenderTick is set to 1, using Forge's RenderTickEvent for mod operation..." );
+            }
+            else
+            {
+                Logger.Log( "ForceForgeOnRenderTick is set to 1, but Forge's main class is not present, quitting..." );
+                disabled = true;
+                return false;
+            }
+        }
+        else
+        {
+            liteLoader = Reflection.reflectLiteLoader();
+            optifine = Reflection.reflectOptifine();
+        }
+        
+        if ( !liteLoader && ( ForceForgeOnRenderTick == 0 ) )
+        {
+            useForge = !Reflection.reflectMinecraft();
+            if ( !useForge )
             {
                 if ( !Reflection.replaceProfiler() )
                 {
-//                    if ( modLoader )
-//                    {
-//                        useModLoader = true;
-//                        Logger.Log( "Using ModLoader for mod operation" );
-//                    }
-//                    else
-//                    {
+                    if ( minecraftForge )
+                    {
+                        useForge = true;
+                        Logger.Log( "Using Forge's RenderTickEvent for mod operation." );
+                    }
+                    else
+                    {
                         Logger.Log( "Failed to replace the Minecraft profiler, quitting..." );
 
                         disabled = true;
                         return false;
-//                    }
+                    }
                 }
             }
             else
             {
-//                Logger.Log( "Using ModLoader for mod operation" );
-
-                Logger.Log("Failed to reflect Minecraft, quitting...");
-                disabled = true;
-                return false;
+                Logger.Log( "Using Forge's RenderTickEvent for mod operation" );
             }
         }
         
@@ -158,7 +149,7 @@ public class Main extends DeobfuscationLayer
             mainConfig.setPropertyValue( "LMBTweakWithoutItem", 1 );
             mainConfig.setPropertyValue( "WheelTweak", 1 );
             mainConfig.setPropertyValue( "WheelSearchOrder", 1 );
-            mainConfig.setPropertyValue( "ForceModLoader", 0 );
+            mainConfig.setPropertyValue( "ForceForgeOnRenderTick", 0 );
             mainConfig.setPropertyValue( "Debug", 0 );
             
             mainConfig.saveConfig();
@@ -171,7 +162,7 @@ public class Main extends DeobfuscationLayer
         LMBTweakWithoutItem = mainConfig.getOrCreatePropertyValue( "LMBTweakWithoutItem", 1 );
         WheelTweak = mainConfig.getOrCreatePropertyValue( "WheelTweak", 1 );
         WheelSearchOrder = mainConfig.getOrCreatePropertyValue( "WheelSearchOrder", 1 );
-        ForceModLoader = mainConfig.getOrCreatePropertyValue( "ForceModLoader", 0 );
+        ForceForgeOnRenderTick = mainConfig.getOrCreatePropertyValue( "ForceForgeOnRenderTick", 0 );
         Debug = mainConfig.getOrCreatePropertyValue( "Debug", 0 );
         
         mainConfig.saveConfig();
