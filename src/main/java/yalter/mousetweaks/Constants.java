@@ -2,13 +2,6 @@ package yalter.mousetweaks;
 
 public class Constants
 {
-    
-    // Mod name
-    public static final String  NAME                 = "Mouse Tweaks";
-    
-    // Mod version
-    public static final String  VERSION              = "2.4.1";
-    
     // Obfuscated names
     public static final String  ISMOUSEOVERSLOT_NAME = "a";
     public static final String  FIELDE_NAME          = "H";

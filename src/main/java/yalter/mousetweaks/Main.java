@@ -129,8 +129,7 @@ public class Main extends DeobfuscationLayer
         if ( returnValue )
         {
             ModCompatibility.initialize();
-            Logger.Log( Constants.NAME + " version " + Constants.VERSION
-                    + " has been initialised" );
+            Logger.Log( "Mouse Tweaks has been initialised" );
         }
         else
         {
@@ -371,6 +370,10 @@ public class Main extends DeobfuscationLayer
         if ( ( wheel != 0 ) && ( selectedSlot != null ) )
         {
             int numItemsToMove = Math.abs( wheel );
+            if ( Debug == 1 )
+            {
+                Logger.Log("numItemsToMove: " + numItemsToMove);
+            }
             
             if ( slotCount > Constants.INVENTORY_SIZE )
             {
@@ -489,6 +492,8 @@ public class Main extends DeobfuscationLayer
                             
                             if ( wheel < 0 )
                             {
+                                numItemsToMove = Math.min(numItemsToMove, getItemStackSize(stackFrom));
+
                                 if ( ( stackTo != null )
                                         && ( ( getMaxItemStackSize( stackTo ) - getItemStackSize( stackTo ) ) <= numItemsToMove ) )
                                 {
@@ -496,8 +501,7 @@ public class Main extends DeobfuscationLayer
                                     clickSlot( currentScreen, slotTo, 0, false );
                                     clickSlot( currentScreen, slotFrom, 0, false );
                                     
-                                    numItemsToMove -= getMaxItemStackSize( stackTo )
-                                            - getItemStackSize( stackTo );
+                                    numItemsToMove -= getMaxItemStackSize( stackTo ) - getItemStackSize( stackTo );
                                 }
                                 else
                                 {
@@ -532,7 +536,7 @@ public class Main extends DeobfuscationLayer
                                 {
                                     clickSlot( currentScreen, slotFrom, 0, false );
                                     
-                                    if ( stackFrom.stackSize <= numItemsToMove )
+                                    if ( getItemStackSize( stackFrom ) <= numItemsToMove )
                                     {
                                         clickSlot( currentScreen, slotTo, 0, false );
                                         numItemsToMove -= getMaxItemStackSize( stackFrom );

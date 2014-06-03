@@ -16,8 +16,9 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'curseforge'
 
-version = "2.4.1"
+version = "2.4.2"
 group = "yalter.mousetweaks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MouseTweaks"
 
@@ -32,10 +33,8 @@ processResources
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        include 'litemod.json'
 
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
@@ -44,11 +43,13 @@ processResources
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
-        exclude 'litemod.json'
     }
-}
 
-// Thanks to the IronChest repository for those.
+    def propertiesFile = new File(destinationDir, 'version.properties')
+    def properties = new Properties()
+    properties['MouseTweaks.version'] = project.version
+    properties.store(propertiesFile.newWriter(), null)
+}
 
 jar {
     exclude 'com/**'

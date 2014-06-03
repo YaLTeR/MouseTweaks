@@ -2,13 +2,13 @@
 {
     "modid": "MouseTweaks",
     "name": "Mouse Tweaks",
-    "description": "Have you ever been tired of right clicking while crafting furnaces, chests or whatever? My client-side mod solves this problem! Just hold your right mouse button in one inventory slot and drag your mouse toward another. Also works with left mouse button! Credits: LiteLoader and some mods' source code, which I used as a reference to how to do certain stuff when I was unsure.",
+    "description": "A mod that enhances the inventory management by adding various additional functions to the usual mouse buttons.",
     "version": "${version}",
     "mcversion": "${mcversion}",
     "url": "http://www.minecraftforum.net/topic/1518185-",
     "updateUrl": "",
     "authorList": [ "YaLTeR" ],
-    "credits": "In the description.",
+    "credits": "Various open-source mods from where I learned.",
     "logoFile": "/mousetweaks_logo.png",
     "screenshots": [ ],
     "dependencies": [ ]

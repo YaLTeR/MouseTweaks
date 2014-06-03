@@ -6,11 +6,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 
-@Mod(modid = MouseTweaksForge.MODID, version = MouseTweaksForge.VERSION, useMetadata = true)
+@Mod(modid = "MouseTweaks", useMetadata = true)
 public class MouseTweaksForge {
-    public static final String MODID = "MouseTweaks";
-    public static final String VERSION = Constants.VERSION;
-
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
