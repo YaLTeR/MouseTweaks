@@ -16,7 +16,6 @@ buildscript {
 }
 
 apply plugin: 'forge'
-apply plugin: 'curseforge'
 
 version = "2.4.2"
 group = "yalter.mousetweaks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
