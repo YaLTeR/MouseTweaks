@@ -46,11 +46,11 @@
 	<!-- Path to the python executable used by MCP, change if using a non-windows OS -->
 	<property name="python"         location="${mcp.dir}/runtime/bin/python/python_mcp.exe" />
 
-    <!-- Increments and retrieves the build number. -->
-    <buildnumber file="./buildnumber.txt" />
-
 	<!-- Main target -->
 	<target name="main" description="Perform all tasks for a build">
+        <!-- Increments and retrieves the build number. -->
+        <buildnumber file="./buildnumber.txt" />
+
 		<!-- Init sets up the environment ready for the build, cleaning the old staging paths    -->
 		<!-- and creating new clean ones that we will use for output. Also copies all the        -->
 		<!-- required source files to the target source directory ready for MCP to build them.   -->
