@@ -142,6 +142,8 @@
 		<copy todir="${stage.dir}">
 			<fileset dir="${mcp.dir}/reobf/minecraft" excludes=".svn/**, *.txt">
 				<exclude name="*.class"/>
+
+                <!-- One Minecraft class gets copied for whatever reason. -->
                 <exclude name="net/**"/>
 			</fileset>
 		</copy>
