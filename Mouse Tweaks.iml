@@ -10,6 +10,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Client" />
     <orderEntry type="module" module-name="LiteLoader" />
+    <orderEntry type="library" name="lwjgl-2.9.1" level="project" />
   </component>
 </module>
 

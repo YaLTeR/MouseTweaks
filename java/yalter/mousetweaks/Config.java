@@ -1,9 +1,6 @@
 package yalter.mousetweaks;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
 public class Config {
@@ -37,7 +34,12 @@ public class Config {
 
 	public boolean saveConfig() {
 		try {
-			FileWriter configWriter = new FileWriter(fileName);
+            File config = new File(fileName);
+            File parentDir = config.getParentFile();
+            if (!parentDir.exists())
+                parentDir.mkdirs();
+
+			FileWriter configWriter = new FileWriter(config);
 			properties.store(configWriter, null);
 			configWriter.close();
 

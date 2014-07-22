@@ -29,7 +29,7 @@ public class Reflection {
 		guiContainerClass.storeClass("GuiContainer", GuiContainer.class);
 
 		Method isMouseOverSlot = getMethod(GuiContainer.class,
-				getObfuscatedName(Constants.ISMOUSEOVERSLOT_FORGE_NAME, Constants.ISMOUSEOVERSLOT_FORGE_NAME, Constants.ISMOUSEOVERSLOT_NAME), Slot.class, int.class,
+				getObfuscatedName(Constants.ISMOUSEOVERSLOT_MCP_NAME, Constants.ISMOUSEOVERSLOT_FORGE_NAME, Constants.ISMOUSEOVERSLOT_NAME), Slot.class, int.class,
 				int.class);
 
 		if (isMouseOverSlot == null) {
@@ -37,11 +37,11 @@ public class Reflection {
 			return false;
 		}
 
-		guiContainerClass.storeMethod("isMouseOverSlot", isMouseOverSlot);
+		guiContainerClass.storeMethod(Constants.ISMOUSEOVERSLOT_FORGE_NAME, isMouseOverSlot);
 
 		Field field;
 		field = getField(GuiContainer.class,
-				getObfuscatedName(Constants.FIELDE_FORGE_NAME, Constants.FIELDE_FORGE_NAME, Constants.FIELDE_NAME));
+				getObfuscatedName(Constants.FIELDE_MCP_NAME, Constants.FIELDE_FORGE_NAME, Constants.FIELDE_NAME));
 
 		if (field == null) {
 			Logger.Log("Failed to retrieve the E field, disabling RMBTweak");
@@ -50,7 +50,7 @@ public class Reflection {
 			guiContainerClass.storeField(Constants.FIELDE_FORGE_NAME, field);
 
 			field = getField(GuiContainer.class,
-					getObfuscatedName(Constants.FIELDq_FORGE_NAME, Constants.FIELDq_FORGE_NAME, Constants.FIELDq_NAME));
+					getObfuscatedName(Constants.FIELDq_MCP_NAME, Constants.FIELDq_FORGE_NAME, Constants.FIELDq_NAME));
 
 			if (field == null) {
 				Logger.Log("Failed to retreive the q field, disabling RMBTweak");

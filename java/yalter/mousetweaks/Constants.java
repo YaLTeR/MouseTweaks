@@ -9,7 +9,7 @@ public class Constants {
 	public static final String ISMOUSEOVERSLOT_NAME = "a";
 	public static final String FIELDE_NAME          = "H";
 	public static final String FIELDq_NAME          = "t";
-	public static final String MCPROFILER_NAME      = "A";
+	public static final String MCPROFILER_NAME      = "z";
 
 	// Forge obfuscated names
 	public static final String ISMOUSEOVERSLOT_FORGE_NAME = "func_146981_a";
@@ -18,7 +18,10 @@ public class Constants {
 	public static final String MCPROFILER_FORGE_NAME      = "field_71424_I";
 
 	// MCP names - these are the same as Forge ones for the most part
-	public static final String MCPROFILER_MCP_NAME = "mcProfiler";
+    public static final String ISMOUSEOVERSLOT_MCP_NAME = "isMouseOverSlot";
+    public static final String FIELDE_MCP_NAME          = "ignoreMouseUp";
+    public static final String FIELDq_MCP_NAME          = "dragSplitting";
+	public static final String MCPROFILER_MCP_NAME      = "mcProfiler";
 
 	// OnTick methods
 	public static final String ONTICKMETHOD_FORGE_NAME      = "Forge";

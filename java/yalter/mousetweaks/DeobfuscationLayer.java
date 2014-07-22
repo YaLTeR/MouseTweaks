@@ -7,10 +7,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
-import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Mouse;
 
@@ -54,7 +52,7 @@ public class DeobfuscationLayer {
 	}
 
 	protected static Container getContainer(GuiContainer guiContainer) {
-		return guiContainer.field_147002_h;
+		return guiContainer.inventorySlots;
 	}
 
 	protected static List<?> getSlots(Container container) {
@@ -67,18 +65,6 @@ public class DeobfuscationLayer {
 
 	protected static ItemStack getSlotStack(Slot slot) {
 		return (slot == null) ? null : slot.getStack();
-	}
-
-	protected static int getItemStackID(ItemStack itemStack) {
-		return Item.getIdFromItem(itemStack.getItem());
-	}
-
-	protected static boolean hasSubtypesItemStack(ItemStack itemStack) {
-		return itemStack.getHasSubtypes();
-	}
-
-	protected static int getItemStackItemDamage(ItemStack itemStack) {
-		return itemStack.getItemDamage();
 	}
 
 	protected static int getWindowId(Container container) {
@@ -99,10 +85,6 @@ public class DeobfuscationLayer {
 
 	protected static InventoryPlayer getInventoryPlayer() {
 		return getThePlayer().inventory;
-	}
-
-	protected static GameSettings getGameSettings() {
-		return mc.gameSettings;
 	}
 
 	protected static int getDisplayWidth() {
@@ -139,13 +121,11 @@ public class DeobfuscationLayer {
 
 	protected static boolean areStacksCompatible(ItemStack itemStack1, ItemStack itemStack2) {
 		return ((itemStack1 == null) || (itemStack2 == null))
-				|| ((getItemStackID(itemStack1) == getItemStackID(itemStack2))
-					&& (!hasSubtypesItemStack(itemStack1)
-						|| (getItemStackItemDamage(itemStack1) == getItemStackItemDamage(itemStack2))));
+				|| itemStack1.isItemEqual(itemStack2);
 	}
 
 	protected static boolean isMouseOverSlot(GuiContainer guiContainer, Slot slot) {
-		return (Boolean) Reflection.guiContainerClass.invokeMethod(guiContainer, "isMouseOverSlot", slot, getRequiredMouseX(), getRequiredMouseY());
+		return (Boolean) Reflection.guiContainerClass.invokeMethod(guiContainer, Constants.ISMOUSEOVERSLOT_FORGE_NAME, slot, getRequiredMouseX(), getRequiredMouseY());
 	}
 
 	protected static Slot getSelectedSlot(GuiContainer guiContainer, Container container, int slotCount) {
@@ -169,20 +149,16 @@ public class DeobfuscationLayer {
 	}
 
 	protected static int getRequiredMouseX() {
-		ScaledResolution var8 = new ScaledResolution(getGameSettings(), getDisplayWidth(),
+		ScaledResolution var8 = new ScaledResolution(mc, getDisplayWidth(),
 				getDisplayHeight());
 		int var9 = var8.getScaledWidth();
 		return (Mouse.getX() * var9) / getDisplayWidth();
 	}
 
 	protected static int getRequiredMouseY() {
-		ScaledResolution var8 = new ScaledResolution(getGameSettings(), getDisplayWidth(),
+		ScaledResolution var8 = new ScaledResolution(mc, getDisplayWidth(),
 				getDisplayHeight());
 		int var10 = var8.getScaledHeight();
 		return var10 - ((Mouse.getY() * var10) / getDisplayHeight()) - 1;
-	}
-
-	protected static void sendClientMessage(String message) {
-		getThePlayer().sendChatMessage(message);
 	}
 }
