@@ -34,10 +34,10 @@ public class Config {
 
 	public boolean saveConfig() {
 		try {
-            File config = new File(fileName);
-            File parentDir = config.getParentFile();
-            if (!parentDir.exists())
-                parentDir.mkdirs();
+			File config = new File(fileName);
+			File parentDir = config.getParentFile();
+			if (!parentDir.exists())
+				parentDir.mkdirs();
 
 			FileWriter configWriter = new FileWriter(config);
 			properties.store(configWriter, null);

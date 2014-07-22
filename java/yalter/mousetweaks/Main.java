@@ -331,7 +331,7 @@ public class Main extends DeobfuscationLayer {
 				if ((Main.RMBTweak == 1) && !Main.DisableRMBTweak) {
 
 					if ((stackOnMouse != null) && areStacksCompatible(stackOnMouse, targetStack)
-                            && !isCraftingOutputSlot(currentScreen, selectedSlot)) {
+							&& !isCraftingOutputSlot(currentScreen, selectedSlot)) {
 						if ((firstSlot != null) && !firstSlotClicked) {
 							firstSlotClicked = true;
 							disableRMBDragWithID(currentScreen);
@@ -354,13 +354,13 @@ public class Main extends DeobfuscationLayer {
 								clickSlot(currentScreen, selectedSlot, 0, true);
 							} else { // If shift is not down, we need to merge the item stack on the mouse with the one in the slot.
 								if ((getItemStackSize(stackOnMouse) + getItemStackSize(targetStack)) <= getMaxItemStackSize(stackOnMouse)) {
-								    // We need to click on the slot so that our item stack gets merged with it,
-                                    // and then click again to return the stack to the mouse.
-                                    // However, if the slot is crafting output, then the item is added to the mouse stack
-                                    // on the first click and we don't need to click the second time.
+									// We need to click on the slot so that our item stack gets merged with it,
+									// and then click again to return the stack to the mouse.
+									// However, if the slot is crafting output, then the item is added to the mouse stack
+									// on the first click and we don't need to click the second time.
 									clickSlot(currentScreen, selectedSlot, 0, false);
-                                    if (!isCraftingOutputSlot(currentScreen, selectedSlot))
-									    clickSlot(currentScreen, selectedSlot, 0, false);
+									if (!isCraftingOutputSlot(currentScreen, selectedSlot))
+										clickSlot(currentScreen, selectedSlot, 0, false);
 								}
 							}
 						}

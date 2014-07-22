@@ -18,9 +18,9 @@ public class Constants {
 	public static final String MCPROFILER_FORGE_NAME      = "field_71424_I";
 
 	// MCP names - these are the same as Forge ones for the most part
-    public static final String ISMOUSEOVERSLOT_MCP_NAME = "isMouseOverSlot";
-    public static final String FIELDE_MCP_NAME          = "ignoreMouseUp";
-    public static final String FIELDq_MCP_NAME          = "dragSplitting";
+	public static final String ISMOUSEOVERSLOT_MCP_NAME = "isMouseOverSlot";
+	public static final String FIELDE_MCP_NAME          = "ignoreMouseUp";
+	public static final String FIELDq_MCP_NAME          = "dragSplitting";
 	public static final String MCPROFILER_MCP_NAME      = "mcProfiler";
 
 	// OnTick methods
