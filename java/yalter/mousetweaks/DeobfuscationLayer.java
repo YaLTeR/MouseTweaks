@@ -1,7 +1,7 @@
 package yalter.mousetweaks;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -79,7 +79,7 @@ public class DeobfuscationLayer {
 		// }
 	}
 
-	protected static EntityClientPlayerMP getThePlayer() {
+	protected static EntityPlayerSP getThePlayer() {
 		return mc.thePlayer;
 	}
 

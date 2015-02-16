@@ -9,7 +9,7 @@ public class Constants {
 	public static final String ISMOUSEOVERSLOT_NAME = "a";
 	public static final String FIELDE_NAME          = "H";
 	public static final String FIELDq_NAME          = "t";
-	public static final String MCPROFILER_NAME      = "z";
+	public static final String MCPROFILER_NAME      = "y";
 
 	// Forge obfuscated names
 	public static final String ISMOUSEOVERSLOT_FORGE_NAME = "func_146981_a";

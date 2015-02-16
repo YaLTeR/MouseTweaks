@@ -6,13 +6,13 @@
 
 	<!-- The version of your mod, can be any string as long as it's valid as part of a file name -->
 	<!-- and should match the version string returned by your mod.                               -->
-	<property name="version"        value="2.4.4" />
+	<property name="version"        value="2.5.0" />
 		
 	<!-- The Minecraft version the mod is for, appended to the output file name for reference -->
-	<property name="mcversion"      value="1.7.10" />
+	<property name="mcversion"      value="1.8" />
 		
 	<!-- The version inserted into the mod metadata to tell the loader what version of MC this mod is for -->
-	<property name="litemodversion" value="1.7.10" />
+	<property name="litemodversion" value="1.8" />
 		
 	<!-- Your name, this gets written into the mod metadata and jar metadata -->
 	<property name="author"         value="YaLTeR" />

@@ -9,7 +9,7 @@
     "updateUrl": "",
     "authorList": [ "YaLTeR" ],
     "credits": "Various open-source mods from where I learned.",
-    "logoFile": "/mousetweaks_logo.png",
+    "logoFile": "mousetweaks_logo.png",
     "screenshots": [ ],
     "dependencies": [ ]
 }
