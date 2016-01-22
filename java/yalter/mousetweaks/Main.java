@@ -82,8 +82,10 @@ public class Main extends DeobfuscationLayer {
 			Logger.Log("Minecraft Forge is not installed.");
 		}
 
-		liteLoader = ((entryPoint == Constants.EntryPoint.LITELOADER) // If we're initialising from LiteModMouseTweaks, the check is not necessary.
-				|| Reflection.doesClassExist("com.mumfrey.liteloader.core.LiteLoader"));
+		// LiteLoader disabled until it's out.
+//		liteLoader = ((entryPoint == Constants.EntryPoint.LITELOADER) // If we're initialising from LiteModMouseTweaks, the check is not necessary.
+//				|| Reflection.doesClassExist("com.mumfrey.liteloader.core.LiteLoader"));
+		liteLoader = false;
 		if (liteLoader) {
 			Logger.Log("LiteLoader is installed.");
 		} else {

@@ -149,15 +149,13 @@ public class DeobfuscationLayer {
 	}
 
 	protected static int getRequiredMouseX() {
-		ScaledResolution var8 = new ScaledResolution(mc, getDisplayWidth(),
-				getDisplayHeight());
+		ScaledResolution var8 = new ScaledResolution(mc);
 		int var9 = var8.getScaledWidth();
 		return (Mouse.getX() * var9) / getDisplayWidth();
 	}
 
 	protected static int getRequiredMouseY() {
-		ScaledResolution var8 = new ScaledResolution(mc, getDisplayWidth(),
-				getDisplayHeight());
+		ScaledResolution var8 = new ScaledResolution(mc);
 		int var10 = var8.getScaledHeight();
 		return var10 - ((Mouse.getY() * var10) / getDisplayHeight()) - 1;
 	}

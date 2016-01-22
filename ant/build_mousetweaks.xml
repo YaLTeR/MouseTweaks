@@ -2,17 +2,17 @@
 
 <project name="Mouse Tweaks" basedir="." default="main">
 
-    <property name="modid"          value="MouseTweaks" />
+	<property name="modid"          value="MouseTweaks" />
 
 	<!-- The version of your mod, can be any string as long as it's valid as part of a file name -->
 	<!-- and should match the version string returned by your mod.                               -->
-	<property name="version"        value="2.5.0" />
+	<property name="version"        value="2.6.0" />
 		
 	<!-- The Minecraft version the mod is for, appended to the output file name for reference -->
-	<property name="mcversion"      value="1.8" />
+	<property name="mcversion"      value="1.8.9" />
 		
 	<!-- The version inserted into the mod metadata to tell the loader what version of MC this mod is for -->
-	<property name="litemodversion" value="1.8" />
+	<property name="litemodversion" value="1.8.9" />
 		
 	<!-- Your name, this gets written into the mod metadata and jar metadata -->
 	<property name="author"         value="YaLTeR" />
@@ -36,7 +36,7 @@
 	<property name="md5.dir"        location="${mcp.dir}/md5" />
 	<property name="build.dir"      location="${mcp.dir}/build" />
 	<property name="target.dir"     location="${build.dir}/src" />
-    <property name="sourcejar.dir"  location="${build.dir}/srcjar"/>
+	<property name="sourcejar.dir"  location="${build.dir}/srcjar"/>
 	<property name="dist.dir"       location="${build.dir}/dist" />
 	<property name="stage.dir"      location="${build.dir}/stage/${ant.project.name}/${version}" />
 		
@@ -48,8 +48,8 @@
 
 	<!-- Main target -->
 	<target name="main" description="Perform all tasks for a build">
-        <!-- Increments and retrieves the build number. -->
-        <buildnumber file="./buildnumber.txt" />
+		<!-- Increments and retrieves the build number. -->
+		<buildnumber file="./buildnumber.txt" />
 
 		<!-- Init sets up the environment ready for the build, cleaning the old staging paths    -->
 		<!-- and creating new clean ones that we will use for output. Also copies all the        -->
@@ -64,20 +64,20 @@
 		<antcall target="reobfuscate" />
 			
 		<!-- Saves the new MD5's to our own file, for use by downstream projects. If enabled.    -->
-		<antcall target="savemd5" />
+		<!-- <antcall target="savemd5" /> -->
 			
 		<!-- Stages the new class files, and our project resources into the staging directory    -->
 		<!-- ready to be built into the output jar file.                                         -->
 		<antcall target="stage" />
 
-        <!-- Compiles the MouseTweaksForge class. -->
-        <antcall target="compileforge" />
+		<!-- Compiles the MouseTweaksForge class. -->
+		<antcall target="compileforge" />
 			
 		<!-- Builds the output jar file and writes it as a .jar file to the build directory. -->
 		<antcall target="litemod" />
 
-        <!-- Makes a source jar. -->
-        <antcall target="sourcejar" />
+		<!-- Makes a source jar. -->
+		<antcall target="sourcejar" />
 	</target>
 
 	<!-- Clean the target and reobf dirs -->		
@@ -87,14 +87,14 @@
 	</target>
 
 	<!-- Copies the upstream MD5's to the MCP directory -->
-	<target name="preparemd5" description="Copy patched MD5 to the temp directory" depends="clean">
+	<!-- <target name="preparemd5" description="Copy patched MD5 to the temp directory" depends="clean">
 		<echo level="info" message="Prepare exclusion MD5s, using exclusion set &quot;${md5set}&quot;" />
 
 		<copy tofile="${temp.dir}/client.md5" file="${md5.dir}/client_${md5set}.md5" failonerror="true" verbose="true" overwrite="true" />
-	</target>
+	</target> -->
 
 	<!-- Contributes MCP and project sources to the target dir -->
-	<target name="prepare" description="Prepare source for MCP" depends="preparemd5">
+	<target name="prepare" description="Prepare source for MCP">
 		<echo level="info" message="Prepare sources for compile" />
 
 		<!-- Contribute the MCP sources -->
@@ -107,32 +107,32 @@
 		<!-- upstream project needs a line below, so if you have additional upstreams then       -->
 		<!-- simply duplicate the line below and change "LiteLoader" to the name of the eclipse  -->
 		<!-- project that you want to contribute sources from.                                   -->
-		<antcall target="contributesource">
-            <param name="lib" value="LiteLoader" />
-            <param name="destination" value="${target.dir}" />
-        </antcall>
+		<!-- <antcall target="contributesource">
+			<param name="lib" value="LiteLoader" />
+			<param name="destination" value="${target.dir}" />
+		</antcall> -->
 
 		<!-- Lastly we contribute sources from the project itself, you do not need to change this -->
 		<antcall target="contributesource">
-            <param name="lib" value="${project}" />
-            <param name="destination" value="${target.dir}" />
-        </antcall>
+			<param name="lib" value="${project}" />
+			<param name="destination" value="${target.dir}" />
+		</antcall>
 	</target>
 
-    <!-- Compile the MouseTweaksForge class -->
-    <target name="compileforge" description="Compile the MouseTweaksForge">
-        <echo level="info" message="Compiling the MouseTweaksForge class" />
+	<!-- Compile the MouseTweaksForge class -->
+	<target name="compileforge" description="Compile the MouseTweaksForge">
+		<echo level="info" message="Compiling the MouseTweaksForge class" />
 
-        <javac srcdir="../forge/"
-               destdir="${stage.dir}"
-               source="1.6"
-               target="1.6">
-            <classpath>
-                <pathelement location="../forge/forgeSrc.jar" />
-                <pathelement location="${stage.dir}" />
-            </classpath>
-        </javac>
-    </target>
+		<javac srcdir="../forge/"
+			   destdir="${stage.dir}"
+			   source="1.6"
+			   target="1.6">
+			<classpath>
+				<pathelement location="../forge/forgeSrc.jar" />
+				<pathelement location="${stage.dir}" />
+			</classpath>
+		</javac>
+	</target>
 
 	<!-- Stage class files and resources into the staging directory -->
 	<target name="stage" description="Stage resources into staging directory">
@@ -143,8 +143,8 @@
 			<fileset dir="${mcp.dir}/reobf/minecraft" excludes=".svn/**, *.txt">
 				<exclude name="*.class"/>
 
-                <!-- One Minecraft class gets copied for whatever reason. -->
-                <exclude name="net/**"/>
+				<!-- One Minecraft class gets copied for whatever reason. -->
+				<exclude name="net/**"/>
 			</fileset>
 		</copy>
 
@@ -157,30 +157,30 @@
 
 		<!-- Lastly we contribute resources from the project itself                              -->
 		<antcall target="contributeresources">
-            <param name="lib" value="${project}" />
-            <param name="destination" value="${stage.dir}" />
-        </antcall>
+			<param name="lib" value="${project}" />
+			<param name="destination" value="${stage.dir}" />
+		</antcall>
 
 		<!-- Uses the template file to build the litemod.json file and stages it to the staging  -->
 		<!-- directory.                                                                          -->
 		<antcall target="gentemplates">
-            <param name="destination" value="${stage.dir}" />
+			<param name="destination" value="${stage.dir}" />
 		</antcall>
 	</target>
 
-    <!-- Generates the files from the templates -->
-    <target name="gentemplates" description="Generate the necessary files from the templates">
-        <echo level="info" message="Generating the files from the templates" />
+	<!-- Generates the files from the templates -->
+	<target name="gentemplates" description="Generate the necessary files from the templates">
+		<echo level="info" message="Generating the files from the templates" />
 
-        <concat destfile="${destination}/litemod.json" append="false">
-            <fileset file="./litemod.template.json" />
-            <filterchain><expandproperties /></filterchain>
-        </concat>
-        <concat destfile="${destination}/mcmod.info" append="false">
-            <fileset file="./mcmod.template.info" />
-            <filterchain><expandproperties /></filterchain>
-        </concat>
-    </target>
+		<concat destfile="${destination}/litemod.json" append="false">
+			<fileset file="./litemod.template.json" />
+			<filterchain><expandproperties /></filterchain>
+		</concat>
+		<concat destfile="${destination}/mcmod.info" append="false">
+			<fileset file="./mcmod.template.info" />
+			<filterchain><expandproperties /></filterchain>
+		</concat>
+	</target>
 
 	<!-- Contributes java sources from a project, do not alter -->
 	<target name="contributesource" description="Contribute an upstream project source code to the destination path">
@@ -193,51 +193,51 @@
 			<!-- Maven default -->
 			<fileset dir="${eclipse.dir}/${lib}/src/main/java" />
 
-            <filterchain>
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="MODNAME" value="${ant.project.name}"/>
-                    <token key="MODID" value="${modid}"/>
-                    <token key="VERSION" value="${version}"/>
-                </replacetokens>
-            </filterchain>
+			<filterchain>
+				<replacetokens begintoken="@" endtoken="@">
+					<token key="MODNAME" value="${ant.project.name}"/>
+					<token key="MODID" value="${modid}"/>
+					<token key="VERSION" value="${version}"/>
+				</replacetokens>
+			</filterchain>
 		</copy>
 	</target>
 
-    <!-- Makes a source jar -->
-    <target name="sourcejar" description="Make the source jar">
-        <echo level="info" message="Making the source jar" />
+	<!-- Makes a source jar -->
+	<target name="sourcejar" description="Make the source jar">
+		<echo level="info" message="Making the source jar" />
 
-        <delete dir="${sourcejar.dir}" />
-        <mkdir dir="${sourcejar.dir}" />
+		<delete dir="${sourcejar.dir}" />
+		<mkdir dir="${sourcejar.dir}" />
 
-        <antcall target="contributesource">
-            <param name="lib" value="${project}" />
-            <param name="destination" value="${sourcejar.dir}" />
-        </antcall>
-        <antcall target="contributeresources">
-            <param name="lib" value="${project}" />
-            <param name="destination" value="${sourcejar.dir}" />
-        </antcall>
-        <antcall target="gentemplates">
-            <param name="destination" value="${sourcejar.dir}" />
-        </antcall>
+		<antcall target="contributesource">
+			<param name="lib" value="${project}" />
+			<param name="destination" value="${sourcejar.dir}" />
+		</antcall>
+		<antcall target="contributeresources">
+			<param name="lib" value="${project}" />
+			<param name="destination" value="${sourcejar.dir}" />
+		</antcall>
+		<antcall target="gentemplates">
+			<param name="destination" value="${sourcejar.dir}" />
+		</antcall>
 
-        <copy todir="${sourcejar.dir}" verbose="false" overwrite="true" failonerror="false">
-            <fileset dir="../forge/" includes="**/*.java" />
-        </copy>
+		<copy todir="${sourcejar.dir}" verbose="false" overwrite="true" failonerror="false">
+			<fileset dir="../forge/" includes="**/*.java" />
+		</copy>
 
-        <jar destfile="${dist.dir}/${modid}-${version}-mc${mcversion}-src.jar" duplicate="preserve" index="true" manifestencoding="UTF-8">
-            <manifest>
-                <attribute name="Built-By" value="MCP (http://mcp.ocean-labs.de)" />
-                <attribute name="Implementation-Vendor" value="${author}" />
-                <attribute name="Implementation-Title" value="${ant.project.name}" />
-                <attribute name="Implementation-Version" value="${version}" />
-            </manifest>
-            <fileset dir="${sourcejar.dir}" />
-        </jar>
+		<jar destfile="${dist.dir}/${modid}-${version}-mc${mcversion}-src.jar" duplicate="preserve" index="true" manifestencoding="UTF-8">
+			<manifest>
+				<attribute name="Built-By" value="MCP (http://mcp.ocean-labs.de)" />
+				<attribute name="Implementation-Vendor" value="${author}" />
+				<attribute name="Implementation-Title" value="${ant.project.name}" />
+				<attribute name="Implementation-Version" value="${version}" />
+			</manifest>
+			<fileset dir="${sourcejar.dir}" />
+		</jar>
 
-        <delete dir="${sourcejar.dir}" />
-    </target>
+		<delete dir="${sourcejar.dir}" />
+	</target>
 
 	<!-- Contribute resources from a project, do not alter -->
 	<target name="contributeresources" description="Contribute resources to the destination path">
@@ -295,11 +295,11 @@
 	</target>
 	
 	<!-- Stores generated output MD5's for downstream projects if specifed -->
-	<target name="savemd5" description="Put post-obfuscation MD5 to stored md5 set" if="outmd5set">
+	<!-- <target name="savemd5" description="Put post-obfuscation MD5 to stored md5 set" if="outmd5set">
 		<echo level="info" message="Storing obfuscated MD5s" />
 
 		<copy file="${temp.dir}/client_reobf.md5" tofile="${md5.dir}/client_${outmd5set}.md5" overwrite="true" verbose="true" />
-	</target>
+	</target> -->
 	
 	<!-- Builds the litemod jar file -->
 	<target name="litemod" description="Build the litemod file">
