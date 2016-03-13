@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.liteloader'
+
+version = "2.6.1"
+group = "yalter.mousetweaks"
+archivesBaseName = "MouseTweaks"
+
+minecraft {
+    version = "1.8.9"
+    runDir = "run"
+    mappings = "stable_22"
+
+    replace '@VERSION@', project.version
+}
+
+jar {
+    archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}.jar"
+}
+
+sourceJar {
+    archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}-src.jar"
+}
+
+dependencies {
+    provided files('forgeSrc-1.8.9-11.15.1.1764.jar')
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        include 'litemod.json'
+
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+        exclude 'litemod.json'
+    }
+}
