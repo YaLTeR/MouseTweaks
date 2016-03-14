@@ -41,7 +41,7 @@ public class Reflection {
 
 		if (field == null) {
 			Logger.Log("Failed to retrieve the E field, disabling RMBTweak.");
-			Main.DisableRMBTweak = true;
+			Main.disableRMBTweak = true;
 		} else {
 			guiContainerClass.storeField(Constants.FIELDE_FORGE_NAME, field);
 
@@ -50,7 +50,7 @@ public class Reflection {
 
 			if (field == null) {
 				Logger.Log("Failed to retreive the q field, disabling RMBTweak.");
-				Main.DisableRMBTweak = true;
+				Main.disableRMBTweak = true;
 			} else {
 				guiContainerClass.storeField(Constants.FIELDq_FORGE_NAME, field);
 			}
@@ -97,7 +97,7 @@ public class Reflection {
 		} catch (Exception e) {
 			Logger.Log("Could not retrieve field \"" + name + "\" from class \"" + clazz.getName() + "\".");
 
-			if (Main.Debug == 1) {
+			if (Main.Debug) {
 				e.printStackTrace();
 			}
 		}
@@ -129,7 +129,7 @@ public class Reflection {
 		} catch (Exception e) {
 			Logger.Log("Could not retrieve field \"" + name + "\" from class \"" + clazz.getName() + "\"");
 
-			if (Main.Debug == 1) {
+			if (Main.Debug) {
 				e.printStackTrace();
 			}
 		}
@@ -160,7 +160,7 @@ public class Reflection {
 		} catch (Exception e) {
 			Logger.Log("Could not retrieve method \"" + name + "\" from class \"" + clazz.getName()	+ "\"");
 
-			if (Main.Debug == 1) {
+			if (Main.Debug) {
 				e.printStackTrace();
 			}
 		}

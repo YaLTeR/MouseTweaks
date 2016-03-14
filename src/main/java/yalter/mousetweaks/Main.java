@@ -14,9 +14,9 @@ import java.util.List;
 public class Main extends DeobfuscationLayer {
 
 	public static boolean liteLoader = false;
-	public static boolean minecraftForge = false;
+	public static boolean forge = false;
 
-	public static boolean DisableRMBTweak = false;
+	public static boolean disableRMBTweak = false;
 
 	public static int RMBTweak = 0;
 	public static int LMBTweakWithItem = 0;
@@ -28,7 +28,7 @@ public class Main extends DeobfuscationLayer {
 	public static List<OnTickMethod> onTickMethodOrder = new LinkedList<OnTickMethod>();
 	public static OnTickMethod onTickMethod;
 
-	public static int Debug = 0;
+	public static boolean Debug = false;
 
 	public static Config mainConfig;
 	private static GuiScreen oldGuiScreen = null;
@@ -72,9 +72,9 @@ public class Main extends DeobfuscationLayer {
 		mainConfig = new Config(mc.mcDataDir + File.separator + "config" + File.separator + "MouseTweaks.cfg");
 		readConfigFile();
 
-		minecraftForge = ((entryPoint == Constants.EntryPoint.FORGE
+		forge = ((entryPoint == Constants.EntryPoint.FORGE
 				|| Reflection.doesClassExist("net.minecraftforge.client.MinecraftForgeClient")));
-		if (minecraftForge) {
+		if (forge) {
 			Logger.Log("Minecraft Forge is installed.");
 		} else {
 			Logger.Log("Minecraft Forge is not installed.");
@@ -108,7 +108,7 @@ public class Main extends DeobfuscationLayer {
 		LMBTweakWithoutItem = mainConfig.getOrCreateIntProperty("LMBTweakWithoutItem", 1);
 		WheelTweak = mainConfig.getOrCreateIntProperty("WheelTweak", 1);
 		WheelSearchOrder = mainConfig.getOrCreateIntProperty("WheelSearchOrder", 1);
-		Debug = mainConfig.getOrCreateIntProperty("Debug", 0);
+		Debug = mainConfig.getOrCreateIntProperty("Debug", 0) != 0;
 
 		String onTickMethodString = mainConfig.getOrCreateProperty("OnTickMethodOrder",
 				Constants.ONTICKMETHOD_FORGE_NAME + ", "
@@ -128,7 +128,7 @@ public class Main extends DeobfuscationLayer {
 		mainConfig.setIntProperty("LMBTweakWithoutItem", LMBTweakWithoutItem);
 		mainConfig.setIntProperty("WheelTweak", WheelTweak);
 		mainConfig.setIntProperty("WheelSearchOrder", WheelSearchOrder);
-		mainConfig.setIntProperty("Debug", Debug);
+		mainConfig.setIntProperty("Debug", Debug ? 1 : 0);
 		mainConfig.setProperty("OnTickMethodOrder", onTickMethodOrderToString());
 
 		return mainConfig.saveConfig();
@@ -179,7 +179,7 @@ public class Main extends DeobfuscationLayer {
 		for (OnTickMethod method : onTickMethodOrder) {
 			switch (method) {
 				case FORGE:
-					if (minecraftForge) {
+					if (forge) {
 						onTickMethod = OnTickMethod.FORGE;
 						if (print_always || onTickMethod != previous_method)
 							Logger.Log("Using Forge for the mod operation.");
@@ -264,7 +264,7 @@ public class Main extends DeobfuscationLayer {
 		if (guiContainerID == GuiContainerID.NOTGUICONTAINER)
 			return;
 
-		if ((Main.DisableRMBTweak || (Main.RMBTweak == 0))
+		if ((Main.disableRMBTweak || (Main.RMBTweak == 0))
 				&& (Main.LMBTweakWithoutItem == 0)
 				&& (Main.LMBTweakWithItem == 0)
 				&& (Main.WheelTweak == 0))
@@ -332,7 +332,7 @@ public class Main extends DeobfuscationLayer {
 			boolean shiftIsDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 
 			if (Mouse.isButtonDown(1)) { // Right mouse button
-				if ((Main.RMBTweak == 1) && !Main.DisableRMBTweak) {
+				if ((Main.RMBTweak == 1) && !Main.disableRMBTweak) {
 
 					if ((stackOnMouse != null) && areStacksCompatible(stackOnMouse, targetStack)
 							&& !isCraftingOutputSlot(currentScreen, selectedSlot)) {

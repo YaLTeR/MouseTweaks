@@ -77,7 +77,7 @@ public class ConfigGuiFactory implements IModGuiFactory {
                 WheelTweak.set(Main.WheelTweak != 0);
                 WheelSearchOrder.set((Main.WheelSearchOrder == 0) ? "First to last" : "Last to first");
                 OnTickMethodOrder.set(Main.onTickMethodOrderToString());
-                Debug.set(Main.Debug != 0);
+                Debug.set(Main.Debug);
             }
 
             super.initGui();
@@ -93,7 +93,7 @@ public class ConfigGuiFactory implements IModGuiFactory {
             Main.WheelTweak = WheelTweak.getBoolean() ? 1 : 0;
             Main.WheelSearchOrder = (WheelSearchOrder.getString().equals("First to last")) ? 0 : 1;
             Main.onTickMethodOrderFromString(OnTickMethodOrder.getString());
-            Main.Debug = Debug.getBoolean() ? 1 : 0;
+            Main.Debug = Debug.getBoolean();
             Main.saveConfigFile();
             Main.findOnTickMethod(true);
 
