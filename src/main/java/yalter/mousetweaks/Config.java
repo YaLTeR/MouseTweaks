@@ -100,6 +100,10 @@ public class Config {
 			else if (Constants.ONTICKMETHOD_LITELOADER_NAME.equalsIgnoreCase(method))
 				onTickMethodOrder.add(OnTickMethod.LITELOADER);
 		}
+
+		// Make sure we have one of each.
+		onTickMethodOrder.add(OnTickMethod.FORGE);
+		onTickMethodOrder.add(OnTickMethod.LITELOADER);
 	}
 
 	static {
