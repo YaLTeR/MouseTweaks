@@ -80,7 +80,7 @@ public class Reflection {
 
 	public static Field getField(Class clazz, String name) {
 		try {
-			Field field = null;
+			Field field;
 
 			try {
 				field = clazz.getField(name);
@@ -97,7 +97,7 @@ public class Reflection {
 		} catch (Exception e) {
 			Logger.Log("Could not retrieve field \"" + name + "\" from class \"" + clazz.getName() + "\".");
 
-			if (Main.config.debug) {
+			if (Config.debug) {
 				e.printStackTrace();
 			}
 		}
@@ -107,7 +107,7 @@ public class Reflection {
 
 	public static Field getFinalField(Class clazz, String name) {
 		try {
-			Field field = null;
+			Field field;
 
 			try {
 				field = clazz.getField(name);
@@ -129,7 +129,7 @@ public class Reflection {
 		} catch (Exception e) {
 			Logger.Log("Could not retrieve field \"" + name + "\" from class \"" + clazz.getName() + "\"");
 
-			if (Main.config.debug) {
+			if (Config.debug) {
 				e.printStackTrace();
 			}
 		}
@@ -139,7 +139,7 @@ public class Reflection {
 
 	public static Method getMethod(Class<?> clazz, String name, Class... args) {
 		try {
-			Method method = null;
+			Method method;
 
 			try {
 				method = clazz.getMethod(name, args);
@@ -151,7 +151,7 @@ public class Reflection {
 				if ((args != null) && (args.length != 0)) {
 					method = clazz.getDeclaredMethod(name, args);
 				} else {
-					method = clazz.getDeclaredMethod(name, new Class[0]);
+					method = clazz.getDeclaredMethod(name);
 				}
 			}
 
@@ -160,7 +160,7 @@ public class Reflection {
 		} catch (Exception e) {
 			Logger.Log("Could not retrieve method \"" + name + "\" from class \"" + clazz.getName()	+ "\"");
 
-			if (Main.config.debug) {
+			if (Config.debug) {
 				e.printStackTrace();
 			}
 		}

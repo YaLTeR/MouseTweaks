@@ -40,25 +40,23 @@ public class Main extends DeobfuscationLayer {
 	}
 
 	public static boolean initialize(Constants.EntryPoint entryPoint) {
-		Logger.Log("A call to initialise, entry point: " + entryPoint.toString() + ".");
+		Logger.Log("A call to initialize, entry point: " + entryPoint.toString() + ".");
 
 		if (disabled)
 			return false;
 
 		if (initialized)
 			return true;
-
 		initialized = true;
+
+		mc = Minecraft.getMinecraft();
+		config = new Config(mc.mcDataDir + File.separator + "config" + File.separator + "MouseTweaks.cfg");
+		config.read();
 
 		if (!Reflection.reflectGuiContainer()) {
 			disabled = true;
 			return false;
 		}
-
-		mc = Minecraft.getMinecraft();
-
-		config = new Config(mc.mcDataDir + File.separator + "config" + File.separator + "MouseTweaks.cfg");
-		config.read();
 
 		forge = ((entryPoint == Constants.EntryPoint.FORGE
 				|| Reflection.doesClassExist("net.minecraftforge.client.MinecraftForgeClient")));

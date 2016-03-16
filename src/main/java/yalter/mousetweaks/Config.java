@@ -9,13 +9,13 @@ public class Config {
 	protected static final Properties defaultValues = new Properties();
 	protected String fileName;
 
-	public boolean rmbTweak = false;
-	public boolean lmbTweakWithItem = false;
-	public boolean lmbTweakWithoutItem = false;
-	public boolean wheelTweak = false;
+	public boolean rmbTweak = true;
+	public boolean lmbTweakWithItem = true;
+	public boolean lmbTweakWithoutItem = true;
+	public boolean wheelTweak = true;
 	public WheelSearchOrder wheelSearchOrder = WheelSearchOrder.LAST_TO_FIRST;
 	public Set<OnTickMethod> onTickMethodOrder = new LinkedHashSet<OnTickMethod>(); // The order has to be preserved.
-	public boolean debug = false;
+	public static boolean debug = false;
 
 	public Config(String fileName) {
 		this.fileName = fileName;
