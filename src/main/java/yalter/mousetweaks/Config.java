@@ -64,7 +64,7 @@ public class Config {
 			properties.store(configWriter, null);
 			configWriter.close();
 
-			if (existed)
+			if (!existed)
 				Logger.Log("Created the config file.");
 		} catch (IOException e) {
 			Logger.Log("Failed to write the config file: " + fileName);
