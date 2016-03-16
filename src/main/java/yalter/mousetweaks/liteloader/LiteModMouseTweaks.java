@@ -4,6 +4,7 @@ import com.mumfrey.liteloader.RenderListener;
 import net.minecraft.client.gui.GuiScreen;
 import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.Main;
+import yalter.mousetweaks.OnTickMethod;
 
 import java.io.File;
 
@@ -26,7 +27,7 @@ public class LiteModMouseTweaks implements RenderListener {
 
     @Override
     public void onRender() {
-        if (Main.onTickMethod == Main.OnTickMethod.LITELOADER)
+        if (Main.onTickMethod == OnTickMethod.LITELOADER)
             Main.onUpdateInGame();
     }
 

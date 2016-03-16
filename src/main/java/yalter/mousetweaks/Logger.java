@@ -7,7 +7,7 @@ public class Logger {
 	}
 
 	public static void DebugLog(String text) {
-		if (Main.Debug)
+		if (Main.config.debug)
 			System.out.println("[Mouse Tweaks] " + text);
 	}
 

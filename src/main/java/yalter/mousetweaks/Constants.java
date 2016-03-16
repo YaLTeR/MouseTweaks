@@ -6,6 +6,14 @@ public class Constants {
 	public static final String VERSION     = "@VERSION@";
 	public static final String UPDATE_URL  = "http://play.sourceruns.org/yalter/MouseTweaks/update.json";
 
+	public static final String CONFIG_RMB_TWEAK              = "RMBTweak";
+	public static final String CONFIG_LMB_TWEAK_WITH_ITEM    = "LMBTweakWithItem";
+	public static final String CONFIG_LMB_TWEAK_WITHOUT_ITEM = "LMBTweakWithoutItem";
+	public static final String CONFIG_WHEEL_TWEAK            = "WheelTweak";
+	public static final String CONFIG_WHEEL_SEARCH_ORDER     = "WheelSearchOrder";
+	public static final String CONFIG_ONTICK_METHOD_ORDER    = "OnTickMethodOrder";
+	public static final String CONFIG_DEBUG                  = "Debug";
+
 	// Obfuscated names
 	public static final String ISMOUSEOVERSLOT_NAME = "a";
 	public static final String FIELDE_NAME          = "H";
@@ -21,11 +29,9 @@ public class Constants {
 	public static final String FIELDE_MCP_NAME          = "ignoreMouseUp";
 	public static final String FIELDq_MCP_NAME          = "dragSplitting";
 
-	// OnTick method names
 	public static final String ONTICKMETHOD_FORGE_NAME      = "Forge";
 	public static final String ONTICKMETHOD_LITELOADER_NAME = "LiteLoader";
 
-	// Inventory-related stuff
 	public static final int INVENTORY_SIZE = 36; // Size of the player inventory
 
 	public enum EntryPoint {

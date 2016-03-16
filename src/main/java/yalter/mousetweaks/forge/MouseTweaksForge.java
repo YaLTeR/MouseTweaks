@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.Main;
+import yalter.mousetweaks.OnTickMethod;
 
 @Mod(
 	modid = Constants.MOD_ID, // If this isn't here, the mod doesn't load.
@@ -25,7 +26,7 @@ public class MouseTweaksForge {
 
 	@SubscribeEvent
 	public void onRenderTick(TickEvent.RenderTickEvent event) {
-		if (Main.onTickMethod == Main.OnTickMethod.FORGE && event.phase == TickEvent.Phase.START)
+		if (Main.onTickMethod == OnTickMethod.FORGE && event.phase == TickEvent.Phase.START)
 			Main.onUpdateInGame();
 	}
 }

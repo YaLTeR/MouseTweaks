@@ -8,8 +8,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Main extends DeobfuscationLayer {
 
@@ -18,19 +16,9 @@ public class Main extends DeobfuscationLayer {
 
 	public static boolean disableRMBTweak = false;
 
-	public static int RMBTweak = 0;
-	public static int LMBTweakWithItem = 0;
-	public static int LMBTweakWithoutItem = 0;
-	public static int WheelTweak = 0;
-	public static int WheelSearchOrder = 1;
-
-	public enum OnTickMethod { FORGE, LITELOADER }
-	public static List<OnTickMethod> onTickMethodOrder = new LinkedList<OnTickMethod>();
+	public static Config config;
 	public static OnTickMethod onTickMethod;
 
-	public static boolean Debug = false;
-
-	public static Config mainConfig;
 	private static GuiScreen oldGuiScreen = null;
 	private static Object container = null;
 	private static Slot oldSelectedSlot = null;
@@ -44,7 +32,7 @@ public class Main extends DeobfuscationLayer {
 	private static GuiContainerID guiContainerID;
 
 	private static boolean readConfig = false;
-	private static boolean initialised = false;
+	private static boolean initialized = false;
 	private static boolean disabled = false;
 
 	public static boolean initialize() {
@@ -57,10 +45,10 @@ public class Main extends DeobfuscationLayer {
 		if (disabled)
 			return false;
 
-		if (initialised)
+		if (initialized)
 			return true;
 
-		initialised = true;
+		initialized = true;
 
 		if (!Reflection.reflectGuiContainer()) {
 			disabled = true;
@@ -69,8 +57,8 @@ public class Main extends DeobfuscationLayer {
 
 		mc = Minecraft.getMinecraft();
 
-		mainConfig = new Config(mc.mcDataDir + File.separator + "config" + File.separator + "MouseTweaks.cfg");
-		readConfigFile();
+		config = new Config(mc.mcDataDir + File.separator + "config" + File.separator + "MouseTweaks.cfg");
+		config.read();
 
 		forge = ((entryPoint == Constants.EntryPoint.FORGE
 				|| Reflection.doesClassExist("net.minecraftforge.client.MinecraftForgeClient")));
@@ -95,88 +83,14 @@ public class Main extends DeobfuscationLayer {
 		}
 
 		ModCompatibility.initialize();
-		Logger.Log("Mouse Tweaks has been initialised.");
+		Logger.Log("Mouse Tweaks has been initialized.");
 
 		return true;
 	}
 
-	public static void readConfigFile() {
-		boolean loadedConfig = mainConfig.readConfig();
-
-		RMBTweak = mainConfig.getOrCreateIntProperty("RMBTweak", 1);
-		LMBTweakWithItem = mainConfig.getOrCreateIntProperty("LMBTweakWithItem", 1);
-		LMBTweakWithoutItem = mainConfig.getOrCreateIntProperty("LMBTweakWithoutItem", 1);
-		WheelTweak = mainConfig.getOrCreateIntProperty("WheelTweak", 1);
-		WheelSearchOrder = mainConfig.getOrCreateIntProperty("WheelSearchOrder", 1);
-		Debug = mainConfig.getOrCreateIntProperty("Debug", 0) != 0;
-
-		String onTickMethodString = mainConfig.getOrCreateProperty("OnTickMethodOrder",
-				Constants.ONTICKMETHOD_FORGE_NAME + ", "
-				+ Constants.ONTICKMETHOD_LITELOADER_NAME);
-		onTickMethodOrderFromString(onTickMethodString);
-
-		boolean savedConfig = saveConfigFile();
-		if (savedConfig && !loadedConfig)
-			Logger.Log("Mouse Tweaks config file was created.");
-	}
-
-	public static boolean saveConfigFile() {
-		Logger.DebugLog("saveConfigFile()");
-
-		mainConfig.setIntProperty("RMBTweak", RMBTweak);
-		mainConfig.setIntProperty("LMBTweakWithItem", LMBTweakWithItem);
-		mainConfig.setIntProperty("LMBTweakWithoutItem", LMBTweakWithoutItem);
-		mainConfig.setIntProperty("WheelTweak", WheelTweak);
-		mainConfig.setIntProperty("WheelSearchOrder", WheelSearchOrder);
-		mainConfig.setIntProperty("Debug", Debug ? 1 : 0);
-		mainConfig.setProperty("OnTickMethodOrder", onTickMethodOrderToString());
-
-		return mainConfig.saveConfig();
-	}
-
-	public static void onTickMethodOrderFromString(String string) {
-		onTickMethodOrder.clear();
-
-		string = string.trim();
-		String onTickMethods[] = string.split("[\\s]*,[\\s]*");
-		for (String method : onTickMethods) {
-			if (Constants.ONTICKMETHOD_FORGE_NAME.equalsIgnoreCase(method) && !onTickMethodOrder.contains(OnTickMethod.FORGE))
-				onTickMethodOrder.add(OnTickMethod.FORGE);
-			else if (Constants.ONTICKMETHOD_LITELOADER_NAME.equalsIgnoreCase(method) && !onTickMethodOrder.contains(OnTickMethod.LITELOADER))
-				onTickMethodOrder.add(OnTickMethod.LITELOADER);
-		}
-
-		// Make sure we have one of each.
-		if (!onTickMethodOrder.contains(OnTickMethod.FORGE))
-			onTickMethodOrder.add(OnTickMethod.FORGE);
-		if (!onTickMethodOrder.contains(OnTickMethod.LITELOADER))
-			onTickMethodOrder.add(OnTickMethod.LITELOADER);
-	}
-
-	public static String onTickMethodOrderToString() {
-		String result = "";
-
-		for (OnTickMethod method : onTickMethodOrder) {
-			if (!result.isEmpty())
-				result += ", ";
-
-			switch (method) {
-				case FORGE:
-					result += Constants.ONTICKMETHOD_FORGE_NAME;
-					break;
-
-				case LITELOADER:
-					result += Constants.ONTICKMETHOD_LITELOADER_NAME;
-					break;
-			}
-		}
-
-		return result;
-	}
-
 	public static boolean findOnTickMethod(boolean print_always) {
 		OnTickMethod previous_method = onTickMethod;
-		for (OnTickMethod method : onTickMethodOrder) {
+		for (OnTickMethod method : config.onTickMethodOrder) {
 			switch (method) {
 				case FORGE:
 					if (forge) {
@@ -220,7 +134,7 @@ public class Main extends DeobfuscationLayer {
 		} else {
 			if (readConfig) {
 				readConfig = false;
-				readConfigFile();
+				config.read();
 				findOnTickMethod(false);
 			}
 
@@ -264,10 +178,10 @@ public class Main extends DeobfuscationLayer {
 		if (guiContainerID == GuiContainerID.NOTGUICONTAINER)
 			return;
 
-		if ((Main.disableRMBTweak || (Main.RMBTweak == 0))
-				&& (Main.LMBTweakWithoutItem == 0)
-				&& (Main.LMBTweakWithItem == 0)
-				&& (Main.WheelTweak == 0))
+		if ((Main.disableRMBTweak || !config.rmbTweak)
+				&& !config.lmbTweakWithItem
+				&& !config.lmbTweakWithoutItem
+				&& !config.wheelTweak)
 			return;
 
 		if (disableForThisContainer)
@@ -279,7 +193,7 @@ public class Main extends DeobfuscationLayer {
 		if (slotCount == 0) // If there are no slots, then there is nothing to do.
 			return;
 
-		int wheel = ((Main.WheelTweak == 1) && !disableWheelForThisContainer) ? Mouse.getDWheel() / 120 : 0;
+		int wheel = (config.wheelTweak && !disableWheelForThisContainer) ? Mouse.getDWheel() / 120 : 0;
 
 		if (!Mouse.isButtonDown(1)) {
 			firstSlotClicked = false;
@@ -332,7 +246,7 @@ public class Main extends DeobfuscationLayer {
 			boolean shiftIsDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 
 			if (Mouse.isButtonDown(1)) { // Right mouse button
-				if ((Main.RMBTweak == 1) && !Main.disableRMBTweak) {
+				if (config.rmbTweak && !Main.disableRMBTweak) {
 
 					if ((stackOnMouse != null) && areStacksCompatible(stackOnMouse, targetStack)
 							&& !isCraftingOutputSlot(currentScreen, selectedSlot)) {
@@ -351,7 +265,7 @@ public class Main extends DeobfuscationLayer {
 				}
 			} else if (Mouse.isButtonDown(0)) { // Left mouse button
 				if (stackOnMouse != null) {
-					if (Main.LMBTweakWithItem == 1) {
+					if (config.lmbTweakWithItem) {
 						if ((targetStack != null) && areStacksCompatible(stackOnMouse, targetStack)) {
 
 							if (shiftIsDown) { // If shift is down, we just shift-click the slot and the item gets moved into another inventory.
@@ -370,7 +284,7 @@ public class Main extends DeobfuscationLayer {
 						}
 
 					}
-				} else if (Main.LMBTweakWithoutItem == 1) {
+				} else if (config.lmbTweakWithoutItem) {
 					if (targetStack != null) {
 						if (shiftIsDown) {
 							clickSlot(currentScreen, selectedSlot, 0, true);
@@ -402,7 +316,7 @@ public class Main extends DeobfuscationLayer {
 							countUntil = slotCount;
 						}
 
-						if ((wheel < 0) || (Main.WheelSearchOrder == 0)) {
+						if ((wheel < 0) || config.wheelSearchOrder == WheelSearchOrder.FIRST_TO_LAST) {
 							for (int i = slotCounter; i < countUntil; i++) {
 								Slot sl = getSlotWithID(currentScreen, i);
 								ItemStack stackSl = getSlotStack(sl);

@@ -10,6 +10,7 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.Logger;
 import yalter.mousetweaks.Main;
+import yalter.mousetweaks.WheelSearchOrder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +37,13 @@ public class ConfigGuiFactory implements IModGuiFactory {
     }
 
     public static class ConfigGui extends GuiConfig {
-        private static Property RMBTweak = new Property("RMB tweak", "true", Property.Type.BOOLEAN);
-        private static Property LMBTweakWithItem = new Property("LMB tweak with item", "true", Property.Type.BOOLEAN);
-        private static Property LMBTweakWithoutItem = new Property("LMB tweak without item", "true", Property.Type.BOOLEAN);
-        private static Property WheelTweak = new Property("Wheel tweak", "true", Property.Type.BOOLEAN);
-        private static Property WheelSearchOrder = new Property("Wheel tweak search order", "Last to first", Property.Type.STRING, new String[] { "First to last", "Last to first" });
-        private static Property OnTickMethodOrder = new Property("OnTick method order", "Forge, LiteLoader", Property.Type.STRING);
-        private static Property Debug = new Property("Debug", "false", Property.Type.BOOLEAN);
+        private static Property rmbTweak = new Property("RMB tweak", "true", Property.Type.BOOLEAN);
+        private static Property lmbTweakWithItem = new Property("LMB tweak with item", "true", Property.Type.BOOLEAN);
+        private static Property lmbTweakWithoutItem = new Property("LMB tweak without item", "true", Property.Type.BOOLEAN);
+        private static Property wheelTweak = new Property("Wheel tweak", "true", Property.Type.BOOLEAN);
+        private static Property wheelSearchOrder = new Property("Wheel tweak search order", "Last to first", Property.Type.STRING, new String[] { "First to last", "Last to first" });
+        private static Property onTickMethodOrder = new Property("OnTick method order", "Forge, LiteLoader", Property.Type.STRING);
+        private static Property debug = new Property("Debug", "false", Property.Type.BOOLEAN);
 
         private boolean is_open = false;
 
@@ -53,13 +54,13 @@ public class ConfigGuiFactory implements IModGuiFactory {
         private static List<IConfigElement> getConfigElements() {
             List<IConfigElement> list = new ArrayList<IConfigElement>();
 
-            list.add(new ConfigElement(RMBTweak));
-            list.add(new ConfigElement(LMBTweakWithItem));
-            list.add(new ConfigElement(LMBTweakWithoutItem));
-            list.add(new ConfigElement(WheelTweak));
-            list.add(new ConfigElement(WheelSearchOrder));
-            list.add(new ConfigElement(OnTickMethodOrder));
-            list.add(new ConfigElement(Debug));
+            list.add(new ConfigElement(rmbTweak));
+            list.add(new ConfigElement(lmbTweakWithItem));
+            list.add(new ConfigElement(lmbTweakWithoutItem));
+            list.add(new ConfigElement(wheelTweak));
+            list.add(new ConfigElement(wheelSearchOrder));
+            list.add(new ConfigElement(onTickMethodOrder));
+            list.add(new ConfigElement(debug));
 
             return list;
         }
@@ -71,13 +72,16 @@ public class ConfigGuiFactory implements IModGuiFactory {
             if (!is_open) {
                 is_open = true;
 
-                RMBTweak.set(Main.RMBTweak != 0);
-                LMBTweakWithItem.set(Main.LMBTweakWithItem != 0);
-                LMBTweakWithoutItem.set(Main.LMBTweakWithoutItem != 0);
-                WheelTweak.set(Main.WheelTweak != 0);
-                WheelSearchOrder.set((Main.WheelSearchOrder == 0) ? "First to last" : "Last to first");
-                OnTickMethodOrder.set(Main.onTickMethodOrderToString());
-                Debug.set(Main.Debug);
+                rmbTweak.set(Main.config.rmbTweak);
+                lmbTweakWithItem.set(Main.config.lmbTweakWithItem);
+                lmbTweakWithoutItem.set(Main.config.lmbTweakWithoutItem);
+                wheelTweak.set(Main.config.wheelTweak);
+                wheelSearchOrder.set(
+                    (Main.config.wheelSearchOrder == WheelSearchOrder.FIRST_TO_LAST)
+                        ? "First to last"
+                        : "Last to first");
+                onTickMethodOrder.set(Main.config.onTickMethodOrderString());
+                debug.set(Main.config.debug);
             }
 
             super.initGui();
@@ -87,18 +91,20 @@ public class ConfigGuiFactory implements IModGuiFactory {
         public void onGuiClosed() {
             Logger.DebugLog("onGuiClosed()");
 
-            Main.RMBTweak = RMBTweak.getBoolean() ? 1 : 0;
-            Main.LMBTweakWithItem = LMBTweakWithItem.getBoolean() ? 1 : 0;
-            Main.LMBTweakWithoutItem = LMBTweakWithoutItem.getBoolean() ? 1 : 0;
-            Main.WheelTweak = WheelTweak.getBoolean() ? 1 : 0;
-            Main.WheelSearchOrder = (WheelSearchOrder.getString().equals("First to last")) ? 0 : 1;
-            Main.onTickMethodOrderFromString(OnTickMethodOrder.getString());
-            Main.Debug = Debug.getBoolean();
-            Main.saveConfigFile();
+            Main.config.rmbTweak = rmbTweak.getBoolean();
+            Main.config.lmbTweakWithItem = lmbTweakWithItem.getBoolean();
+            Main.config.lmbTweakWithoutItem = lmbTweakWithoutItem.getBoolean();
+            Main.config.wheelTweak = wheelTweak.getBoolean();
+            Main.config.wheelSearchOrder =
+                wheelSearchOrder.getString().equals("First to last")
+                    ? WheelSearchOrder.FIRST_TO_LAST
+                    : WheelSearchOrder.LAST_TO_FIRST;
+            Main.config.onTickMethodOrderFromString(onTickMethodOrder.getString());
+            Main.config.debug = debug.getBoolean();
+            Main.config.save();
             Main.findOnTickMethod(true);
 
             is_open = false;
-
             super.onGuiClosed();
         }
     }

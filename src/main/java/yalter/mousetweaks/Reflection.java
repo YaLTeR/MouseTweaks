@@ -97,7 +97,7 @@ public class Reflection {
 		} catch (Exception e) {
 			Logger.Log("Could not retrieve field \"" + name + "\" from class \"" + clazz.getName() + "\".");
 
-			if (Main.Debug) {
+			if (Main.config.debug) {
 				e.printStackTrace();
 			}
 		}
@@ -129,7 +129,7 @@ public class Reflection {
 		} catch (Exception e) {
 			Logger.Log("Could not retrieve field \"" + name + "\" from class \"" + clazz.getName() + "\"");
 
-			if (Main.Debug) {
+			if (Main.config.debug) {
 				e.printStackTrace();
 			}
 		}
@@ -160,7 +160,7 @@ public class Reflection {
 		} catch (Exception e) {
 			Logger.Log("Could not retrieve method \"" + name + "\" from class \"" + clazz.getName()	+ "\"");
 
-			if (Main.Debug) {
+			if (Main.config.debug) {
 				e.printStackTrace();
 			}
 		}
