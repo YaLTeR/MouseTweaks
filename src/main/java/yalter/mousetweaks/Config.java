@@ -41,6 +41,8 @@ public class Config {
 		wheelSearchOrder = WheelSearchOrder.fromId(Integer.parseInt(properties.getProperty(Constants.CONFIG_WHEEL_SEARCH_ORDER)));
 		debug = Integer.parseInt(properties.getProperty(Constants.CONFIG_DEBUG)) != 0;
 		onTickMethodOrderFromString(properties.getProperty(Constants.CONFIG_ONTICK_METHOD_ORDER));
+
+		save();
 	}
 
 	public void save() {
