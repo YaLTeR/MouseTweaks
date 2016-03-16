@@ -72,6 +72,7 @@ public class ConfigGuiFactory implements IModGuiFactory {
             if (!is_open) {
                 is_open = true;
 
+                Main.config.read();
                 rmbTweak.set(Main.config.rmbTweak);
                 lmbTweakWithItem.set(Main.config.lmbTweakWithItem);
                 lmbTweakWithoutItem.set(Main.config.lmbTweakWithoutItem);
