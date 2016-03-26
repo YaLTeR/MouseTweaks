@@ -69,9 +69,9 @@ public class DeobfuscationLayer {
 		return container.windowId;
 	}
 
-	protected static void windowClick(int windowId, int slotNumber, int mouseButton, int shiftPressed) {
+	protected static void windowClick(int windowId, int slotNumber, int mouseButton, boolean shiftPressed) {
 		// if (slotNumber != -1) {
-		getPlayerController().windowClick(windowId, slotNumber, mouseButton, shiftPressed, getThePlayer());
+		getPlayerController().windowClick(windowId, slotNumber, mouseButton, shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP, getThePlayer());
 		// }
 	}
 

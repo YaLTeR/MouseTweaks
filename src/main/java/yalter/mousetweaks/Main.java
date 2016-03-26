@@ -510,7 +510,7 @@ public class Main extends DeobfuscationLayer {
 
 	public static void clickSlot(GuiScreen currentScreen, Slot targetSlot, int mouseButton, boolean shiftPressed) {
 		if (guiContainerID == GuiContainerID.MINECRAFT) {
-			windowClick(getWindowId(asContainer(container)), getSlotNumber(targetSlot), mouseButton, shiftPressed ? 1 : 0);
+			windowClick(getWindowId(asContainer(container)), getSlotNumber(targetSlot), mouseButton, shiftPressed);
 		} else {
 			ModCompatibility.clickSlot(guiContainerID, currentScreen, container, targetSlot, mouseButton, shiftPressed);
 		}
