@@ -39,13 +39,24 @@ sourceJar {
 //    provided files('forgeSrc-1.8.9-11.15.1.1764.jar')
 //}
 
+sourceSets {
+	main {
+		java {
+			exclude '**/liteloader/*'
+		}
+		resources {
+			exclude 'litemod.json'
+		}
+	}
+}
+
 processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
- //       include 'litemod.json'
+//        include 'litemod.json'
 
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
