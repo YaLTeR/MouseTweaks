@@ -227,7 +227,7 @@ public class Main extends DeobfuscationLayer {
 			if (selectedSlot == null) {
 				oldSelectedSlot = selectedSlot;
 
-				if ((firstSlot != null) && !firstSlotClicked) {
+				if (config.rmbTweak && !Main.disableRMBTweak && (firstSlot != null) && !firstSlotClicked) {
 					firstSlotClicked = true;
 					disableRMBDragWithID(currentScreen);
 					firstSlot = null;
