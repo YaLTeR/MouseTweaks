@@ -14,6 +14,7 @@ public class Config {
 	public boolean lmbTweakWithoutItem = true;
 	public boolean wheelTweak = true;
 	public WheelSearchOrder wheelSearchOrder = WheelSearchOrder.LAST_TO_FIRST;
+	public WheelScrollDirection wheelScrollDirection = WheelScrollDirection.NORMAL;
 	public Set<OnTickMethod> onTickMethodOrder = new LinkedHashSet<OnTickMethod>(); // The order has to be preserved.
 	public static boolean debug = false;
 
@@ -39,6 +40,7 @@ public class Config {
 		lmbTweakWithoutItem = Integer.parseInt(properties.getProperty(Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM)) != 0;
 		wheelTweak = Integer.parseInt(properties.getProperty(Constants.CONFIG_WHEEL_TWEAK)) != 0;
 		wheelSearchOrder = WheelSearchOrder.fromId(Integer.parseInt(properties.getProperty(Constants.CONFIG_WHEEL_SEARCH_ORDER)));
+		wheelScrollDirection = WheelScrollDirection.fromId(Integer.parseInt(properties.getProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION)));
 		debug = Integer.parseInt(properties.getProperty(Constants.CONFIG_DEBUG)) != 0;
 		onTickMethodOrderFromString(properties.getProperty(Constants.CONFIG_ONTICK_METHOD_ORDER));
 
@@ -52,6 +54,7 @@ public class Config {
 		properties.setProperty(Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM, lmbTweakWithoutItem ? "1" : "0");
 		properties.setProperty(Constants.CONFIG_WHEEL_TWEAK, wheelTweak ? "1" : "0");
 		properties.setProperty(Constants.CONFIG_WHEEL_SEARCH_ORDER, String.valueOf(wheelSearchOrder.ordinal()));
+		properties.setProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION, String.valueOf(wheelScrollDirection.ordinal()));
 		properties.setProperty(Constants.CONFIG_DEBUG, debug ? "1" : "0");
 		properties.setProperty(Constants.CONFIG_ONTICK_METHOD_ORDER, onTickMethodOrderString());
 
@@ -114,6 +117,7 @@ public class Config {
 		defaultValues.setProperty(Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM, "1");
 		defaultValues.setProperty(Constants.CONFIG_WHEEL_TWEAK, "1");
 		defaultValues.setProperty(Constants.CONFIG_WHEEL_SEARCH_ORDER, "1");
+		defaultValues.setProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION, "0");
 		defaultValues.setProperty(Constants.CONFIG_ONTICK_METHOD_ORDER, "Forge, LiteLoader");
 		defaultValues.setProperty(Constants.CONFIG_DEBUG, "0");
 	}

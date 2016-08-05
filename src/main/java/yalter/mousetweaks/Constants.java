@@ -11,6 +11,7 @@ public class Constants {
 	public static final String CONFIG_LMB_TWEAK_WITHOUT_ITEM = "LMBTweakWithoutItem";
 	public static final String CONFIG_WHEEL_TWEAK            = "WheelTweak";
 	public static final String CONFIG_WHEEL_SEARCH_ORDER     = "WheelSearchOrder";
+	public static final String CONFIG_WHEEL_SCROLL_DIRECTION = "WheelScrollDirection";
 	public static final String CONFIG_ONTICK_METHOD_ORDER    = "OnTickMethodOrder";
 	public static final String CONFIG_DEBUG                  = "Debug";
 

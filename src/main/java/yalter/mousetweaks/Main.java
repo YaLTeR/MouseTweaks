@@ -192,6 +192,8 @@ public class Main extends DeobfuscationLayer {
 			return;
 
 		int wheel = (config.wheelTweak && !disableWheelForThisContainer) ? Mouse.getDWheel() / 120 : 0;
+		if (config.wheelScrollDirection == WheelScrollDirection.INVERTED)
+			wheel = -wheel;
 
 		if (!Mouse.isButtonDown(1)) {
 			firstSlotClicked = false;
