@@ -1,6 +1,6 @@
 [
 {
-    "modid": "MouseTweaks",
+    "modid": "mousetweaks",
     "name": "Mouse Tweaks",
     "description": "A mod that enhances the inventory management by adding various additional functions to the usual mouse buttons.",
     "version": "${version}",

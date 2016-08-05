@@ -1,28 +1,46 @@
 buildscript {
     repositories {
+        mavenLocal()
+        mavenCentral()
         jcenter()
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
+        maven {
+            name = 'sponge'
+            url = 'http://repo.spongepowered.org/maven'
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
     }
 }
-//apply plugin: 'net.minecraftforge.gradle.liteloader'
-apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "2.6.3"
+apply plugin: 'net.minecraftforge.gradle.liteloader'
+apply plugin: 'org.spongepowered.mixin'
+// apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "2.6.4"
 group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
 minecraft {
-    version = "1.9.4-12.17.0.1937"
+    // version = "1.10.2-12.18.1.2046"
+    version = "1.10.2"
     runDir = "run"
     mappings = "snapshot_20160518"
 
     replace '@VERSION@', project.version
+}
+
+mixin {
+    defaultObfuscationEnv notch
 }
 
 jar {
@@ -33,15 +51,15 @@ sourceJar {
     archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}-src.jar"
 }
 
-//dependencies {
-//    provided files('forgeSrc-1.8.9-11.15.1.1764.jar')
-//}
+dependencies {
+   provided files('forgeSrc-1.10.2-12.18.1.2046.jar')
+}
 
 sourceSets {
 	main {
-		java {
-			exclude '**/liteloader/*'
-		}
+		// java {
+		// 	exclude '**/liteloader/*'
+		// }
 		resources {
 			exclude 'litemod.json'
 		}
@@ -54,7 +72,7 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-//        include 'litemod.json'
+        include 'litemod.json'
 
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
@@ -64,3 +82,11 @@ processResources {
         exclude 'litemod.json'
     }
 }
+
+// allprojects {
+//     gradle.projectsEvaluated {
+//         tasks.withType(JavaCompile) {
+//             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+//         }
+//     }
+// }
