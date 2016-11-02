@@ -7,11 +7,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.IModGuiFactory;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
-import yalter.mousetweaks.Constants;
-import yalter.mousetweaks.Logger;
-import yalter.mousetweaks.Main;
-import yalter.mousetweaks.WheelScrollDirection;
-import yalter.mousetweaks.WheelSearchOrder;
+import yalter.mousetweaks.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +85,7 @@ public class ConfigGuiFactory implements IModGuiFactory {
                         ? "Down to push, up to pull"
                         : "Up to push, down to pull");
                 onTickMethodOrder.set(Main.config.onTickMethodOrderString());
-                debug.set(Main.config.debug);
+                debug.set(Config.debug);
             }
 
             super.initGui();
@@ -112,7 +108,7 @@ public class ConfigGuiFactory implements IModGuiFactory {
                     ? WheelScrollDirection.NORMAL
                     : WheelScrollDirection.INVERTED;
             Main.config.onTickMethodOrderFromString(onTickMethodOrder.getString());
-            Main.config.debug = debug.getBoolean();
+            Config.debug = debug.getBoolean();
             Main.config.save();
             Main.findOnTickMethod(true);
 
