@@ -72,7 +72,6 @@ public class Reflection {
 		try {
 			return Class.forName(name);
 		} catch (ClassNotFoundException e) {
-			;
 		}
 
 		return null;

@@ -5,7 +5,7 @@ public enum WheelScrollDirection {
 	INVERTED(1);
 
 	private final int id;
-	private WheelScrollDirection(int id) {
+	WheelScrollDirection(int id) {
 		this.id = id;
 	}
 	public int getValue() {

@@ -5,7 +5,7 @@ public enum WheelSearchOrder {
 	LAST_TO_FIRST(1);
 
 	private final int id;
-	private WheelSearchOrder(int id) {
+	WheelSearchOrder(int id) {
 		this.id = id;
 	}
 	public int getValue() {
