@@ -52,7 +52,7 @@ sourceJar {
 }
 
 dependencies {
-   provided files('forgeSrc-1.10.2-12.18.1.2046.jar')
+   provided files('forgeSrc-1.10.2-12.18.2.2118.jar')
 }
 
 sourceSets {
