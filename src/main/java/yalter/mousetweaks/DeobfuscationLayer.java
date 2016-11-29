@@ -62,7 +62,8 @@ public class DeobfuscationLayer {
 	}
 
 	protected static ItemStack getSlotStack(Slot slot) {
-		return (slot == null) ? null : slot.getStack();
+		ItemStack stack = (slot == null) ? null : slot.getStack();
+		return (stack == null || stack.isEmpty()) ? null : stack;
 	}
 
 	protected static int getWindowId(Container container) {
@@ -76,7 +77,7 @@ public class DeobfuscationLayer {
 	}
 
 	protected static EntityPlayerSP getThePlayer() {
-		return mc.thePlayer;
+		return mc.player;
 	}
 
 	protected static InventoryPlayer getInventoryPlayer() {
@@ -92,7 +93,8 @@ public class DeobfuscationLayer {
 	}
 
 	protected static ItemStack getStackOnMouse() {
-		return getInventoryPlayer().getItemStack();
+		ItemStack stack = getInventoryPlayer().getItemStack();
+		return stack.isEmpty() ? null : stack;
 	}
 
 	protected static PlayerControllerMP getPlayerController() {
@@ -104,7 +106,7 @@ public class DeobfuscationLayer {
 	}
 
 	protected static int getItemStackSize(ItemStack itemStack) {
-		return itemStack.stackSize;
+		return itemStack.getCount();
 	}
 
 	protected static int getMaxItemStackSize(ItemStack itemStack) {

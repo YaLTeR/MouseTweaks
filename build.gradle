@@ -26,15 +26,15 @@ apply plugin: 'net.minecraftforge.gradle.liteloader'
 apply plugin: 'org.spongepowered.mixin'
 // apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "2.6.4"
+version = "2.6.5"
 group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
 minecraft {
-    // version = "1.10.2-12.18.1.2046"
-    version = "1.10.2"
+    // version = "1.11-13.19.0.2168"
+    version = "1.11"
     runDir = "run"
-    mappings = "snapshot_20160518"
+    mappings = "snapshot_20161129"
 
     replace '@VERSION@', project.version
 }
@@ -52,7 +52,7 @@ sourceJar {
 }
 
 dependencies {
-   provided files('forgeSrc-1.10.2-12.18.2.2118.jar')
+    provided files('forgeSrc-1.11-13.19.0.2168.jar')
 }
 
 sourceSets {

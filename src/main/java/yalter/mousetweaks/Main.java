@@ -149,6 +149,8 @@ public class Main extends DeobfuscationLayer {
 		if (oldGuiScreen != currentScreen) {
 			oldGuiScreen = currentScreen;
 
+			Logger.DebugLog("You have just opened " + currentScreen.getClass().getSimpleName() + ".");
+
 			// If we opened an inventory from another inventory (for example, NEI's options menu).
 			guiContainerID = getGuiContainerID(currentScreen);
 			if (guiContainerID == GuiContainerID.NOTGUICONTAINER)
@@ -330,7 +332,7 @@ public class Main extends DeobfuscationLayer {
 									}
 								} else if (areStacksCompatible(originalStack, stackSl)) {
 									if ((wheel < 0)
-											&& (stackSl.stackSize < stackSl.getMaxStackSize())) {
+											&& (stackSl.getCount() < stackSl.getMaxStackSize())) {
 										applicableSlot = sl;
 										break;
 									} else if (wheel > 0) {
@@ -352,7 +354,7 @@ public class Main extends DeobfuscationLayer {
 									}
 								} else if (areStacksCompatible(originalStack, stackSl)) {
 									if ((wheel < 0)
-											&& (stackSl.stackSize < stackSl.getMaxStackSize())) {
+											&& (stackSl.getCount() < stackSl.getMaxStackSize())) {
 										applicableSlot = sl;
 										break;
 									} else if (wheel > 0) {
