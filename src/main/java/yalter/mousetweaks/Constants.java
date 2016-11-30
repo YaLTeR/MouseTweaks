@@ -6,34 +6,26 @@ public class Constants {
 	public static final String VERSION     = "@VERSION@";
 	public static final String UPDATE_URL  = "http://play.sourceruns.org/yalter/MouseTweaks/update.json";
 
-	public static final String CONFIG_RMB_TWEAK              = "RMBTweak";
-	public static final String CONFIG_LMB_TWEAK_WITH_ITEM    = "LMBTweakWithItem";
-	public static final String CONFIG_LMB_TWEAK_WITHOUT_ITEM = "LMBTweakWithoutItem";
-	public static final String CONFIG_WHEEL_TWEAK            = "WheelTweak";
-	public static final String CONFIG_WHEEL_SEARCH_ORDER     = "WheelSearchOrder";
-	public static final String CONFIG_WHEEL_SCROLL_DIRECTION = "WheelScrollDirection";
-	public static final String CONFIG_ONTICK_METHOD_ORDER    = "OnTickMethodOrder";
-	public static final String CONFIG_DEBUG                  = "Debug";
+	static final String CONFIG_RMB_TWEAK              = "RMBTweak";
+	static final String CONFIG_LMB_TWEAK_WITH_ITEM    = "LMBTweakWithItem";
+	static final String CONFIG_LMB_TWEAK_WITHOUT_ITEM = "LMBTweakWithoutItem";
+	static final String CONFIG_WHEEL_TWEAK            = "WheelTweak";
+	static final String CONFIG_WHEEL_SEARCH_ORDER     = "WheelSearchOrder";
+	static final String CONFIG_WHEEL_SCROLL_DIRECTION = "WheelScrollDirection";
+	static final String CONFIG_ONTICK_METHOD_ORDER    = "OnTickMethodOrder";
+	static final String CONFIG_DEBUG                  = "Debug";
 
-	// Obfuscated names
-	public static final String ISMOUSEOVERSLOT_NAME = "a";
-	public static final String FIELDE_NAME          = "H";
-	public static final String FIELDq_NAME          = "t";
+	// Names for reflection.
+	public static final ObfuscatedName IGNOREMOUSEUP_NAME = new ObfuscatedName("ignoreMouseUp", "field_146995_H", "H");
+	public static final ObfuscatedName DRAGSPLITTING_NAME = new ObfuscatedName("dragSplitting", "field_147007_t", "t");
+	public static final ObfuscatedName DRAGSPLITTINGBUTTON_NAME = new ObfuscatedName("dragSplittingButton", "field_146988_G", "G");
+	public static final ObfuscatedName DRAGSPLITTINGSLOTS_NAME = new ObfuscatedName("dragSplittingSlots", "field_147008_s", "s");
+	public static final ObfuscatedName GETSLOTATPOSITION_NAME = new ObfuscatedName("getSlotAtPosition", "func_146975_c", "c");
 
-	// Forge obfuscated names
-	public static final String ISMOUSEOVERSLOT_FORGE_NAME = "func_146981_a";
-	public static final String FIELDE_FORGE_NAME          = "field_146995_H";
-	public static final String FIELDq_FORGE_NAME          = "field_147007_t";
+	static final String ONTICKMETHOD_FORGE_NAME      = "Forge";
+	static final String ONTICKMETHOD_LITELOADER_NAME = "LiteLoader";
 
-	// MCP names
-	public static final String ISMOUSEOVERSLOT_MCP_NAME = "isMouseOverSlot";
-	public static final String FIELDE_MCP_NAME          = "ignoreMouseUp";
-	public static final String FIELDq_MCP_NAME          = "dragSplitting";
-
-	public static final String ONTICKMETHOD_FORGE_NAME      = "Forge";
-	public static final String ONTICKMETHOD_LITELOADER_NAME = "LiteLoader";
-
-	public static final int INVENTORY_SIZE = 36; // Size of the player inventory
+	static final int INVENTORY_SIZE = 36; // Size of the player inventory
 
 	public enum EntryPoint {
 		UNDEFINED,

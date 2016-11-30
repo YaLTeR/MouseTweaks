@@ -24,14 +24,14 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 apply plugin: 'org.spongepowered.mixin'
-// apply plugin: 'net.minecraftforge.gradle.forge'
+//apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "2.6.5"
+version = "2.7"
 group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
 minecraft {
-    // version = "1.11-13.19.0.2168"
+//    version = "1.11-13.19.0.2168"
     version = "1.11"
     runDir = "run"
     mappings = "snapshot_20161129"
@@ -57,9 +57,9 @@ dependencies {
 
 sourceSets {
 	main {
-		// java {
-		// 	exclude '**/liteloader/*'
-		// }
+//		java {
+//			exclude '**/liteloader/*'
+//		}
 		resources {
 			exclude 'litemod.json'
 		}
