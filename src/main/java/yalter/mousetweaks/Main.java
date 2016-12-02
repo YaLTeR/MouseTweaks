@@ -28,6 +28,8 @@ public class Main
 
 	private static GuiScreen oldGuiScreen = null;
 	private static Slot oldSelectedSlot = null;
+	private static Slot firstRightClickedSlot = null;
+	private static boolean oldRMBDown = false;
 	private static boolean disableForThisContainer = false;
 	private static boolean disableWheelForThisContainer = false;
 
@@ -115,6 +117,7 @@ public class Main
 			// Reset stuff
 			oldGuiScreen = null;
 			oldSelectedSlot = null;
+			firstRightClickedSlot = null;
 			disableForThisContainer = false;
 			disableWheelForThisContainer = false;
 			readConfig = true;
@@ -129,6 +132,8 @@ public class Main
 
 			onUpdateInGui(currentScreen);
 		}
+
+		oldRMBDown = Mouse.isButtonDown(1);
 	}
 
 	private static void onUpdateInGui(GuiScreen currentScreen) {
@@ -173,8 +178,13 @@ public class Main
 		Slot selectedSlot = handler.getSlotUnderMouse();
 
 		if (Mouse.isButtonDown(1)) {
-			if (handler.disableRMBDraggingFunctionality() && selectedSlot != null)
-				handler.clickSlot(selectedSlot, MouseButton.RIGHT, false);
+			if (!oldRMBDown)
+				firstRightClickedSlot = selectedSlot;
+
+			if (handler.disableRMBDraggingFunctionality() && firstRightClickedSlot != null)
+				handler.clickSlot(firstRightClickedSlot, MouseButton.RIGHT, false);
+		} else {
+			firstRightClickedSlot = null;
 		}
 
 		if (oldSelectedSlot != selectedSlot) {

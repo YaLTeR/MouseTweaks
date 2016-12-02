@@ -48,15 +48,6 @@ public class Reflection {
 		}
 
 		try {
-			Field f = getField(GuiContainer.class, getObfuscatedName(Constants.DRAGSPLITTINGSLOTS_NAME));
-			guiContainerClass.storeField(Constants.DRAGSPLITTINGSLOTS_NAME.forgeName, f);
-		} catch (NoSuchFieldException e) {
-			Logger.Log("Could not retrieve GuiContainer.dragSplittingSlots.");
-			guiContainerClass = null;
-			return;
-		}
-
-		try {
 			Method m = getMethod(GuiContainer.class, getObfuscatedName(Constants.GETSLOTATPOSITION_NAME), int.class, int.class);
 			guiContainerClass.storeMethod(Constants.GETSLOTATPOSITION_NAME.forgeName, m);
 		} catch (NoSuchMethodException e) {

@@ -56,27 +56,28 @@ public interface IMTModGuiContainer2 {
 	/**
 	 * If your container has an RMB dragging functionality (like vanilla containers), disable it inside this method.
 	 * This method is called every frame (render tick), which is after all mouseClicked / mouseClickMove / mouseReleased
-	 * events are handled. If true is returned from this method, Mouse Tweaks will click the currently selected slot.
-	 * This is needed because the vanilla RMB dragging functionality prevents the slot clicks initially.
+	 * events are handled (although note these events are handled every game tick, which is far less frequent than every
+	 * render tick).
+	 *
+	 * If true is returned from this method, Mouse Tweaks will click the slot on which the right mouse
+	 * button was initially pressed (in most cases this is the slot currently under mouse). This is needed because
+	 * the vanilla RMB dragging functionality prevents the initial slot click.
 	 *
 	 * For vanilla containers this method looks like this:
 	 * <pre>
+	 * this.ignoreMouseUp = true;
+	 *
 	 * if (this.dragSplitting) {
 	 *     if (this.dragSplittingButton == 1) {
 	 *         this.dragSplitting = false;
-	 *         this.ignoreMouseUp = true;
-	 *
-	 *         foreach(Slot slot : this.dragSplittingSlots)
-	 *             this.handleMouseClick(slot, slot.slotNumber, 1, ClickType.PICKUP);
-	 *
-	 *         return this.dragSplittingSlots.isEmpty();
+	 *         return true;
 	 *     }
 	 * }
 	 *
 	 * return false;
 	 * </pre>
 	 *
-	 * @return True if Mouse Tweaks should click the currently selected slot.
+	 * @return True if Mouse Tweaks should click the slot on which the RMB was pressed.
 	 */
 	boolean disableRMBDraggingFunctionality();
 }

@@ -7,14 +7,10 @@ import net.minecraft.crash.CrashReport;
 import net.minecraft.inventory.*;
 import net.minecraft.util.ReportedException;
 import org.lwjgl.input.Mouse;
-import yalter.mousetweaks.Constants;
-import yalter.mousetweaks.IGuiScreenHandler;
-import yalter.mousetweaks.MouseButton;
-import yalter.mousetweaks.Reflection;
+import yalter.mousetweaks.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Set;
 
 public class GuiContainerHandler implements IGuiScreenHandler {
 	protected Minecraft mc;
@@ -71,16 +67,12 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
 	@Override
 	public boolean disableRMBDraggingFunctionality() {
+		Reflection.guiContainerClass.setFieldValue(guiContainer, Constants.IGNOREMOUSEUP_NAME.forgeName, true);
+
 		if ((Boolean)Reflection.guiContainerClass.getFieldValue(guiContainer, Constants.DRAGSPLITTING_NAME.forgeName)) {
 			if ((Integer)Reflection.guiContainerClass.getFieldValue(guiContainer, Constants.DRAGSPLITTINGBUTTON_NAME.forgeName) == 1) {
 				Reflection.guiContainerClass.setFieldValue(guiContainer, Constants.DRAGSPLITTING_NAME.forgeName, false);
-				Reflection.guiContainerClass.setFieldValue(guiContainer, Constants.IGNOREMOUSEUP_NAME.forgeName, true);
-
-				Set<Slot> slots = (Set<Slot>)Reflection.guiContainerClass.getFieldValue(guiContainer, Constants.DRAGSPLITTINGSLOTS_NAME.forgeName);
-				for (Slot slot : slots)
-					clickSlot(slot, MouseButton.RIGHT, false);
-
-				return slots.isEmpty();
+				return true;
 			}
 		}
 
