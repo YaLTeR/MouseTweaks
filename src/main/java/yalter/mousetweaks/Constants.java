@@ -21,6 +21,7 @@ public class Constants {
 	public static final ObfuscatedName DRAGSPLITTINGBUTTON_NAME = new ObfuscatedName("dragSplittingButton", "field_146988_G", "G");
 	public static final ObfuscatedName DRAGSPLITTINGSLOTS_NAME = new ObfuscatedName("dragSplittingSlots", "field_147008_s", "s");
 	public static final ObfuscatedName GETSLOTATPOSITION_NAME = new ObfuscatedName("getSlotAtPosition", "func_146975_c", "c");
+	public static final ObfuscatedName HANDLEMOUSECLICK_NAME = new ObfuscatedName("handleMouseClick", "func_184098_a", "a");
 
 	static final String ONTICKMETHOD_FORGE_NAME      = "Forge";
 	static final String ONTICKMETHOD_LITELOADER_NAME = "LiteLoader";

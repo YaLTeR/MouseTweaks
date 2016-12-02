@@ -3,10 +3,12 @@ package yalter.mousetweaks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import yalter.mousetweaks.handlers.GuiContainerCreativeHandler;
 import yalter.mousetweaks.handlers.GuiContainerHandler;
 
 import java.io.File;
@@ -49,6 +51,7 @@ public class Main
 		config.read();
 
 		Reflection.reflectGuiContainer();
+		Reflection.reflectGuiContainerCreative();
 
 		forge = ((entryPoint == Constants.EntryPoint.FORGE
 				|| Reflection.doesClassExist("net.minecraftforge.client.MinecraftForgeClient")));
@@ -189,7 +192,8 @@ public class Main
 
 			if (Mouse.isButtonDown(1)) { // Right mouse button
 				if (config.rmbTweak) {
-					if (!handler.isCraftingOutput(selectedSlot)
+					if (!handler.isIgnored(selectedSlot)
+						&& !handler.isCraftingOutput(selectedSlot)
 						&& !stackOnMouse.isEmpty()
 						&& areStacksCompatible(stackOnMouse, targetStack)
 						&& selectedSlot.isItemValid(stackOnMouse)) {
@@ -199,7 +203,8 @@ public class Main
 			} else if (Mouse.isButtonDown(0)) { // Left mouse button
 				if (!stackOnMouse.isEmpty()) {
 					if (config.lmbTweakWithItem) {
-						if (!targetStack.isEmpty()
+						if (!handler.isIgnored(selectedSlot)
+							&& !targetStack.isEmpty()
 							&& areStacksCompatible(stackOnMouse, targetStack)) {
 							if (shiftIsDown) { // If shift is down, we just shift-click the slot and the item gets moved into another inventory.
 								handler.clickSlot(selectedSlot, MouseButton.LEFT, true);
@@ -218,7 +223,7 @@ public class Main
 						}
 					}
 				} else if (config.lmbTweakWithoutItem) {
-					if (!targetStack.isEmpty() && shiftIsDown) {
+					if (!targetStack.isEmpty() && shiftIsDown && !handler.isIgnored(selectedSlot)) {
 						handler.clickSlot(selectedSlot, MouseButton.LEFT, true);
 					}
 				}
@@ -234,7 +239,7 @@ public class Main
 			wheel = -wheel;
 
 		int numItemsToMove = Math.abs(wheel);
-		if (numItemsToMove == 0 || selectedSlot == null)
+		if (numItemsToMove == 0 || selectedSlot == null || handler.isIgnored(selectedSlot))
 			return;
 
 		boolean pushItems = (wheel < 0);
@@ -251,11 +256,14 @@ public class Main
 
 		if (isCraftingOutput) {
 			if (pushItems) {
-				for (int i = 0; i < numItemsToMove; i++) {
-					handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
-				}
+				if (originalStack.isEmpty())
+					return;
 
 				Slot applicableSlot = findWheelApplicableSlot(slots, selectedSlot, pushItems);
+
+				for (int i = 0; i < numItemsToMove; i++)
+					handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
+
 				if (applicableSlot != null && stackOnMouse.isEmpty())
 					handler.clickSlot(applicableSlot, MouseButton.LEFT, false);
 			}
@@ -315,9 +323,12 @@ public class Main
 				} else {
 					handler.clickSlot(slotFrom, MouseButton.LEFT, false);
 
-					if (stackFrom.getCount() <= numItemsToMove) {
+					if (handler.isCraftingOutput(slotFrom)) {
 						handler.clickSlot(slotTo, MouseButton.LEFT, false);
-						numItemsToMove -= stackFrom.getMaxStackSize();
+						--numItemsToMove;
+					} else if (stackFrom.getCount() <= numItemsToMove) {
+						handler.clickSlot(slotTo, MouseButton.LEFT, false);
+						numItemsToMove -= stackFrom.getCount();
 					} else {
 						for (int i = 0; i < numItemsToMove; i++)
 							handler.clickSlot(slotTo, MouseButton.RIGHT, false);
@@ -335,7 +346,9 @@ public class Main
 
 	// Finds the appropriate handler to use with this GuiScreen. Returns null if no handler was found.
 	private static IGuiScreenHandler findHandler(GuiScreen currentScreen) {
-		if (currentScreen instanceof GuiContainer) {
+		if (currentScreen instanceof GuiContainerCreative) {
+			return new GuiContainerCreativeHandler((GuiContainerCreative)currentScreen);
+		} else if (currentScreen instanceof GuiContainer) {
 			return new GuiContainerHandler((GuiContainer)currentScreen);
 		}
 
@@ -366,6 +379,9 @@ public class Main
 
 		for (int i = startIndex; i != endIndex; i += direction) {
 			Slot slot = slots.get(i);
+
+			if (handler.isIgnored(slot))
+				continue;
 
 			if (findInPlayerInventory) {
 				if (slot.inventory != mc.player.inventory)

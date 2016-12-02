@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 public class GuiContainerHandler implements IGuiScreenHandler {
-	private Minecraft mc;
-	private GuiContainer guiContainer;
+	protected Minecraft mc;
+	protected GuiContainer guiContainer;
 
 	public GuiContainerHandler(GuiContainer guiContainer) {
 		this.mc = Minecraft.getMinecraft();

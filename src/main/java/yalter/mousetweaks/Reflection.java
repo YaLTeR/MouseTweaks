@@ -1,17 +1,19 @@
 package yalter.mousetweaks;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 public class Reflection {
 	private static Obfuscation obfuscation;
 	private static boolean checkObfuscation = true;
 
 	public static ReflectionCache guiContainerClass;
+	public static ReflectionCache guiContainerCreative;
 
 	static void reflectGuiContainer() {
 		Logger.Log("Reflecting GuiContainer...");
@@ -66,6 +68,23 @@ public class Reflection {
 		Logger.Log("Success.");
 	}
 
+	static void reflectGuiContainerCreative() {
+		Logger.Log("Reflecting GuiContainerCreative...");
+
+		guiContainerCreative = new ReflectionCache();
+
+		try {
+			Method m = getMethod(GuiContainerCreative.class, getObfuscatedName(Constants.HANDLEMOUSECLICK_NAME), Slot.class, int.class, int.class, ClickType.class);
+			guiContainerCreative.storeMethod(Constants.HANDLEMOUSECLICK_NAME.forgeName, m);
+		} catch (NoSuchMethodException e) {
+			Logger.Log("Could not retrieve GuiContainerCreative.handleMouseClick().");
+			guiContainerCreative = null;
+			return;
+		}
+
+		Logger.Log("Success.");
+	}
+
 	static boolean doesClassExist(String name) {
 		try {
 			Class.forName(name);
@@ -75,7 +94,7 @@ public class Reflection {
 		}
 	}
 
-	static Field getField(Class clazz, String name) throws NoSuchFieldException {
+	private static Field getField(Class clazz, String name) throws NoSuchFieldException {
 		Field field;
 
 		try {
@@ -88,7 +107,7 @@ public class Reflection {
 		return field;
 	}
 
-	static Method getMethod(Class<?> clazz, String name, Class... args) throws NoSuchMethodException {
+	private static Method getMethod(Class<?> clazz, String name, Class... args) throws NoSuchMethodException {
 		Method method;
 
 		try {
@@ -101,7 +120,7 @@ public class Reflection {
 		return method;
 	}
 
-	static String getObfuscatedName(ObfuscatedName obfuscatedName) {
+	private static String getObfuscatedName(ObfuscatedName obfuscatedName) {
 		if (checkObfuscation) {
 			checkObfuscation();
 		}
