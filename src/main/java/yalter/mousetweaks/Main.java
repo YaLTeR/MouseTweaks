@@ -181,7 +181,7 @@ public class Main
 			if (!oldRMBDown)
 				firstRightClickedSlot = selectedSlot;
 
-			if (handler.disableRMBDraggingFunctionality()) {
+			if (config.rmbTweak && handler.disableRMBDraggingFunctionality()) {
 				// Check some conditions to see if we really need to click the first slot.
 				if (firstRightClickedSlot != null
 					&& (firstRightClickedSlot != selectedSlot || oldSelectedSlot == selectedSlot) // This condition is here to prevent double-clicking.
