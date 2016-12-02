@@ -57,11 +57,11 @@ public interface IMTModGuiContainer2 {
 	 * If your container has an RMB dragging functionality (like vanilla containers), disable it inside this method.
 	 * This method is called every frame (render tick), which is after all mouseClicked / mouseClickMove / mouseReleased
 	 * events are handled (although note these events are handled every game tick, which is far less frequent than every
-	 * render tick).
+	 * render tick).<br><br>
 	 *
 	 * If true is returned from this method, Mouse Tweaks will click the slot on which the right mouse
 	 * button was initially pressed (in most cases this is the slot currently under mouse). This is needed because
-	 * the vanilla RMB dragging functionality prevents the initial slot click.
+	 * the vanilla RMB dragging functionality prevents the initial slot click.<br><br>
 	 *
 	 * For vanilla containers this method looks like this:
 	 * <pre>
