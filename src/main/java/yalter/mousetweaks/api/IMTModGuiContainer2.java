@@ -67,7 +67,7 @@ public interface IMTModGuiContainer2 {
 	 *         this.ignoreMouseUp = true;
 	 *
 	 *         foreach(Slot slot : this.dragSplittingSlots)
-	 *             this.handleMouseClick(slot, slot.number, 1, ClickType.PICKUP);
+	 *             this.handleMouseClick(slot, slot.slotNumber, 1, ClickType.PICKUP);
 	 *
 	 *         return this.dragSplittingSlots.isEmpty();
 	 *     }
