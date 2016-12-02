@@ -181,8 +181,22 @@ public class Main
 			if (!oldRMBDown)
 				firstRightClickedSlot = selectedSlot;
 
-			if (handler.disableRMBDraggingFunctionality() && firstRightClickedSlot != null)
-				handler.clickSlot(firstRightClickedSlot, MouseButton.RIGHT, false);
+			if (handler.disableRMBDraggingFunctionality()) {
+				// Check some conditions to see if we really need to click the first slot.
+				if (firstRightClickedSlot != null
+					&& (firstRightClickedSlot != selectedSlot || oldSelectedSlot == selectedSlot) // This condition is here to prevent double-clicking.
+					&& !handler.isIgnored(firstRightClickedSlot)
+					&& !handler.isCraftingOutput(firstRightClickedSlot)) {
+					ItemStack targetStack = firstRightClickedSlot.getStack();
+					ItemStack stackOnMouse = mc.player.inventory.getItemStack();
+
+					if (!stackOnMouse.isEmpty()
+						&& areStacksCompatible(stackOnMouse, targetStack)
+						&& firstRightClickedSlot.isItemValid(stackOnMouse)) {
+						handler.clickSlot(firstRightClickedSlot, MouseButton.RIGHT, false);
+					}
+				}
+			}
 		} else {
 			firstRightClickedSlot = null;
 		}
@@ -193,6 +207,10 @@ public class Main
 			// Nothing to do if no slot is selected.
 			if (selectedSlot == null)
 				return;
+
+			// Prevent double-clicking.
+			if (firstRightClickedSlot == selectedSlot)
+				firstRightClickedSlot = null;
 
 			Logger.DebugLog("You have selected a new slot, it's slot number is " + selectedSlot.slotNumber);
 

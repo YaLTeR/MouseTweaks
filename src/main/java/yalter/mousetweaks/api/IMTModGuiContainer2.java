@@ -59,9 +59,9 @@ public interface IMTModGuiContainer2 {
 	 * events are handled (although note these events are handled every game tick, which is far less frequent than every
 	 * render tick).<br><br>
 	 *
-	 * If true is returned from this method, Mouse Tweaks will click the slot on which the right mouse
-	 * button was initially pressed (in most cases this is the slot currently under mouse). This is needed because
-	 * the vanilla RMB dragging functionality prevents the initial slot click.<br><br>
+	 * If true is returned from this method, Mouse Tweaks (after checking other conditions like isIgnored) will click
+	 * the slot on which the right mouse button was initially pressed (in most cases this is the slot currently under
+	 * mouse). This is needed because the vanilla RMB dragging functionality prevents the initial slot click.<br><br>
 	 *
 	 * For vanilla containers this method looks like this:
 	 * <pre>
