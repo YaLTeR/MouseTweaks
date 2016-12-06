@@ -12,28 +12,28 @@ public interface IMTModGuiContainer2 {
 	 *
 	 * @return True if Mouse Tweaks should be disabled, false otherwise.
 	 */
-	boolean isMouseTweaksDisabled();
+	boolean MT_isMouseTweaksDisabled();
 
 	/**
 	 * If you want to disable the Wheel Tweak in your GuiScreen, return true from this method.
 	 *
 	 * @return True if the Wheel Tweak should be disabled, false otherwise.
 	 */
-	boolean isWheelTweakDisabled();
+	boolean MT_isWheelTweakDisabled();
 
 	/**
 	 * Returns the Container.
 	 *
 	 * @return Container that is currently in use.
 	 */
-	Container getContainer();
+	Container MT_getContainer();
 
 	/**
 	 * Returns the Slot that is currently selected by the player, or null if no Slot is selected.
 	 *
 	 * @return Slot that is located under the mouse, or null if no Slot it currently under the mouse.
 	 */
-	Slot getSlotUnderMouse();
+	Slot MT_getSlotUnderMouse();
 
 	/**
 	 * Return true if the given Slot behaves like the vanilla crafting output slots (inside the crafting table,
@@ -42,7 +42,7 @@ public interface IMTModGuiContainer2 {
 	 * @param slot the slot to check
 	 * @return True if slot is a crafting output slot.
 	 */
-	boolean isCraftingOutput(Slot slot);
+	boolean MT_isCraftingOutput(Slot slot);
 
 	/**
 	 * Return true if the given Slot should be ignored by Mouse Tweaks. Examples of ignored slots are the item select
@@ -51,7 +51,7 @@ public interface IMTModGuiContainer2 {
 	 * @param slot the slot to check
 	 * @return Tru if slot should be ignored by Mouse Tweaks.
 	 */
-	boolean isIgnored(Slot slot);
+	boolean MT_isIgnored(Slot slot);
 
 	/**
 	 * If your container has an RMB dragging functionality (like vanilla containers), disable it inside this method.
@@ -79,5 +79,5 @@ public interface IMTModGuiContainer2 {
 	 *
 	 * @return True if Mouse Tweaks should click the slot on which the RMB was pressed.
 	 */
-	boolean disableRMBDraggingFunctionality();
+	boolean MT_disableRMBDraggingFunctionality();
 }

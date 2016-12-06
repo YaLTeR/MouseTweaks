@@ -20,32 +20,32 @@ public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
 
 	@Override
 	public boolean isMouseTweaksDisabled() {
-		return modGuiContainer.isMouseTweaksDisabled();
+		return modGuiContainer.MT_isMouseTweaksDisabled();
 	}
 
 	@Override
 	public boolean isWheelTweakDisabled() {
-		return modGuiContainer.isWheelTweakDisabled();
+		return modGuiContainer.MT_isWheelTweakDisabled();
 	}
 
 	@Override
 	public List<Slot> getSlots() {
-		return modGuiContainer.getContainer().inventorySlots;
+		return modGuiContainer.MT_getContainer().inventorySlots;
 	}
 
 	@Override
 	public Slot getSlotUnderMouse() {
-		return modGuiContainer.getSlotUnderMouse();
+		return modGuiContainer.MT_getSlotUnderMouse();
 	}
 
 	@Override
 	public boolean disableRMBDraggingFunctionality() {
-		return modGuiContainer.disableRMBDraggingFunctionality();
+		return modGuiContainer.MT_disableRMBDraggingFunctionality();
 	}
 
 	@Override
 	public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-		mc.playerController.windowClick(modGuiContainer.getContainer().windowId,
+		mc.playerController.windowClick(modGuiContainer.MT_getContainer().windowId,
 		                                slot.slotNumber,
 		                                mouseButton.getValue(),
 		                                shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP,
@@ -54,11 +54,11 @@ public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
 
 	@Override
 	public boolean isCraftingOutput(Slot slot) {
-		return modGuiContainer.isCraftingOutput(slot);
+		return modGuiContainer.MT_isCraftingOutput(slot);
 	}
 
 	@Override
 	public boolean isIgnored(Slot slot) {
-		return modGuiContainer.isIgnored(slot);
+		return modGuiContainer.MT_isIgnored(slot);
 	}
 }
