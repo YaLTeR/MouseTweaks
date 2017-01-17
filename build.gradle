@@ -1,25 +1,25 @@
 buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = 'sponge'
-            url = 'http://repo.spongepowered.org/maven'
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
-        classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
-    }
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		jcenter()
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
+		maven {
+			name = 'sponge'
+			url = 'http://repo.spongepowered.org/maven'
+		}
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+		classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
+	}
 }
 
 apply plugin: 'net.minecraftforge.gradle.liteloader'
@@ -31,28 +31,28 @@ group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
 minecraft {
-//    version = "1.11-13.19.0.2168"
-    version = "1.11"
-    runDir = "run"
-    mappings = "snapshot_20161129"
+//	version = "1.11.2-13.20.0.2216"
+	version = "1.11.2"
+	runDir = "run"
+	mappings = "snapshot_20170116"
 
-    replace '@VERSION@', project.version
+	replace '@VERSION@', project.version
 }
 
 mixin {
-    defaultObfuscationEnv notch
+	defaultObfuscationEnv notch
 }
 
 jar {
-    archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}.jar"
+	archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}.jar"
 }
 
 sourceJar {
-    archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}-src.jar"
+	archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}-src.jar"
 }
 
 dependencies {
-    provided files('forgeSrc-1.11-13.19.0.2168.jar')
+	provided files('forgeSrc-1.11.2-13.20.0.2216.jar')
 }
 
 sourceSets {
@@ -67,26 +67,26 @@ sourceSets {
 }
 
 processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        include 'litemod.json'
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+		include 'litemod.json'
 
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
+		expand 'version':project.version, 'mcversion':project.minecraft.version
+	}
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-        exclude 'litemod.json'
-    }
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+		exclude 'litemod.json'
+	}
 }
 
-// allprojects {
-//     gradle.projectsEvaluated {
-//         tasks.withType(JavaCompile) {
-//             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-//         }
-//     }
-// }
+//allprojects {
+//	gradle.projectsEvaluated {
+//		tasks.withType(JavaCompile) {
+//			options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+//		}
+//	}
+//}
