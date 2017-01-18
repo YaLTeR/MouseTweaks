@@ -5,6 +5,8 @@ import net.minecraft.inventory.Slot;
 
 /**
  * This is the interface you want to implement in your GuiScreen to make it compatible with Mouse Tweaks.
+ * If this interface is not enough (for example, you need a custom slot click function, or if you use a custom Container
+ * which happens to be incompatible), check IMTModGuiContainer2Ex instead.
  */
 public interface IMTModGuiContainer2 {
 	/**
