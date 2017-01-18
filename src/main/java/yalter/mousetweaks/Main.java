@@ -9,8 +9,10 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
+import yalter.mousetweaks.api.IMTModGuiContainer2Ex;
 import yalter.mousetweaks.handlers.GuiContainerCreativeHandler;
 import yalter.mousetweaks.handlers.GuiContainerHandler;
+import yalter.mousetweaks.handlers.IMTModGuiContainer2ExHandler;
 import yalter.mousetweaks.handlers.IMTModGuiContainer2Handler;
 
 import java.io.File;
@@ -376,7 +378,9 @@ public class Main
 
 	// Finds the appropriate handler to use with this GuiScreen. Returns null if no handler was found.
 	private static IGuiScreenHandler findHandler(GuiScreen currentScreen) {
-		if (currentScreen instanceof IMTModGuiContainer2) {
+		if (currentScreen instanceof IMTModGuiContainer2Ex) {
+			return new IMTModGuiContainer2ExHandler((IMTModGuiContainer2Ex)currentScreen);
+		} else if (currentScreen instanceof IMTModGuiContainer2) {
 			return new IMTModGuiContainer2Handler((IMTModGuiContainer2)currentScreen);
 		} else if (currentScreen instanceof GuiContainerCreative) {
 			return new GuiContainerCreativeHandler((GuiContainerCreative)currentScreen);
