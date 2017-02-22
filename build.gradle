@@ -31,10 +31,10 @@ group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
 minecraft {
-//	version = "1.11.2-13.20.0.2216"
+	//version = "1.11.2-13.20.0.2236"
 	version = "1.11.2"
 	runDir = "run"
-	mappings = "snapshot_20170116"
+	mappings = "snapshot_20170222"
 
 	replace '@VERSION@', project.version
 }
@@ -52,14 +52,14 @@ sourceJar {
 }
 
 dependencies {
-	provided files('forgeSrc-1.11.2-13.20.0.2216.jar')
+	provided files('forgeSrc-1.11.2-13.20.0.2236.jar')
 }
 
 sourceSets {
 	main {
-//		java {
-//			exclude '**/liteloader/*'
-//		}
+		//java {
+		//        exclude '**/liteloader/*'
+		//}
 		resources {
 			exclude 'litemod.json'
 		}
