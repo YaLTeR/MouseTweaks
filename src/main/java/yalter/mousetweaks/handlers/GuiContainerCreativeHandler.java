@@ -12,31 +12,8 @@ import yalter.mousetweaks.Reflection;
 import java.lang.reflect.InvocationTargetException;
 
 public class GuiContainerCreativeHandler extends GuiContainerHandler {
-	protected GuiContainerCreative guiContainerCreative;
-
 	public GuiContainerCreativeHandler(GuiContainerCreative guiContainerCreative) {
 		super(guiContainerCreative);
-		this.guiContainerCreative = guiContainerCreative;
-	}
-
-	@Override
-	public boolean isMouseTweaksDisabled() {
-		return (super.isMouseTweaksDisabled() || Reflection.guiContainerCreative == null);
-	}
-
-	@Override
-	public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-		try {
-			Reflection.guiContainerCreative.invokeMethod(guiContainerCreative,
-			                                             Constants.HANDLEMOUSECLICK_NAME.forgeName,
-			                                             slot,
-			                                             slot.slotNumber,
-			                                             mouseButton.getValue(),
-			                                             shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP);
-		} catch (InvocationTargetException e) {
-			CrashReport crashreport = CrashReport.makeCrashReport(e, "GuiContainerCreative.handleMouseClick() threw an exception when called from MouseTweaks");
-			throw new ReportedException(crashreport);
-		}
 	}
 
 	@Override

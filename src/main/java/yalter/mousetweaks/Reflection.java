@@ -2,18 +2,22 @@ package yalter.mousetweaks;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
+import net.minecraft.util.ReportedException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 public class Reflection {
 	private static Obfuscation obfuscation;
 	private static boolean checkObfuscation = true;
 
+	private static HashMap<Class, Method> HMCCache = new HashMap<Class, Method>();
+
 	public static ReflectionCache guiContainerClass;
-	public static ReflectionCache guiContainerCreative;
 
 	static void reflectGuiContainer() {
 		Logger.Log("Reflecting GuiContainer...");
@@ -59,21 +63,22 @@ public class Reflection {
 		Logger.Log("Success.");
 	}
 
-	static void reflectGuiContainerCreative() {
-		Logger.Log("Reflecting GuiContainerCreative...");
-
-		guiContainerCreative = new ReflectionCache();
-
-		try {
-			Method m = getMethod(GuiContainerCreative.class, getObfuscatedName(Constants.HANDLEMOUSECLICK_NAME), Slot.class, int.class, int.class, ClickType.class);
-			guiContainerCreative.storeMethod(Constants.HANDLEMOUSECLICK_NAME.forgeName, m);
-		} catch (NoSuchMethodException e) {
-			Logger.Log("Could not retrieve GuiContainerCreative.handleMouseClick().");
-			guiContainerCreative = null;
-			return;
+	public static Method getHMCMethod(GuiContainer object) {
+		if (HMCCache.containsKey(object.getClass())) {
+			return HMCCache.get(object.getClass());
 		}
 
-		Logger.Log("Success.");
+		try {
+			Method method = searchMethod(object.getClass(), getObfuscatedName(Constants.HANDLEMOUSECLICK_NAME), Slot.class, int.class, int.class, ClickType.class);
+
+			Logger.DebugLog("Found handleMouseClick() for " + object.getClass().getSimpleName() + ", caching.");
+
+			HMCCache.put(object.getClass(), method);
+			return method;
+		} catch (NoSuchMethodException e) {
+			CrashReport crashreport = CrashReport.makeCrashReport(e, "MouseTweaks could not find handleMouseClick() in a GuiContainer.");
+			throw new ReportedException(crashreport);
+		}
 	}
 
 	static boolean doesClassExist(String name) {
@@ -109,6 +114,23 @@ public class Reflection {
 
 		method.setAccessible(true);
 		return method;
+	}
+
+	private static Method searchMethod(Class<?> clazz, String name, Class... args) throws NoSuchMethodException {
+		Method method;
+
+		do {
+			try {
+				method = clazz.getDeclaredMethod(name, args);
+
+				method.setAccessible(true);
+				return method;
+			} catch (NoSuchMethodException e) {
+				clazz = clazz.getSuperclass();
+			}
+		} while (clazz != null);
+
+		throw new NoSuchMethodException();
 	}
 
 	private static String getObfuscatedName(ObfuscatedName obfuscatedName) {

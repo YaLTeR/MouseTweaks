@@ -57,7 +57,6 @@ public class Main
 		config.read();
 
 		Reflection.reflectGuiContainer();
-		Reflection.reflectGuiContainerCreative();
 
 		forge = ((entryPoint == Constants.EntryPoint.FORGE
 				|| Reflection.doesClassExist("net.minecraftforge.client.MinecraftForgeClient")));

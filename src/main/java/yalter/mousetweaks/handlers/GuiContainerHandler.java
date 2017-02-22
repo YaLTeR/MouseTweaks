@@ -10,15 +10,18 @@ import org.lwjgl.input.Mouse;
 import yalter.mousetweaks.*;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class GuiContainerHandler implements IGuiScreenHandler {
 	protected Minecraft mc;
 	protected GuiContainer guiContainer;
+	protected Method handleMouseClick;
 
 	public GuiContainerHandler(GuiContainer guiContainer) {
 		this.mc = Minecraft.getMinecraft();
 		this.guiContainer = guiContainer;
+		this.handleMouseClick = Reflection.getHMCMethod(guiContainer);
 	}
 
 	private int getDisplayWidth() {
@@ -60,7 +63,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 		try {
 			return (Slot)Reflection.guiContainerClass.invokeMethod(guiContainer, Constants.GETSLOTATPOSITION_NAME.forgeName, getRequiredMouseX(), getRequiredMouseY());
 		} catch (InvocationTargetException e) {
-			CrashReport crashreport = CrashReport.makeCrashReport(e, "GuiContainer.getSlotAtPosition() threw an exception when called from MouseTweaks");
+			CrashReport crashreport = CrashReport.makeCrashReport(e, "GuiContainer.getSlotAtPosition() threw an exception when called from MouseTweaks.");
 			throw new ReportedException(crashreport);
 		}
 	}
@@ -81,11 +84,19 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
 	@Override
 	public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-		mc.playerController.windowClick(guiContainer.inventorySlots.windowId,
-		                                slot.slotNumber,
-		                                mouseButton.getValue(),
-		                                shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP,
-		                                mc.player);
+		try {
+			handleMouseClick.invoke(guiContainer,
+			                        slot,
+			                        slot.slotNumber,
+			                        mouseButton.getValue(),
+			                        shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP);
+		} catch (InvocationTargetException e) {
+			CrashReport crashreport = CrashReport.makeCrashReport(e, "handleMouseClick() threw an exception when called from MouseTweaks.");
+			throw new ReportedException(crashreport);
+		} catch (IllegalAccessException e) {
+			CrashReport crashreport = CrashReport.makeCrashReport(e, "Calling handleMouseClick() from MouseTweaks.");
+			throw new ReportedException(crashreport);
+		}
 	}
 
 	@Override
