@@ -190,9 +190,9 @@ public class Main
 					&& !handler.isIgnored(firstRightClickedSlot)
 					&& !handler.isCraftingOutput(firstRightClickedSlot)) {
 					ItemStack targetStack = firstRightClickedSlot.getStack();
-					ItemStack stackOnMouse = mc.player.inventory.getItemStack();
+					ItemStack stackOnMouse = mc.thePlayer.inventory.getItemStack();
 
-					if (!stackOnMouse.isEmpty()
+					if (stackOnMouse != null
 						&& areStacksCompatible(stackOnMouse, targetStack)
 						&& firstRightClickedSlot.isItemValid(stackOnMouse)) {
 						handler.clickSlot(firstRightClickedSlot, MouseButton.RIGHT, false);
@@ -217,8 +217,8 @@ public class Main
 			Logger.DebugLog("You have selected a new slot, it's slot number is " + selectedSlot.slotNumber);
 
 			// Copy stacks, otherwise when we click stuff they get updated and mess up the logic.
-			ItemStack targetStack = selectedSlot.getStack().copy();
-			ItemStack stackOnMouse = mc.player.inventory.getItemStack().copy();
+			ItemStack targetStack = copyStack(selectedSlot.getStack());
+			ItemStack stackOnMouse = copyStack(mc.thePlayer.inventory.getItemStack());
 
 			boolean shiftIsDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 
@@ -226,22 +226,22 @@ public class Main
 				if (config.rmbTweak) {
 					if (!handler.isIgnored(selectedSlot)
 						&& !handler.isCraftingOutput(selectedSlot)
-						&& !stackOnMouse.isEmpty()
+						&& stackOnMouse != null
 						&& areStacksCompatible(stackOnMouse, targetStack)
 						&& selectedSlot.isItemValid(stackOnMouse)) {
 						handler.clickSlot(selectedSlot, MouseButton.RIGHT, false);
 					}
 				}
 			} else if (Mouse.isButtonDown(0)) { // Left mouse button
-				if (!stackOnMouse.isEmpty()) {
+				if (stackOnMouse != null) {
 					if (config.lmbTweakWithItem) {
 						if (!handler.isIgnored(selectedSlot)
-							&& !targetStack.isEmpty()
+							&& targetStack != null
 							&& areStacksCompatible(stackOnMouse, targetStack)) {
 							if (shiftIsDown) { // If shift is down, we just shift-click the slot and the item gets moved into another inventory.
 								handler.clickSlot(selectedSlot, MouseButton.LEFT, true);
 							} else { // If shift is not down, we need to merge the item stack on the mouse with the one in the slot.
-								if ((stackOnMouse.getCount() + targetStack.getCount()) <= stackOnMouse.getMaxStackSize()) {
+								if ((stackOnMouse.stackSize + targetStack.stackSize) <= stackOnMouse.getMaxStackSize()) {
 									// We need to click on the slot so that our item stack gets merged with it,
 									// and then click again to return the stack to the mouse.
 									// However, if the slot is crafting output, then the item is added to the mouse stack
@@ -255,7 +255,7 @@ public class Main
 						}
 					}
 				} else if (config.lmbTweakWithoutItem) {
-					if (!targetStack.isEmpty() && shiftIsDown && !handler.isIgnored(selectedSlot)) {
+					if (targetStack != null && shiftIsDown && !handler.isIgnored(selectedSlot)) {
 						handler.clickSlot(selectedSlot, MouseButton.LEFT, true);
 					}
 				}
@@ -275,20 +275,20 @@ public class Main
 			return;
 
 		boolean pushItems = (wheel < 0);
-		ItemStack stackOnMouse = mc.player.inventory.getItemStack().copy();
-		ItemStack originalStack = selectedSlot.getStack().copy();
+		ItemStack stackOnMouse = copyStack(mc.thePlayer.inventory.getItemStack());
+		ItemStack originalStack = copyStack(selectedSlot.getStack());
 		boolean isCraftingOutput = handler.isCraftingOutput(selectedSlot);
 
 		// Rather complex condition to determine when the wheel tweak can't be used.
-		if (originalStack.isEmpty()
-			|| (!stackOnMouse.isEmpty() && (isCraftingOutput ? !areStacksCompatible(originalStack, stackOnMouse) : areStacksCompatible(originalStack, stackOnMouse))))
+		if (originalStack == null
+			|| (stackOnMouse != null && (isCraftingOutput ? !areStacksCompatible(originalStack, stackOnMouse) : areStacksCompatible(originalStack, stackOnMouse))))
 			return;
 
 		List<Slot> slots = handler.getSlots();
 
 		if (isCraftingOutput) {
 			if (pushItems) {
-				if (originalStack.isEmpty())
+				if (originalStack == null)
 					return;
 
 				Slot applicableSlot = findWheelApplicableSlot(slots, selectedSlot, pushItems);
@@ -296,7 +296,7 @@ public class Main
 				for (int i = 0; i < numItemsToMove; i++)
 					handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
 
-				if (applicableSlot != null && stackOnMouse.isEmpty())
+				if (applicableSlot != null && stackOnMouse == null)
 					handler.clickSlot(applicableSlot, MouseButton.LEFT, false);
 			}
 
@@ -311,22 +311,22 @@ public class Main
 			if (pushItems) {
 				Slot slotTo = applicableSlot;
 				Slot slotFrom = selectedSlot;
-				ItemStack stackTo = slotTo.getStack().copy();
-				ItemStack stackFrom = slotFrom.getStack().copy();
+				ItemStack stackTo = copyStack(slotTo.getStack());
+				ItemStack stackFrom = copyStack(slotFrom.getStack());
 
-				numItemsToMove = Math.min(numItemsToMove, stackFrom.getCount());
+				numItemsToMove = Math.min(numItemsToMove, stackFrom.stackSize);
 
-				if (!stackTo.isEmpty() && (stackTo.getMaxStackSize() - stackTo.getCount()) <= numItemsToMove) {
+				if (stackTo != null && (stackTo.getMaxStackSize() - stackTo.stackSize) <= numItemsToMove) {
 					// The applicable slot fits in less items than we can move.
 					handler.clickSlot(slotFrom, MouseButton.LEFT, false);
 					handler.clickSlot(slotTo, MouseButton.LEFT, false);
 					handler.clickSlot(slotFrom, MouseButton.LEFT, false);
 
-					numItemsToMove -= stackTo.getMaxStackSize() - stackTo.getCount();
+					numItemsToMove -= stackTo.getMaxStackSize() - stackTo.stackSize;
 				} else {
 					handler.clickSlot(slotFrom, MouseButton.LEFT, false);
 
-					if (stackFrom.getCount() <= numItemsToMove) {
+					if (stackFrom.stackSize <= numItemsToMove) {
 						handler.clickSlot(slotTo, MouseButton.LEFT, false);
 					} else {
 						for (int i = 0; i < numItemsToMove; i++)
@@ -340,13 +340,13 @@ public class Main
 			} else {
 				Slot slotTo = selectedSlot;
 				Slot slotFrom = applicableSlot;
-				ItemStack stackTo = slotTo.getStack().copy();
-				ItemStack stackFrom = slotFrom.getStack().copy();
+				ItemStack stackTo = copyStack(slotTo.getStack());
+				ItemStack stackFrom = copyStack(slotFrom.getStack());
 
-				if (stackTo.getCount() == stackTo.getMaxStackSize())
+				if (stackTo.stackSize == stackTo.getMaxStackSize())
 					break;
 
-				if ((stackTo.getMaxStackSize() - stackTo.getCount()) <= numItemsToMove) {
+				if ((stackTo.getMaxStackSize() - stackTo.stackSize) <= numItemsToMove) {
 					handler.clickSlot(slotFrom, MouseButton.LEFT, false);
 					handler.clickSlot(slotTo, MouseButton.LEFT, false);
 
@@ -358,9 +358,9 @@ public class Main
 					if (handler.isCraftingOutput(slotFrom)) {
 						handler.clickSlot(slotTo, MouseButton.LEFT, false);
 						--numItemsToMove;
-					} else if (stackFrom.getCount() <= numItemsToMove) {
+					} else if (stackFrom.stackSize <= numItemsToMove) {
 						handler.clickSlot(slotTo, MouseButton.LEFT, false);
-						numItemsToMove -= stackFrom.getCount();
+						numItemsToMove -= stackFrom.stackSize;
 					} else {
 						for (int i = 0; i < numItemsToMove; i++)
 							handler.clickSlot(slotTo, MouseButton.RIGHT, false);
@@ -394,7 +394,11 @@ public class Main
 	// Returns true if we can put items from one stack into another.
 	// This is different from ItemStack.areItemsEqual() because here empty stacks are compatible with anything.
 	private static boolean areStacksCompatible(ItemStack a, ItemStack b) {
-		return a.isEmpty() || b.isEmpty() || a.isItemEqual(b);
+		return a == null || b == null || a.isItemEqual(b);
+	}
+
+	private static ItemStack copyStack(ItemStack s) {
+		return s == null ? null : s.copy();
 	}
 
 	private static Slot findWheelApplicableSlot(List<Slot> slots, Slot selectedSlot, boolean pushItems) {
@@ -410,7 +414,7 @@ public class Main
 		}
 
 		ItemStack originalStack = selectedSlot.getStack();
-		boolean findInPlayerInventory = (selectedSlot.inventory != mc.player.inventory);
+		boolean findInPlayerInventory = (selectedSlot.inventory != mc.thePlayer.inventory);
 		Slot rv = null;
 
 		for (int i = startIndex; i != endIndex; i += direction) {
@@ -420,16 +424,16 @@ public class Main
 				continue;
 
 			if (findInPlayerInventory) {
-				if (slot.inventory != mc.player.inventory)
+				if (slot.inventory != mc.thePlayer.inventory)
 					continue;
 			} else {
-				if (slot.inventory == mc.player.inventory)
+				if (slot.inventory == mc.thePlayer.inventory)
 					continue;
 			}
 
 			ItemStack stack = slot.getStack();
 
-			if (stack.isEmpty()) {
+			if (stack == null) {
 				if (rv == null
 					&& pushItems
 					&& slot.isItemValid(originalStack)
@@ -439,7 +443,7 @@ public class Main
 			} else if (areStacksCompatible(originalStack, stack)) {
 				if (pushItems) {
 					if (!handler.isCraftingOutput(slot)
-						&& stack.getCount() < stack.getMaxStackSize())
+						&& stack.stackSize < stack.getMaxStackSize())
 						return slot;
 				} else {
 					return slot;

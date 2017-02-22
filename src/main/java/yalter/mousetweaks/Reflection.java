@@ -2,7 +2,6 @@ package yalter.mousetweaks;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 
 import java.lang.reflect.Field;
@@ -65,7 +64,7 @@ public class Reflection {
 		guiContainerCreative = new ReflectionCache();
 
 		try {
-			Method m = getMethod(GuiContainerCreative.class, getObfuscatedName(Constants.HANDLEMOUSECLICK_NAME), Slot.class, int.class, int.class, ClickType.class);
+			Method m = getMethod(GuiContainerCreative.class, getObfuscatedName(Constants.HANDLEMOUSECLICK_NAME), Slot.class, int.class, int.class, int.class);
 			guiContainerCreative.storeMethod(Constants.HANDLEMOUSECLICK_NAME.forgeName, m);
 		} catch (NoSuchMethodException e) {
 			Logger.Log("Could not retrieve GuiContainerCreative.handleMouseClick().");

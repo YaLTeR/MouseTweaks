@@ -2,7 +2,6 @@ package yalter.mousetweaks.handlers;
 
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.crash.CrashReport;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ReportedException;
 import yalter.mousetweaks.Constants;
@@ -32,7 +31,7 @@ public class GuiContainerCreativeHandler extends GuiContainerHandler {
 			                                             slot,
 			                                             slot.slotNumber,
 			                                             mouseButton.getValue(),
-			                                             shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP);
+			                                             shiftPressed ? 1 : 0);
 		} catch (InvocationTargetException e) {
 			CrashReport crashreport = CrashReport.makeCrashReport(e, "GuiContainerCreative.handleMouseClick() threw an exception when called from MouseTweaks");
 			throw new ReportedException(crashreport);
@@ -41,6 +40,6 @@ public class GuiContainerCreativeHandler extends GuiContainerHandler {
 
 	@Override
 	public boolean isIgnored(Slot slot) {
-		return (super.isIgnored(slot) || slot.inventory != mc.player.inventory);
+		return (super.isIgnored(slot) || slot.inventory != mc.thePlayer.inventory);
 	}
 }

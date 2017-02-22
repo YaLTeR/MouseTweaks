@@ -21,27 +21,26 @@ buildscript {
 		classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
 	}
 }
-
-apply plugin: 'net.minecraftforge.gradle.liteloader'
-apply plugin: 'org.spongepowered.mixin'
-//apply plugin: 'net.minecraftforge.gradle.forge'
+//apply plugin: 'net.minecraftforge.gradle.liteloader'
+//apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "2.7.1"
 group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
 minecraft {
-//	version = "1.11.2-13.20.0.2216"
-	version = "1.11.2"
+	version = "1.8.8-11.15.0.1655"
+	//version = "1.8.8"
 	runDir = "run"
-	mappings = "snapshot_20170116"
+	mappings = "stable_20"
 
 	replace '@VERSION@', project.version
 }
 
-mixin {
-	defaultObfuscationEnv notch
-}
+//mixin {
+//        defaultObfuscationEnv notch
+//}
 
 jar {
 	archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}.jar"
@@ -51,15 +50,15 @@ sourceJar {
 	archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}-src.jar"
 }
 
-dependencies {
-	provided files('forgeSrc-1.11.2-13.20.0.2216.jar')
-}
+//dependencies {
+//        provided files('forgeSrc-1.8.8-11.15.0.1655.jar')
+//}
 
 sourceSets {
 	main {
-//		java {
-//			exclude '**/liteloader/*'
-//		}
+		java {
+			exclude '**/liteloader/*'
+		}
 		resources {
 			exclude 'litemod.json'
 		}

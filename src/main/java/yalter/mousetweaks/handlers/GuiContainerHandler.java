@@ -84,8 +84,8 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 		mc.playerController.windowClick(guiContainer.inventorySlots.windowId,
 		                                slot.slotNumber,
 		                                mouseButton.getValue(),
-		                                shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP,
-		                                mc.player);
+		                                shiftPressed ? 1 : 0,
+		                                mc.thePlayer);
 	}
 
 	@Override
