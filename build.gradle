@@ -22,6 +22,11 @@ buildscript {
 	}
 }
 
+//plugins {
+//	id "org.gradle.java"
+//	id "com.scuilion.syntastic" version "0.3.8"
+//}
+
 apply plugin: 'net.minecraftforge.gradle.liteloader'
 apply plugin: 'org.spongepowered.mixin'
 //apply plugin: 'net.minecraftforge.gradle.forge'
