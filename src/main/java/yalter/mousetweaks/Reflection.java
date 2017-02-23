@@ -81,6 +81,24 @@ public class Reflection {
 		}
 	}
 
+	public static Method getHMCMethod(Object object) {
+		if (HMCCache.containsKey(object.getClass())) {
+			return HMCCache.get(object.getClass());
+		}
+
+		try {
+			Method method = searchMethod(object.getClass(), getObfuscatedName(Constants.HANDLEMOUSECLICK_NAME), Slot.class, int.class, int.class, ClickType.class);
+
+			Logger.DebugLog("Found handleMouseClick() for " + object.getClass().getSimpleName() + ", caching.");
+
+			HMCCache.put(object.getClass(), method);
+			return method;
+		} catch (NoSuchMethodException e) {
+			Logger.DebugLog("Could not find handleMouseClick() for " + object.getClass().getSimpleName() + ", using windowClick().");
+			return null;
+		}
+	}
+
 	static boolean doesClassExist(String name) {
 		try {
 			Class.forName(name);
