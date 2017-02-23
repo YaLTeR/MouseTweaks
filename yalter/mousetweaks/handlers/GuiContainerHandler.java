@@ -1,24 +1,28 @@
 package yalter.mousetweaks.handlers;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.inventory.*;
-import net.minecraft.util.ReportedException;
+import net.minecraft.src.ScaledResolution;
+import net.minecraft.src.GuiContainer;
+import net.minecraft.src.Slot;
+import net.minecraft.src.SlotCrafting;
+import net.minecraft.src.SlotFurnace;
+import net.minecraft.src.ModLoader;
 import org.lwjgl.input.Mouse;
 import yalter.mousetweaks.*;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class GuiContainerHandler implements IGuiScreenHandler {
 	protected Minecraft mc;
 	protected GuiContainer guiContainer;
+	protected Method handleMouseClick;
 
 	public GuiContainerHandler(GuiContainer guiContainer) {
-		this.mc = Minecraft.getMinecraft();
+		this.mc = ModLoader.getMinecraftInstance();
 		this.guiContainer = guiContainer;
+		this.handleMouseClick = Reflection.getHMCMethod(guiContainer);
 	}
 
 	private int getDisplayWidth() {
@@ -30,12 +34,12 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 	}
 
 	private int getRequiredMouseX() {
-		ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
+		ScaledResolution scaledResolution = new ScaledResolution(mc.gameSettings, getDisplayWidth(), getDisplayHeight());
 		return (Mouse.getX() * scaledResolution.getScaledWidth()) / getDisplayWidth();
 	}
 
 	private int getRequiredMouseY() {
-		ScaledResolution scaledResolution = new ScaledResolution(mc);
+		ScaledResolution scaledResolution = new ScaledResolution(mc.gameSettings, getDisplayWidth(), getDisplayHeight());
 		int scaledHeight = scaledResolution.getScaledHeight();
 		return scaledHeight - ((Mouse.getY() * scaledHeight) / getDisplayHeight()) - 1;
 	}
@@ -60,40 +64,35 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 		try {
 			return (Slot)Reflection.guiContainerClass.invokeMethod(guiContainer, Constants.GETSLOTATPOSITION_NAME.forgeName, getRequiredMouseX(), getRequiredMouseY());
 		} catch (InvocationTargetException e) {
-			CrashReport crashreport = CrashReport.makeCrashReport(e, "GuiContainer.getSlotAtPosition() threw an exception when called from MouseTweaks");
-			throw new ReportedException(crashreport);
+			ModLoader.throwException("GuiContainer.getSlotAtPosition() threw an exception when called from MouseTweaks.", e);
+			return null;
 		}
 	}
 
 	@Override
 	public boolean disableRMBDraggingFunctionality() {
-		Reflection.guiContainerClass.setFieldValue(guiContainer, Constants.IGNOREMOUSEUP_NAME.forgeName, true);
-
-		if ((Boolean)Reflection.guiContainerClass.getFieldValue(guiContainer, Constants.DRAGSPLITTING_NAME.forgeName)) {
-			if ((Integer)Reflection.guiContainerClass.getFieldValue(guiContainer, Constants.DRAGSPLITTINGBUTTON_NAME.forgeName) == 1) {
-				Reflection.guiContainerClass.setFieldValue(guiContainer, Constants.DRAGSPLITTING_NAME.forgeName, false);
-				return true;
-			}
-		}
-
 		return false;
 	}
 
 	@Override
 	public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-		mc.playerController.windowClick(guiContainer.inventorySlots.windowId,
-		                                slot.slotNumber,
-		                                mouseButton.getValue(),
-		                                shiftPressed ? 1 : 0,
-		                                mc.thePlayer);
+		try {
+			handleMouseClick.invoke(guiContainer,
+			                        slot,
+			                        slot.slotNumber,
+			                        mouseButton.getValue(),
+			                        shiftPressed);
+		} catch (InvocationTargetException e) {
+			ModLoader.throwException("handleMouseClick() threw an exception when called from MouseTweaks.", e);
+		} catch (IllegalAccessException e) {
+			ModLoader.throwException("Calling handleMouseClick() from MouseTweaks.", e);
+		}
 	}
 
 	@Override
 	public boolean isCraftingOutput(Slot slot) {
 		return (slot instanceof SlotCrafting
-			|| slot instanceof SlotFurnaceOutput
-			|| slot instanceof SlotMerchantResult
-			|| (guiContainer.inventorySlots instanceof ContainerRepair && slot.slotNumber == 2));
+			|| slot instanceof SlotFurnace);
 	}
 
 	@Override

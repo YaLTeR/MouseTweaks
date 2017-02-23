@@ -1,11 +1,12 @@
 package yalter.mousetweaks;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.GuiContainer;
+import net.minecraft.src.GuiContainerCreative;
+import net.minecraft.src.Slot;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.ModLoader;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
@@ -51,13 +52,12 @@ public class Main
 			return true;
 		initialized = true;
 
-		mc = Minecraft.getMinecraft();
+		mc = ModLoader.getMinecraftInstance();
 
 		config = new Config(mc.mcDataDir + File.separator + "config" + File.separator + "MouseTweaks.cfg");
 		config.read();
 
 		Reflection.reflectGuiContainer();
-		Reflection.reflectGuiContainerCreative();
 
 		forge = ((entryPoint == Constants.EntryPoint.FORGE
 				|| Reflection.doesClassExist("net.minecraftforge.client.MinecraftForgeClient")));
@@ -67,8 +67,9 @@ public class Main
 			Logger.Log("Minecraft Forge is not installed.");
 		}
 
-		liteLoader = ((entryPoint == Constants.EntryPoint.LITELOADER)
-				|| Reflection.doesClassExist("com.mumfrey.liteloader.core.LiteLoader"));
+		//liteLoader = ((entryPoint == Constants.EntryPoint.LITELOADER)
+		//                || Reflection.doesClassExist("com.mumfrey.liteloader.core.LiteLoader"));
+		liteLoader = false;
 		if (liteLoader) {
 			Logger.Log("LiteLoader is installed.");
 		} else {

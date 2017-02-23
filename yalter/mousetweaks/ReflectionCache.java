@@ -1,8 +1,6 @@
 package yalter.mousetweaks;
 
-import net.minecraft.crash.CrashReport;
-import net.minecraft.util.ReportedException;
-
+import net.minecraft.src.ModLoader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,8 +22,8 @@ public class ReflectionCache {
 		try {
 			return method.invoke(obj, args);
 		} catch (IllegalAccessException e) {
-			CrashReport crashreport = CrashReport.makeCrashReport(e, "Invoking method in MouseTweaks' reflection");
-			throw new ReportedException(crashreport);
+			ModLoader.throwException("Invoking method in MouseTweaks' reflection", e);
+			return null;
 		}
 	}
 
@@ -35,8 +33,8 @@ public class ReflectionCache {
 		try {
 			return field.get(obj);
 		} catch (IllegalAccessException e) {
-			CrashReport crashreport = CrashReport.makeCrashReport(e, "Getting field value in MouseTweaks' reflection");
-			throw new ReportedException(crashreport);
+			ModLoader.throwException("Getting field value in MouseTweaks' reflection", e);
+			return null;
 		}
 	}
 
@@ -46,8 +44,7 @@ public class ReflectionCache {
 		try {
 			field.set(obj, value);
 		} catch (IllegalAccessException e) {
-			CrashReport crashreport = CrashReport.makeCrashReport(e, "Setting field value in MouseTweaks' reflection");
-			throw new ReportedException(crashreport);
+			ModLoader.throwException("Setting field value in MouseTweaks' reflection", e);
 		}
 	}
 

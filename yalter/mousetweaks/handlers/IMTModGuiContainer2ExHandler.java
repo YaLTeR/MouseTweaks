@@ -1,19 +1,20 @@
 package yalter.mousetweaks.handlers;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.Slot;
+import net.minecraft.src.Slot;
+import net.minecraft.src.ModLoader;
 import yalter.mousetweaks.IGuiScreenHandler;
 import yalter.mousetweaks.MouseButton;
-import yalter.mousetweaks.api.IMTModGuiContainer2;
+import yalter.mousetweaks.api.IMTModGuiContainer2Ex;
 
 import java.util.List;
 
-public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
+public class IMTModGuiContainer2ExHandler implements IGuiScreenHandler {
 	protected Minecraft mc;
-	protected IMTModGuiContainer2 modGuiContainer;
+	protected IMTModGuiContainer2Ex modGuiContainer;
 
-	public IMTModGuiContainer2Handler(IMTModGuiContainer2 modGuiContainer) {
-		this.mc = Minecraft.getMinecraft();
+	public IMTModGuiContainer2ExHandler(IMTModGuiContainer2Ex modGuiContainer) {
+		this.mc = ModLoader.getMinecraftInstance();
 		this.modGuiContainer = modGuiContainer;
 	}
 
@@ -29,7 +30,7 @@ public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
 
 	@Override
 	public List<Slot> getSlots() {
-		return modGuiContainer.MT_getContainer().inventorySlots;
+		return modGuiContainer.MT_getSlots();
 	}
 
 	@Override
@@ -44,11 +45,7 @@ public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
 
 	@Override
 	public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-		mc.playerController.windowClick(modGuiContainer.MT_getContainer().windowId,
-		                                slot.slotNumber,
-		                                mouseButton.getValue(),
-		                                shiftPressed ? 1 : 0,
-		                                mc.thePlayer);
+		modGuiContainer.MT_clickSlot(slot, mouseButton.getValue(), shiftPressed);
 	}
 
 	@Override

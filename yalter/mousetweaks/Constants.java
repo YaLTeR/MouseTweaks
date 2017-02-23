@@ -2,8 +2,8 @@ package yalter.mousetweaks;
 
 public class Constants {
 	public static final String MOD_NAME    = "Mouse Tweaks";
-	public static final String MOD_ID      = "mousetweaks";
-	public static final String VERSION     = "@VERSION@";
+	public static final String MOD_ID      = "mod_MouseTweaks"; // Has to be this, otherwise Forge won't read mcmod.info.
+	public static final String VERSION     = "2.7.2";
 	public static final String UPDATE_URL  = "http://play.sourceruns.org/yalter/MouseTweaks/update.json";
 
 	static final String CONFIG_RMB_TWEAK              = "RMBTweak";
@@ -16,11 +16,8 @@ public class Constants {
 	static final String CONFIG_DEBUG                  = "Debug";
 
 	// Names for reflection.
-	public static final ObfuscatedName IGNOREMOUSEUP_NAME = new ObfuscatedName("ignoreMouseUp", "field_146995_H", "H");
-	public static final ObfuscatedName DRAGSPLITTING_NAME = new ObfuscatedName("dragSplitting", "field_147007_t", "t");
-	public static final ObfuscatedName DRAGSPLITTINGBUTTON_NAME = new ObfuscatedName("dragSplittingButton", "field_146988_G", "G");
-	public static final ObfuscatedName GETSLOTATPOSITION_NAME = new ObfuscatedName("getSlotAtPosition", "func_146975_c", "c");
-	public static final ObfuscatedName HANDLEMOUSECLICK_NAME = new ObfuscatedName("handleMouseClick", "func_146984_a", "a");
+	public static final ObfuscatedName GETSLOTATPOSITION_NAME = new ObfuscatedName("getSlotAtPosition", "func_588_a", "a");
+	public static final ObfuscatedName HANDLEMOUSECLICK_NAME = new ObfuscatedName("handleMouseClick", "func_35309_a", "a");
 
 	static final String ONTICKMETHOD_FORGE_NAME      = "Forge";
 	static final String ONTICKMETHOD_LITELOADER_NAME = "LiteLoader";
