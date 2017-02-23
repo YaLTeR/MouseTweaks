@@ -15,7 +15,7 @@ public class Reflection {
 	private static Obfuscation obfuscation;
 	private static boolean checkObfuscation = true;
 
-	private static HashMap<Class, Method> HMCCache = new HashMap<Class, Method>();
+	private static HashMap<Class<?>, Method> HMCCache = new HashMap<Class<?>, Method>();
 
 	public static ReflectionCache guiContainerClass;
 
@@ -90,7 +90,7 @@ public class Reflection {
 		}
 	}
 
-	private static Field getField(Class clazz, String name) throws NoSuchFieldException {
+	private static Field getField(Class<?> clazz, String name) throws NoSuchFieldException {
 		Field field;
 
 		try {
@@ -103,7 +103,7 @@ public class Reflection {
 		return field;
 	}
 
-	private static Method getMethod(Class<?> clazz, String name, Class... args) throws NoSuchMethodException {
+	private static Method getMethod(Class<?> clazz, String name, Class<?>... args) throws NoSuchMethodException {
 		Method method;
 
 		try {
@@ -116,7 +116,7 @@ public class Reflection {
 		return method;
 	}
 
-	private static Method searchMethod(Class<?> clazz, String name, Class... args) throws NoSuchMethodException {
+	private static Method searchMethod(Class<?> clazz, String name, Class<?>... args) throws NoSuchMethodException {
 		Method method;
 
 		do {
