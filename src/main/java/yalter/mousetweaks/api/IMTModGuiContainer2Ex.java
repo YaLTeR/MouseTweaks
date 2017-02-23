@@ -89,11 +89,10 @@ public interface IMTModGuiContainer2Ex {
 	 *
 	 * For vanilla containers this method looks like this (mc is Minecraft):
 	 * <pre>
-	 * mc.playerController.windowClick(this.inventorySlots.windowId,
-	 *                                 slot.slotNumber,
-	 *                                 mouseButton,
-	 *                                 shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP,
-	 *                                 mc.player);
+	 * this.handleMouseClick(slot,
+	 *                       slot.slotNumber,
+	 *                       mouseButton,
+	 *                       shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP);
 	 * </pre>
 	 *
 	 * @param slot the slot to click
