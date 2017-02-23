@@ -1,5 +1,6 @@
 package yalter.mousetweaks.api;
 
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 
 import java.util.List;
@@ -92,12 +93,13 @@ public interface IMTModGuiContainer2Ex {
 	 * this.handleMouseClick(slot,
 	 *                       slot.slotNumber,
 	 *                       mouseButton,
-	 *                       shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP);
+	 *                       clickType);
 	 * </pre>
 	 *
 	 * @param slot the slot to click
 	 * @param mouseButton the mouse button to click, left is 0 and right is 1
-	 * @param shiftPressed if false, it should be a normal click, if true - a shift-click
+	 * @param clickType click type, most frequently used ones are PICKUP (normal left or right click)
+	 *                  and QUICK_MOVE (shift click)
 	 */
-	void MT_clickSlot(Slot slot, int mouseButton, boolean shiftPressed);
+	void MT_clickSlot(Slot slot, int mouseButton, ClickType clickType);
 }
