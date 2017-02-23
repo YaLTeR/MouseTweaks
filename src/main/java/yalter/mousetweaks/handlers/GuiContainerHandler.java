@@ -33,7 +33,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 	}
 
 	private int getRequiredMouseX() {
-		ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
+		ScaledResolution scaledResolution = new ScaledResolution(mc);
 		return (Mouse.getX() * scaledResolution.getScaledWidth()) / getDisplayWidth();
 	}
 
