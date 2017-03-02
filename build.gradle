@@ -36,10 +36,10 @@ group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
 minecraft {
-	//version = "1.11.2-13.20.0.2236"
-	version = "1.11.2"
+	//version = "1.10.2-12.18.2.2118"
+	version = "1.10.2"
 	runDir = "run"
-	mappings = "snapshot_20170222"
+	mappings = "stable_29"
 
 	replace '@VERSION@', project.version
 }
@@ -59,7 +59,7 @@ sourceJar {
 }
 
 dependencies {
-	provided files('forgeSrc-1.11.2-13.20.0.2236.jar')
+	provided files('forgeSrc-1.10.2-12.18.2.2118.jar')
 }
 
 sourceSets {
