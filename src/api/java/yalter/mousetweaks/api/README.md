@@ -6,10 +6,10 @@ If your container isn't based on GuiContainer, or if you want to improve compati
 ## IMTModGuiContainer2Ex
 Extended version of the previous interface, adds an ability to override the slot clicking function.
 
-## MouseTweaksIgnore
+## @MouseTweaksIgnore
 Putting this annotation on your GuiContainer is a quick and easy way to disable Mouse Tweaks on the container without having to implement the whole API interface.
 
-## MouseTweaksDisableWheelTweak
+## @MouseTweaksDisableWheelTweak
 Putting this annotation on your GuiContainer is a quick and easy way to disable the wheel tweak on the container without having to implement the whole API interface.
 
 ## IMTModGuiContainer
