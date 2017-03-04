@@ -49,10 +49,12 @@ mixin {
 }
 
 jar {
+	from sourceSets.api.output
 	archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}.jar"
 }
 
 sourceJar {
+	from sourceSets.api.allSource
 	archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}-src.jar"
 }
 
@@ -86,6 +88,15 @@ processResources {
 		exclude 'mcmod.info'
 		exclude 'litemod.json'
 	}
+}
+
+task apiJar(type: Jar) {
+	from sourceSets.api.output
+	archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}-api.jar"
+}
+
+artifacts {
+	archives apiJar
 }
 
 //allprojects {
