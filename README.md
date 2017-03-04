@@ -5,4 +5,4 @@ A mod that enhances the inventory management by adding various additional functi
 `gradlew setupCIWorkspace build`
 
 #Compatibility
-Mouse Tweaks assumes a GuiScreen has some object (Container) which can provide number of slots, slots by indices and the currently selected slot. By default Mouse Tweaks works with all standard GuiContainer-s. If your inventory doesn't extend the standard GuiContainer, you can implement the Mouse Tweaks API interface (`yalter.mousetweaks.api.IMTModGuiContainer`) to provide the necessary functions.
+Mouse Tweaks should work with everything based on GuiContainer. If your GUI isn't based on GuiContainer, or if you want to provide additional compatibility, take a look at `src/api/java/yalter/mousetweaks/api/`.
