@@ -1,6 +1,8 @@
 package yalter.mousetweaks.liteloader;
 
+import com.mumfrey.liteloader.Configurable;
 import com.mumfrey.liteloader.RenderListener;
+import com.mumfrey.liteloader.modconfig.ConfigPanel;
 import net.minecraft.client.gui.GuiScreen;
 import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.Main;
@@ -8,7 +10,7 @@ import yalter.mousetweaks.OnTickMethod;
 
 import java.io.File;
 
-public class LiteModMouseTweaks implements RenderListener {
+public class LiteModMouseTweaks implements RenderListener, Configurable {
     private static LiteModMouseTweaks instance;
 
     public static LiteModMouseTweaks getInstance() {
@@ -49,4 +51,9 @@ public class LiteModMouseTweaks implements RenderListener {
 
     @Override
     public void upgradeSettings(String s, File file, File file2) { }
+
+    @Override
+    public Class<? extends ConfigPanel> getConfigPanelClass() {
+        return MouseTweaksConfigPanel.class;
+    }
 }
