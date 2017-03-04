@@ -8,6 +8,8 @@ import net.minecraft.inventory.*;
 import net.minecraft.util.ReportedException;
 import org.lwjgl.input.Mouse;
 import yalter.mousetweaks.*;
+import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
+import yalter.mousetweaks.api.MouseTweaksIgnore;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,12 +47,13 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
 	@Override
 	public boolean isMouseTweaksDisabled() {
-		return (Reflection.guiContainerClass == null);
+		return guiContainer.getClass().isAnnotationPresent(MouseTweaksIgnore.class)
+			|| (Reflection.guiContainerClass == null);
 	}
 
 	@Override
 	public boolean isWheelTweakDisabled() {
-		return false;
+		return guiContainer.getClass().isAnnotationPresent(MouseTweaksDisableWheelTweak.class);
 	}
 
 	@Override
