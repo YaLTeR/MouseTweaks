@@ -17,7 +17,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 		classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
 	}
 }
@@ -36,10 +36,10 @@ group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
 minecraft {
-	//version = "1.11.2-13.20.0.2236"
-	version = "1.11.2"
+//	version = "1.12-14.21.1.2413"
+	version = "1.12"
 	runDir = "run"
-	mappings = "snapshot_20170222"
+	mappings = "snapshot_20170627"
 
 	replace '@VERSION@', project.version
 }
@@ -59,14 +59,14 @@ sourceJar {
 }
 
 dependencies {
-	provided files('forgeSrc-1.11.2-13.20.0.2236.jar')
+	provided files('forgeBin-1.12-14.21.1.2413.jar')
 }
 
 sourceSets {
 	main {
-		//java {
-		//        exclude '**/liteloader/*'
-		//}
+//		java {
+//		        exclude '**/liteloader/*'
+//		}
 		resources {
 			exclude 'litemod.json'
 		}
