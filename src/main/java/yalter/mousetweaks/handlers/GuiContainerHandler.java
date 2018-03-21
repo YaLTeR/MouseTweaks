@@ -35,14 +35,11 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 	}
 
 	private int getRequiredMouseX() {
-		ScaledResolution scaledResolution = new ScaledResolution(mc);
-		return (Mouse.getX() * scaledResolution.getScaledWidth()) / getDisplayWidth();
+		return (Mouse.getX() * guiContainer.width) / getDisplayWidth();
 	}
 
 	private int getRequiredMouseY() {
-		ScaledResolution scaledResolution = new ScaledResolution(mc);
-		int scaledHeight = scaledResolution.getScaledHeight();
-		return scaledHeight - ((Mouse.getY() * scaledHeight) / getDisplayHeight()) - 1;
+		return guiContainer.height - ((Mouse.getY() * guiContainer.height) / getDisplayHeight()) - 1;
 	}
 
 	@Override
