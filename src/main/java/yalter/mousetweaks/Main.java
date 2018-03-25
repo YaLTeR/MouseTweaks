@@ -161,6 +161,10 @@ public class Main
 					+ (disableWheelForThisContainer ? "disabled" : "enabled")
 					+ ".");
 			}
+			
+			// Mouse.getDWheel() returns Movement of the wheel since last time it was called.
+			// Reset it here to ignore any wheel Movement before currentScreen was opened.
+			if (config.wheelTweak) Mouse.getDWheel();
 		}
 
 		// If everything is disabled there's nothing to do.
