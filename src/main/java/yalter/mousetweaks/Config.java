@@ -43,8 +43,6 @@ public class Config {
 		wheelScrollDirection = WheelScrollDirection.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION), 0));
 		onTickMethodOrderFromString(properties.getProperty(Constants.CONFIG_ONTICK_METHOD_ORDER));
 		debug = parseIntOrDefault(properties.getProperty(Constants.CONFIG_DEBUG), 0) != 0;
-
-		save();
 	}
 
 	private static int parseIntOrDefault(String s, int defaultValue) {
