@@ -93,22 +93,22 @@ public class Config {
 	}
 
 	public String onTickMethodOrderString() {
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		for (OnTickMethod method : onTickMethodOrder) {
-			if (!result.isEmpty())
-				result += ", ";
+			if (result.length() > 0)
+				result.append(", ");
 
 			switch (method) {
 				case FORGE:
-					result += Constants.ONTICKMETHOD_FORGE_NAME;
+					result.append(Constants.ONTICKMETHOD_FORGE_NAME);
 					break;
 
 				case LITELOADER:
-					result += Constants.ONTICKMETHOD_LITELOADER_NAME;
+					result.append(Constants.ONTICKMETHOD_LITELOADER_NAME);
 					break;
 			}
 		}
-		return result;
+		return result.toString();
 	}
 
 	public void onTickMethodOrderFromString(String string) {
