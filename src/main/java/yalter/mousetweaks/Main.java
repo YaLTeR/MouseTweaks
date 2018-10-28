@@ -15,8 +15,7 @@ import yalter.mousetweaks.handlers.*;
 import java.io.File;
 import java.util.List;
 
-public class Main
-{
+public class Main {
 	private static boolean liteLoader = false;
 	private static boolean forge = false;
 
@@ -55,16 +54,16 @@ public class Main
 
 		Reflection.reflectGuiContainer();
 
-		forge = ((entryPoint == Constants.EntryPoint.FORGE
-				|| Reflection.doesClassExist("net.minecraftforge.client.MinecraftForgeClient")));
+		forge = ((entryPoint == Constants.EntryPoint.FORGE || Reflection.doesClassExist(
+			"net.minecraftforge.client.MinecraftForgeClient")));
 		if (forge) {
 			Logger.Log("Minecraft Forge is installed.");
 		} else {
 			Logger.Log("Minecraft Forge is not installed.");
 		}
 
-		liteLoader = ((entryPoint == Constants.EntryPoint.LITELOADER)
-				|| Reflection.doesClassExist("com.mumfrey.liteloader.core.LiteLoader"));
+		liteLoader = ((entryPoint == Constants.EntryPoint.LITELOADER) || Reflection.doesClassExist(
+			"com.mumfrey.liteloader.core.LiteLoader"));
 		if (liteLoader) {
 			Logger.Log("LiteLoader is installed.");
 		} else {
@@ -154,20 +153,19 @@ public class Main
 				disableWheelForThisContainer = handler.isWheelTweakDisabled();
 
 				Logger.DebugLog("Handler: "
-					+ handler.getClass().getSimpleName()
-					+ "; MT is "
-					+ (disableForThisContainer ? "disabled" : "enabled")
-					+ "; wheel tweak is "
-					+ (disableWheelForThisContainer ? "disabled" : "enabled")
-					+ ".");
+				                + handler.getClass().getSimpleName()
+				                + "; MT is "
+				                + (disableForThisContainer
+				                   ? "disabled"
+				                   : "enabled")
+				                + "; wheel tweak is "
+				                + (disableWheelForThisContainer ? "disabled" : "enabled")
+				                + ".");
 			}
 		}
 
 		// If everything is disabled there's nothing to do.
-		if (!config.rmbTweak
-			&& !config.lmbTweakWithItem
-			&& !config.lmbTweakWithoutItem
-			&& !config.wheelTweak)
+		if (!config.rmbTweak && !config.lmbTweakWithItem && !config.lmbTweakWithoutItem && !config.wheelTweak)
 			return;
 
 		if (disableForThisContainer)
@@ -182,15 +180,16 @@ public class Main
 			if (config.rmbTweak && handler.disableRMBDraggingFunctionality()) {
 				// Check some conditions to see if we really need to click the first slot.
 				if (firstRightClickedSlot != null
-					&& (firstRightClickedSlot != selectedSlot || oldSelectedSlot == selectedSlot) // This condition is here to prevent double-clicking.
-					&& !handler.isIgnored(firstRightClickedSlot)
-					&& !handler.isCraftingOutput(firstRightClickedSlot)) {
+				    // This condition is here to prevent double-clicking.
+				    && (firstRightClickedSlot != selectedSlot || oldSelectedSlot == selectedSlot)
+				    && !handler.isIgnored(firstRightClickedSlot)
+				    && !handler.isCraftingOutput(firstRightClickedSlot)) {
 					ItemStack targetStack = firstRightClickedSlot.getStack();
 					ItemStack stackOnMouse = mc.player.inventory.getItemStack();
 
 					if (!stackOnMouse.isEmpty()
-						&& areStacksCompatible(stackOnMouse, targetStack)
-						&& firstRightClickedSlot.isItemValid(stackOnMouse)) {
+					    && areStacksCompatible(stackOnMouse, targetStack)
+					    && firstRightClickedSlot.isItemValid(stackOnMouse)) {
 						handler.clickSlot(firstRightClickedSlot, MouseButton.RIGHT, false);
 					}
 				}
@@ -218,30 +217,37 @@ public class Main
 
 			boolean shiftIsDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 
-			if (Mouse.isButtonDown(1)) { // Right mouse button
+			if (Mouse.isButtonDown(1)) {
+				// Right mouse button
 				if (config.rmbTweak) {
 					if (!handler.isIgnored(selectedSlot)
-						&& !handler.isCraftingOutput(selectedSlot)
-						&& !stackOnMouse.isEmpty()
-						&& areStacksCompatible(stackOnMouse, targetStack)
-						&& selectedSlot.isItemValid(stackOnMouse)) {
+					    && !handler.isCraftingOutput(selectedSlot)
+					    && !stackOnMouse.isEmpty()
+					    && areStacksCompatible(stackOnMouse, targetStack)
+					    && selectedSlot.isItemValid(stackOnMouse)) {
 						handler.clickSlot(selectedSlot, MouseButton.RIGHT, false);
 					}
 				}
-			} else if (Mouse.isButtonDown(0)) { // Left mouse button
+			} else if (Mouse.isButtonDown(0)) {
+				// Left mouse button
 				if (!stackOnMouse.isEmpty()) {
 					if (config.lmbTweakWithItem) {
 						if (!handler.isIgnored(selectedSlot)
-							&& !targetStack.isEmpty()
-							&& areStacksCompatible(stackOnMouse, targetStack)) {
-							if (shiftIsDown) { // If shift is down, we just shift-click the slot and the item gets moved into another inventory.
+						    && !targetStack.isEmpty()
+						    && areStacksCompatible(stackOnMouse, targetStack)) {
+							if (shiftIsDown) {
+								// If shift is down, we just shift-click the slot and the item gets moved into another
+								// inventory.
 								handler.clickSlot(selectedSlot, MouseButton.LEFT, true);
-							} else { // If shift is not down, we need to merge the item stack on the mouse with the one in the slot.
-								if ((stackOnMouse.getCount() + targetStack.getCount()) <= stackOnMouse.getMaxStackSize()) {
-									// We need to click on the slot so that our item stack gets merged with it,
-									// and then click again to return the stack to the mouse.
-									// However, if the slot is crafting output, then the item is added to the mouse stack
-									// on the first click and we don't need to click the second time.
+							} else {
+								// If shift is not down, we need to merge the item stack on the mouse with the one in
+								// the slot.
+								if ((stackOnMouse.getCount() + targetStack.getCount())
+								    <= stackOnMouse.getMaxStackSize()) {
+									// We need to click on the slot so that our item stack gets merged with it, and
+									// then click again to return the stack to the mouse. However, if the slot is
+									// crafting output, then the item is added to the mouse stack on the first click
+									// and we don't need to click the second time.
 									handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
 
 									if (!handler.isCraftingOutput(selectedSlot))
@@ -274,14 +280,18 @@ public class Main
 
 		// Rather complex condition to determine when the wheel tweak can't be used.
 		if (originalStack.isEmpty()
-			|| (!stackOnMouse.isEmpty() && (isCraftingOutput ? !areStacksCompatible(originalStack, stackOnMouse) : areStacksCompatible(originalStack, stackOnMouse))))
+		    || (!stackOnMouse.isEmpty()
+		        && (isCraftingOutput
+		            ? !areStacksCompatible(originalStack, stackOnMouse)
+		            : areStacksCompatible(originalStack, stackOnMouse))))
 			return;
 
 		List<Slot> slots = handler.getSlots();
 
-		if (config.wheelScrollDirection == WheelScrollDirection.INVERTED
-				|| (config.wheelScrollDirection == WheelScrollDirection.INVENTORY_POSITION_AWARE
-					&& otherInventoryIsAbove(selectedSlot, slots))) {
+		if (config.wheelScrollDirection == WheelScrollDirection.INVERTED || (config.wheelScrollDirection
+		                                                                     == WheelScrollDirection.INVENTORY_POSITION_AWARE
+		                                                                     && otherInventoryIsAbove(selectedSlot,
+		                                                                                              slots))) {
 			wheel = -wheel;
 		}
 		boolean pushItems = (wheel < 0);
@@ -372,17 +382,18 @@ public class Main
 						handler.clickSlot(slotFrom, MouseButton.LEFT, false);
 				}
 			}
-		}
-		while (numItemsToMove > 0);
+		} while (numItemsToMove > 0);
 	}
 
 	// Returns true if the other inventory is above the selected slot inventory.
 	//
-	// This is used for the inventory position aware scroll direction. To prevent any surprises, this should have the same logic for what constitutes the "other" inventory as findWheelApplicableSlot().
+	// This is used for the inventory position aware scroll direction. To prevent any surprises, this should have the
+	// same logic for what constitutes the "other" inventory as findWheelApplicableSlot().
 	private static boolean otherInventoryIsAbove(Slot selectedSlot, List<Slot> slots) {
 		boolean selectedIsInPlayerInventory = selectedSlot.inventory == mc.player.inventory;
 		for (Slot slot : slots) {
-			if ((slot.inventory == mc.player.inventory) != selectedIsInPlayerInventory && slot.yPos < selectedSlot.yPos) {
+			if ((slot.inventory == mc.player.inventory) != selectedIsInPlayerInventory
+			    && slot.yPos < selectedSlot.yPos) {
 				return true;
 			}
 		}
@@ -393,15 +404,15 @@ public class Main
 	@SuppressWarnings("deprecation")
 	private static IGuiScreenHandler findHandler(GuiScreen currentScreen) {
 		if (currentScreen instanceof IMTModGuiContainer2Ex) {
-			return new IMTModGuiContainer2ExHandler((IMTModGuiContainer2Ex)currentScreen);
+			return new IMTModGuiContainer2ExHandler((IMTModGuiContainer2Ex) currentScreen);
 		} else if (currentScreen instanceof IMTModGuiContainer2) {
-			return new IMTModGuiContainer2Handler((IMTModGuiContainer2)currentScreen);
+			return new IMTModGuiContainer2Handler((IMTModGuiContainer2) currentScreen);
 		} else if (currentScreen instanceof yalter.mousetweaks.api.IMTModGuiContainer) {
-			return new IMTModGuiContainerHandler((yalter.mousetweaks.api.IMTModGuiContainer)currentScreen);
+			return new IMTModGuiContainerHandler((yalter.mousetweaks.api.IMTModGuiContainer) currentScreen);
 		} else if (currentScreen instanceof GuiContainerCreative) {
-			return new GuiContainerCreativeHandler((GuiContainerCreative)currentScreen);
+			return new GuiContainerCreativeHandler((GuiContainerCreative) currentScreen);
 		} else if (currentScreen instanceof GuiContainer) {
-			return new GuiContainerHandler((GuiContainer)currentScreen);
+			return new GuiContainerHandler((GuiContainer) currentScreen);
 		}
 
 		return null;
@@ -446,16 +457,12 @@ public class Main
 			ItemStack stack = slot.getStack();
 
 			if (stack.isEmpty()) {
-				if (rv == null
-					&& pushItems
-					&& slot.isItemValid(originalStack)
-					&& !handler.isCraftingOutput(slot)) {
+				if (rv == null && pushItems && slot.isItemValid(originalStack) && !handler.isCraftingOutput(slot)) {
 					rv = slot;
 				}
 			} else if (areStacksCompatible(originalStack, stack)) {
 				if (pushItems) {
-					if (!handler.isCraftingOutput(slot)
-						&& stack.getCount() < stack.getMaxStackSize())
+					if (!handler.isCraftingOutput(slot) && stack.getCount() < stack.getMaxStackSize())
 						return slot;
 				} else {
 					return slot;

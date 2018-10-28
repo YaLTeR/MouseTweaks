@@ -21,8 +21,7 @@ public class MouseTweaksConfigPanel extends AbstractConfigPanel {
 
 		int y = -16;
 
-		this.addControl(new GuiCheckbox(0, 0, y += 16, "Enable RMB tweak"),
-		                new ConfigOptionListener<GuiCheckbox>() {
+		this.addControl(new GuiCheckbox(0, 0, y += 16, "Enable RMB tweak"), new ConfigOptionListener<GuiCheckbox>() {
 			@Override
 			public void actionPerformed(GuiCheckbox control) {
 				Main.config.rmbTweak = (control.checked = !control.checked);
@@ -30,36 +29,34 @@ public class MouseTweaksConfigPanel extends AbstractConfigPanel {
 		}).checked = Main.config.rmbTweak;
 
 		this.addControl(new GuiCheckbox(0, 0, y += 16, "Enable LMB tweak with item"),
-			new ConfigOptionListener<GuiCheckbox>() {
-				@Override
-				public void actionPerformed(GuiCheckbox control) {
-					Main.config.lmbTweakWithItem = (control.checked = !control.checked);
-				}
-			}).checked = Main.config.lmbTweakWithItem;
+		                new ConfigOptionListener<GuiCheckbox>() {
+			                @Override
+			                public void actionPerformed(GuiCheckbox control) {
+				                Main.config.lmbTweakWithItem = (control.checked = !control.checked);
+			                }
+		                }).checked = Main.config.lmbTweakWithItem;
 
 		this.addControl(new GuiCheckbox(0, 0, y += 16, "Enable LMB tweak without item"),
-			new ConfigOptionListener<GuiCheckbox>() {
-				@Override
-				public void actionPerformed(GuiCheckbox control) {
-					Main.config.lmbTweakWithoutItem = (control.checked = !control.checked);
-				}
-			}).checked = Main.config.lmbTweakWithoutItem;
+		                new ConfigOptionListener<GuiCheckbox>() {
+			                @Override
+			                public void actionPerformed(GuiCheckbox control) {
+				                Main.config.lmbTweakWithoutItem = (control.checked = !control.checked);
+			                }
+		                }).checked = Main.config.lmbTweakWithoutItem;
 
-		this.addControl(new GuiCheckbox(0, 0, y += 16, "Enable wheel tweak"),
-			new ConfigOptionListener<GuiCheckbox>() {
-				@Override
-				public void actionPerformed(GuiCheckbox control) {
-					Main.config.wheelTweak = (control.checked = !control.checked);
-				}
-			}).checked = Main.config.wheelTweak;
+		this.addControl(new GuiCheckbox(0, 0, y += 16, "Enable wheel tweak"), new ConfigOptionListener<GuiCheckbox>() {
+			@Override
+			public void actionPerformed(GuiCheckbox control) {
+				Main.config.wheelTweak = (control.checked = !control.checked);
+			}
+		}).checked = Main.config.wheelTweak;
 
-		this.addControl(new GuiCheckbox(0, 0, y += 16, "Enable debug mode"),
-			new ConfigOptionListener<GuiCheckbox>() {
-				@Override
-				public void actionPerformed(GuiCheckbox control) {
-					Config.debug = (control.checked = !control.checked);
-				}
-			}).checked = Config.debug;
+		this.addControl(new GuiCheckbox(0, 0, y += 16, "Enable debug mode"), new ConfigOptionListener<GuiCheckbox>() {
+			@Override
+			public void actionPerformed(GuiCheckbox control) {
+				Config.debug = (control.checked = !control.checked);
+			}
+		}).checked = Config.debug;
 	}
 
 	@Override

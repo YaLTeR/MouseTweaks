@@ -37,10 +37,16 @@ public class Config {
 
 		rmbTweak = parseIntOrDefault(properties.getProperty(Constants.CONFIG_RMB_TWEAK), 1) != 0;
 		lmbTweakWithItem = parseIntOrDefault(properties.getProperty(Constants.CONFIG_LMB_TWEAK_WITH_ITEM), 1) != 0;
-		lmbTweakWithoutItem = parseIntOrDefault(properties.getProperty(Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM), 1) != 0;
+		lmbTweakWithoutItem = parseIntOrDefault(properties.getProperty(Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM), 1)
+		                      != 0;
 		wheelTweak = parseIntOrDefault(properties.getProperty(Constants.CONFIG_WHEEL_TWEAK), 1) != 0;
-		wheelSearchOrder = WheelSearchOrder.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_WHEEL_SEARCH_ORDER), 1));
-		wheelScrollDirection = WheelScrollDirection.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION), 0));
+		wheelSearchOrder
+			= WheelSearchOrder.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_WHEEL_SEARCH_ORDER),
+			                                            1));
+		wheelScrollDirection
+			=
+			WheelScrollDirection.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION),
+			                                                0));
 		onTickMethodOrderFromString(properties.getProperty(Constants.CONFIG_ONTICK_METHOD_ORDER));
 		debug = parseIntOrDefault(properties.getProperty(Constants.CONFIG_DEBUG), 0) != 0;
 	}
@@ -68,7 +74,9 @@ public class Config {
 			writeBoolean(configWriter, Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM, lmbTweakWithoutItem);
 			writeBoolean(configWriter, Constants.CONFIG_WHEEL_TWEAK, wheelTweak);
 			writeString(configWriter, Constants.CONFIG_WHEEL_SEARCH_ORDER, String.valueOf(wheelSearchOrder.ordinal()));
-			writeString(configWriter, Constants.CONFIG_WHEEL_SCROLL_DIRECTION, String.valueOf(wheelScrollDirection.ordinal()));
+			writeString(configWriter,
+			            Constants.CONFIG_WHEEL_SCROLL_DIRECTION,
+			            String.valueOf(wheelScrollDirection.ordinal()));
 			writeString(configWriter, Constants.CONFIG_ONTICK_METHOD_ORDER, onTickMethodOrderString());
 			writeBoolean(configWriter, Constants.CONFIG_DEBUG, debug);
 
@@ -87,7 +95,7 @@ public class Config {
 	}
 
 	private static void writeBoolean(FileWriter configWriter, String name, boolean value) throws IOException {
-        writeString(configWriter, name, value ? "1" : "0");
+		writeString(configWriter, name, value ? "1" : "0");
 	}
 
 	public String onTickMethodOrderString() {

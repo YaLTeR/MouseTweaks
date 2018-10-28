@@ -45,7 +45,9 @@ public class IMTModGuiContainer2ExHandler implements IGuiScreenHandler {
 
 	@Override
 	public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-		modGuiContainer.MT_clickSlot(slot, mouseButton.getValue(), shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP);
+		modGuiContainer.MT_clickSlot(slot,
+		                             mouseButton.getValue(),
+		                             shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP);
 	}
 
 	@Override

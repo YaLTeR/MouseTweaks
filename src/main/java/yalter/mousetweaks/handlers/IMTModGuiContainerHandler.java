@@ -33,7 +33,7 @@ public class IMTModGuiContainerHandler implements IGuiScreenHandler {
 		Object container = modGuiContainer.getModContainer();
 		int count = modGuiContainer.getModSlotCount(container);
 		for (int i = 0; i < count; ++i)
-			slots.add((Slot)modGuiContainer.getModSlot(container, i));
+			slots.add((Slot) modGuiContainer.getModSlot(container, i));
 
 		return slots;
 	}
@@ -41,8 +41,7 @@ public class IMTModGuiContainerHandler implements IGuiScreenHandler {
 	@Override
 	public Slot getSlotUnderMouse() {
 		Object container = modGuiContainer.getModContainer();
-		return (Slot)modGuiContainer.getModSelectedSlot(container,
-		                                                modGuiContainer.getModSlotCount(container));
+		return (Slot) modGuiContainer.getModSelectedSlot(container, modGuiContainer.getModSlotCount(container));
 	}
 
 	@Override
@@ -53,10 +52,7 @@ public class IMTModGuiContainerHandler implements IGuiScreenHandler {
 
 	@Override
 	public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-		modGuiContainer.clickModSlot(modGuiContainer.getModContainer(),
-		                             slot,
-		                             mouseButton.getValue(),
-		                             shiftPressed);
+		modGuiContainer.clickModSlot(modGuiContainer.getModContainer(), slot, mouseButton.getValue(), shiftPressed);
 	}
 
 	@Override

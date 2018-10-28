@@ -1,7 +1,6 @@
 package yalter.mousetweaks;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
@@ -52,7 +51,10 @@ public class Reflection {
 		}
 
 		try {
-			Method m = getMethod(GuiContainer.class, getObfuscatedName(Constants.GETSLOTATPOSITION_NAME), int.class, int.class);
+			Method m = getMethod(GuiContainer.class,
+			                     getObfuscatedName(Constants.GETSLOTATPOSITION_NAME),
+			                     int.class,
+			                     int.class);
 			guiContainerClass.storeMethod(Constants.GETSLOTATPOSITION_NAME.forgeName, m);
 		} catch (NoSuchMethodException e) {
 			Logger.Log("Could not retrieve GuiContainer.getSlotAtPosition().");
@@ -69,14 +71,21 @@ public class Reflection {
 		}
 
 		try {
-			Method method = searchMethod(object.getClass(), getObfuscatedName(Constants.HANDLEMOUSECLICK_NAME), Slot.class, int.class, int.class, ClickType.class);
+			Method method = searchMethod(object.getClass(),
+			                             getObfuscatedName(Constants.HANDLEMOUSECLICK_NAME),
+			                             Slot.class,
+			                             int.class,
+			                             int.class,
+			                             ClickType.class);
 
 			Logger.DebugLog("Found handleMouseClick() for " + object.getClass().getSimpleName() + ", caching.");
 
 			HMCCache.put(object.getClass(), method);
 			return method;
 		} catch (NoSuchMethodException e) {
-			CrashReport crashreport = CrashReport.makeCrashReport(e, "MouseTweaks could not find handleMouseClick() in a GuiContainer.");
+			CrashReport crashreport = CrashReport.makeCrashReport(e,
+			                                                      "MouseTweaks could not find handleMouseClick() in a "
+			                                                      + "GuiContainer.");
 			throw new ReportedException(crashreport);
 		}
 	}
@@ -87,14 +96,21 @@ public class Reflection {
 		}
 
 		try {
-			Method method = searchMethod(object.getClass(), getObfuscatedName(Constants.HANDLEMOUSECLICK_NAME), Slot.class, int.class, int.class, ClickType.class);
+			Method method = searchMethod(object.getClass(),
+			                             getObfuscatedName(Constants.HANDLEMOUSECLICK_NAME),
+			                             Slot.class,
+			                             int.class,
+			                             int.class,
+			                             ClickType.class);
 
 			Logger.DebugLog("Found handleMouseClick() for " + object.getClass().getSimpleName() + ", caching.");
 
 			HMCCache.put(object.getClass(), method);
 			return method;
 		} catch (NoSuchMethodException e) {
-			Logger.DebugLog("Could not find handleMouseClick() for " + object.getClass().getSimpleName() + ", using windowClick().");
+			Logger.DebugLog("Could not find handleMouseClick() for "
+			                + object.getClass().getSimpleName()
+			                + ", using windowClick().");
 			return null;
 		}
 	}

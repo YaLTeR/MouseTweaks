@@ -60,10 +60,13 @@ public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
 				                        mouseButton.getValue(),
 				                        shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP);
 			} catch (InvocationTargetException e) {
-				CrashReport crashreport = CrashReport.makeCrashReport(e, "handleMouseClick() threw an exception when called from MouseTweaks.");
+				CrashReport crashreport = CrashReport.makeCrashReport(e,
+				                                                      "handleMouseClick() threw an exception when "
+				                                                      + "called from MouseTweaks.");
 				throw new ReportedException(crashreport);
 			} catch (IllegalAccessException e) {
-				CrashReport crashreport = CrashReport.makeCrashReport(e, "Calling handleMouseClick() from MouseTweaks.");
+				CrashReport crashreport = CrashReport.makeCrashReport(e,
+				                                                      "Calling handleMouseClick() from MouseTweaks.");
 				throw new ReportedException(crashreport);
 			}
 		} else {
