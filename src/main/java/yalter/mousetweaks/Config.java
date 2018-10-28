@@ -56,16 +56,6 @@ public class Config {
 	}
 
 	public void save() {
-		Properties properties = new Properties();
-		properties.setProperty(Constants.CONFIG_RMB_TWEAK, rmbTweak ? "1" : "0");
-		properties.setProperty(Constants.CONFIG_LMB_TWEAK_WITH_ITEM, lmbTweakWithItem ? "1" : "0");
-		properties.setProperty(Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM, lmbTweakWithoutItem ? "1" : "0");
-		properties.setProperty(Constants.CONFIG_WHEEL_TWEAK, wheelTweak ? "1" : "0");
-		properties.setProperty(Constants.CONFIG_WHEEL_SEARCH_ORDER, String.valueOf(wheelSearchOrder.ordinal()));
-		properties.setProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION, String.valueOf(wheelScrollDirection.ordinal()));
-		properties.setProperty(Constants.CONFIG_DEBUG, debug ? "1" : "0");
-		properties.setProperty(Constants.CONFIG_ONTICK_METHOD_ORDER, onTickMethodOrderString());
-
 		try {
 			File config = new File(fileName);
 			boolean existed = config.exists();
@@ -74,7 +64,16 @@ public class Config {
 				parentDir.mkdirs();
 
 			FileWriter configWriter = new FileWriter(config);
-			properties.store(configWriter, null);
+
+			writeBoolean(configWriter, Constants.CONFIG_RMB_TWEAK, rmbTweak);
+			writeBoolean(configWriter, Constants.CONFIG_LMB_TWEAK_WITH_ITEM, lmbTweakWithItem);
+			writeBoolean(configWriter, Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM, lmbTweakWithoutItem);
+			writeBoolean(configWriter, Constants.CONFIG_WHEEL_TWEAK, wheelTweak);
+			writeString(configWriter, Constants.CONFIG_WHEEL_SEARCH_ORDER, String.valueOf(wheelSearchOrder.ordinal()));
+			writeString(configWriter, Constants.CONFIG_WHEEL_SCROLL_DIRECTION, String.valueOf(wheelScrollDirection.ordinal()));
+			writeString(configWriter, Constants.CONFIG_ONTICK_METHOD_ORDER, onTickMethodOrderString());
+			writeBoolean(configWriter, Constants.CONFIG_DEBUG, debug);
+
 			configWriter.close();
 
 			if (!existed)
@@ -83,6 +82,14 @@ public class Config {
 			Logger.Log("Failed to write the config file: " + fileName);
 			e.printStackTrace();
 		}
+	}
+
+	private static void writeString(FileWriter configWriter, String name, String value) throws IOException {
+		configWriter.write(name + '=' + value + '\n');
+	}
+
+	private static void writeBoolean(FileWriter configWriter, String name, boolean value) throws IOException {
+        writeString(configWriter, name, value ? "1" : "0");
 	}
 
 	public String onTickMethodOrderString() {
