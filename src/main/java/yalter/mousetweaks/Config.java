@@ -35,16 +35,24 @@ public class Config {
 			e.printStackTrace();
 		}
 
-		rmbTweak = Integer.parseInt(properties.getProperty(Constants.CONFIG_RMB_TWEAK)) != 0;
-		lmbTweakWithItem = Integer.parseInt(properties.getProperty(Constants.CONFIG_LMB_TWEAK_WITH_ITEM)) != 0;
-		lmbTweakWithoutItem = Integer.parseInt(properties.getProperty(Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM)) != 0;
-		wheelTweak = Integer.parseInt(properties.getProperty(Constants.CONFIG_WHEEL_TWEAK)) != 0;
-		wheelSearchOrder = WheelSearchOrder.fromId(Integer.parseInt(properties.getProperty(Constants.CONFIG_WHEEL_SEARCH_ORDER)));
-		wheelScrollDirection = WheelScrollDirection.fromId(Integer.parseInt(properties.getProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION)));
-		debug = Integer.parseInt(properties.getProperty(Constants.CONFIG_DEBUG)) != 0;
+		rmbTweak = parseIntOrDefault(properties.getProperty(Constants.CONFIG_RMB_TWEAK), 1) != 0;
+		lmbTweakWithItem = parseIntOrDefault(properties.getProperty(Constants.CONFIG_LMB_TWEAK_WITH_ITEM), 1) != 0;
+		lmbTweakWithoutItem = parseIntOrDefault(properties.getProperty(Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM), 1) != 0;
+		wheelTweak = parseIntOrDefault(properties.getProperty(Constants.CONFIG_WHEEL_TWEAK), 1) != 0;
+		wheelSearchOrder = WheelSearchOrder.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_WHEEL_SEARCH_ORDER), 1));
+		wheelScrollDirection = WheelScrollDirection.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION), 0));
 		onTickMethodOrderFromString(properties.getProperty(Constants.CONFIG_ONTICK_METHOD_ORDER));
+		debug = parseIntOrDefault(properties.getProperty(Constants.CONFIG_DEBUG), 0) != 0;
 
 		save();
+	}
+
+	private static int parseIntOrDefault(String s, int defaultValue) {
+		try {
+			return Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
 	}
 
 	public void save() {
