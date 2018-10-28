@@ -37,9 +37,9 @@ archivesBaseName = "MouseTweaks"
 
 minecraft {
 	//version = "1.12.1-14.22.0.2452"
-	version = "1.12.1"
+	version = "1.12.2"
 	runDir = "run"
-	mappings = "snapshot_20170804"
+	mappings = "snapshot_20170919"
 
 	replace '@VERSION@', project.version
 }
