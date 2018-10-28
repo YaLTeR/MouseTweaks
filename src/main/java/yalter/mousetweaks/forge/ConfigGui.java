@@ -16,7 +16,7 @@ public class ConfigGui extends GuiConfig {
     private static Property lmbTweakWithoutItem = new Property("LMB tweak without item", "true", Property.Type.BOOLEAN);
     private static Property wheelTweak = new Property("Wheel tweak", "true", Property.Type.BOOLEAN);
     private static Property wheelSearchOrder = new Property("Wheel tweak search order", "Last to first", Property.Type.STRING, new String[] { "First to last", "Last to first" });
-    private static Property wheelScrollDirection = new Property("Wheel tweak scroll direction", "Down to push, up to pull", Property.Type.STRING, new String[] { "Down to push, up to pull", "Up to push, down to pull" });
+    private static Property wheelScrollDirection = new Property("Wheel tweak scroll direction", Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_NORMAL, Property.Type.STRING, new String[] { Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_NORMAL, Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_INVERTED, Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_INVENTORY_POSITION_AWARE });
     private static Property onTickMethodOrder = new Property("OnTick method order", "Forge, LiteLoader", Property.Type.STRING);
     private static Property debug = new Property("Debug", "false", Property.Type.BOOLEAN);
 
@@ -57,15 +57,23 @@ public class ConfigGui extends GuiConfig {
                 (Main.config.wheelSearchOrder == WheelSearchOrder.FIRST_TO_LAST)
                     ? "First to last"
                     : "Last to first");
-            wheelScrollDirection.set(
-                (Main.config.wheelScrollDirection == WheelScrollDirection.NORMAL)
-                    ? "Down to push, up to pull"
-                    : "Up to push, down to pull");
+            wheelScrollDirection.set(scrollDirectionDescription());
             onTickMethodOrder.set(Main.config.onTickMethodOrderString());
             debug.set(Config.debug);
         }
 
         super.initGui();
+    }
+
+    private String scrollDirectionDescription() {
+        WheelScrollDirection dir = Main.config.wheelScrollDirection;
+        if (dir == WheelScrollDirection.NORMAL) {
+            return Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_NORMAL;
+        } else if (dir == WheelScrollDirection.INVERTED) {
+            return Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_INVERTED;
+        } else {
+            return Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_INVENTORY_POSITION_AWARE;
+        }
     }
 
     @Override
@@ -80,10 +88,7 @@ public class ConfigGui extends GuiConfig {
             wheelSearchOrder.getString().equals("First to last")
                 ? WheelSearchOrder.FIRST_TO_LAST
                 : WheelSearchOrder.LAST_TO_FIRST;
-        Main.config.wheelScrollDirection =
-            wheelScrollDirection.getString().equals("Down to push, up to pull")
-                ? WheelScrollDirection.NORMAL
-                : WheelScrollDirection.INVERTED;
+        Main.config.wheelScrollDirection = scrollDirectionFromDescription(wheelScrollDirection.getString());
         Main.config.onTickMethodOrderFromString(onTickMethodOrder.getString());
         Config.debug = debug.getBoolean();
         Main.config.save();
@@ -91,5 +96,16 @@ public class ConfigGui extends GuiConfig {
 
         is_open = false;
         super.onGuiClosed();
+    }
+
+    private WheelScrollDirection scrollDirectionFromDescription(String description) {
+        switch (description) {
+            case Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_NORMAL:
+                return WheelScrollDirection.NORMAL;
+            case Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_INVERTED:
+                return WheelScrollDirection.INVERTED;
+            default:
+                return WheelScrollDirection.INVENTORY_POSITION_AWARE;
+        }
     }
 }

@@ -2,7 +2,8 @@ package yalter.mousetweaks;
 
 public enum WheelScrollDirection {
 	NORMAL(0),
-	INVERTED(1);
+	INVERTED(1),
+	INVENTORY_POSITION_AWARE(2);
 
 	private final int id;
 	WheelScrollDirection(int id) {
@@ -13,6 +14,12 @@ public enum WheelScrollDirection {
 	}
 
 	public static WheelScrollDirection fromId(int id) {
-		return id == NORMAL.id ? NORMAL : INVERTED;
+		if (id == NORMAL.id) {
+			return NORMAL;
+		} else if (id == INVENTORY_POSITION_AWARE.id) {
+			return INVENTORY_POSITION_AWARE;
+		} else {
+			return INVERTED;
+		}
 	}
 }

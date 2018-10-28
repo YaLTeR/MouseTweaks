@@ -263,14 +263,11 @@ public class Main
 
 	private static void handleWheel(Slot selectedSlot) {
 		int wheel = (config.wheelTweak && !disableWheelForThisContainer) ? Mouse.getDWheel() / 120 : 0;
-		if (config.wheelScrollDirection == WheelScrollDirection.INVERTED)
-			wheel = -wheel;
 
 		int numItemsToMove = Math.abs(wheel);
 		if (numItemsToMove == 0 || selectedSlot == null || handler.isIgnored(selectedSlot))
 			return;
 
-		boolean pushItems = (wheel < 0);
 		ItemStack stackOnMouse = mc.player.inventory.getItemStack().copy();
 		ItemStack originalStack = selectedSlot.getStack().copy();
 		boolean isCraftingOutput = handler.isCraftingOutput(selectedSlot);
@@ -281,6 +278,13 @@ public class Main
 			return;
 
 		List<Slot> slots = handler.getSlots();
+
+		if (config.wheelScrollDirection == WheelScrollDirection.INVERTED
+				|| (config.wheelScrollDirection == WheelScrollDirection.INVENTORY_POSITION_AWARE
+					&& otherInventoryIsAbove(selectedSlot, slots))) {
+			wheel = -wheel;
+		}
+		boolean pushItems = (wheel < 0);
 
 		if (isCraftingOutput) {
 			if (pushItems) {
@@ -370,6 +374,19 @@ public class Main
 			}
 		}
 		while (numItemsToMove > 0);
+	}
+
+	// Returns true if the other inventory is above the selected slot inventory.
+	//
+	// This is used for the inventory position aware scroll direction. To prevent any surprises, this should have the same logic for what constitutes the "other" inventory as findWheelApplicableSlot().
+	private static boolean otherInventoryIsAbove(Slot selectedSlot, List<Slot> slots) {
+		boolean selectedIsInPlayerInventory = selectedSlot.inventory == mc.player.inventory;
+		for (Slot slot : slots) {
+			if ((slot.inventory == mc.player.inventory) != selectedIsInPlayerInventory && slot.yPos < selectedSlot.yPos) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// Finds the appropriate handler to use with this GuiScreen. Returns null if no handler was found.
