@@ -7,7 +7,6 @@ import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
 import yalter.mousetweaks.api.IMTModGuiContainer2Ex;
 import yalter.mousetweaks.handlers.*;
@@ -24,6 +23,7 @@ public class Main {
 
 	private static Minecraft mc;
 
+	private static final MouseState mouseState = new MouseState();
 	private static GuiScreen oldGuiScreen = null;
 	private static Slot oldSelectedSlot = null;
 	private static Slot firstRightClickedSlot = null;
@@ -129,8 +129,11 @@ public class Main {
 
 			onUpdateInGui(currentScreen);
 		}
+	}
 
-		oldRMBDown = Mouse.isButtonDown(1);
+	public static void onMouseInput() {
+		oldRMBDown = mouseState.isButtonPressed(MouseButton.RIGHT);
+		mouseState.update();
 	}
 
 	private static void onUpdateInGui(GuiScreen currentScreen) {
@@ -141,6 +144,9 @@ public class Main {
 			Logger.DebugLog("You have just opened " + currentScreen.getClass().getSimpleName() + ".");
 
 			handler = findHandler(currentScreen);
+
+			// don't handle any mouse inputs that were started from the old gui
+			mouseState.clear();
 
 			if (handler == null) {
 				disableForThisContainer = true;
@@ -173,7 +179,7 @@ public class Main {
 
 		Slot selectedSlot = handler.getSlotUnderMouse();
 
-		if (Mouse.isButtonDown(1)) {
+		if (mouseState.isButtonPressed(MouseButton.RIGHT)) {
 			if (!oldRMBDown)
 				firstRightClickedSlot = selectedSlot;
 
@@ -217,7 +223,7 @@ public class Main {
 
 			boolean shiftIsDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 
-			if (Mouse.isButtonDown(1)) {
+			if (mouseState.isButtonPressed(MouseButton.RIGHT)) {
 				// Right mouse button
 				if (config.rmbTweak) {
 					if (!handler.isIgnored(selectedSlot)
@@ -228,7 +234,7 @@ public class Main {
 						handler.clickSlot(selectedSlot, MouseButton.RIGHT, false);
 					}
 				}
-			} else if (Mouse.isButtonDown(0)) {
+			} else if (mouseState.isButtonPressed(MouseButton.LEFT)) {
 				// Left mouse button
 				if (!stackOnMouse.isEmpty()) {
 					if (config.lmbTweakWithItem) {
@@ -268,7 +274,7 @@ public class Main {
 	}
 
 	private static void handleWheel(Slot selectedSlot) {
-		int wheel = (config.wheelTweak && !disableWheelForThisContainer) ? Mouse.getDWheel() / 120 : 0;
+		int wheel = (config.wheelTweak && !disableWheelForThisContainer) ? mouseState.consumeScrollAmount() / 120 : 0;
 
 		int numItemsToMove = Math.abs(wheel);
 		if (numItemsToMove == 0 || selectedSlot == null || handler.isIgnored(selectedSlot))
