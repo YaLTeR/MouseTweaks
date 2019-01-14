@@ -48,10 +48,17 @@ public class MouseState {
 
 	/**
 	 * Get the button held down during the last mouse update.
-	 * returns null if no button was held down
+	 * returns null if no button was held down, or the press was started in a different gui
 	 */
 	public boolean isButtonPressed(MouseButton mouseButton) {
-		return pressedButtons.contains(mouseButton);
+		if (pressedButtons.contains(mouseButton)) {
+			boolean confirmPressed = Mouse.isButtonDown(mouseButton.getValue());
+			if (!confirmPressed) {
+				pressedButtons.remove(mouseButton);
+			}
+			return confirmPressed;
+		}
+		return false;
 	}
 
 	/**
