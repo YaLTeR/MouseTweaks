@@ -25,6 +25,8 @@ public class MouseState {
 		} else {
 			scrollAmount = Mouse.getEventDWheel();
 		}
+		// clear any pressed buttons in case we missed them being released
+		pressedButtons.removeIf(mouseButton -> !Mouse.isButtonDown(mouseButton.getValue()));
 	}
 
 	private static MouseButton getEventButton() {
@@ -51,14 +53,7 @@ public class MouseState {
 	 * returns null if no button was held down, or the press was started in a different gui
 	 */
 	public boolean isButtonPressed(MouseButton mouseButton) {
-		if (pressedButtons.contains(mouseButton)) {
-			boolean confirmPressed = Mouse.isButtonDown(mouseButton.getValue());
-			if (!confirmPressed) {
-				pressedButtons.remove(mouseButton);
-			}
-			return confirmPressed;
-		}
-		return false;
+		return pressedButtons.contains(mouseButton);
 	}
 
 	/**
