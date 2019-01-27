@@ -1,19 +1,24 @@
-package yalter.mousetweaks;
+package yalter.mousetweaks.forge;
 
 import java.util.EnumSet;
 
 import com.google.common.base.MoreObjects;
 import org.lwjgl.input.Mouse;
+import yalter.mousetweaks.IMouseState;
+import yalter.mousetweaks.MouseButton;
 
-public class MouseState {
+public class ForgeMouseState implements IMouseState {
 	private final EnumSet<MouseButton> pressedButtons = EnumSet.noneOf(MouseButton.class);
 	private int scrollAmount = 0;
 
-	public MouseState() {}
+	public ForgeMouseState() {
+
+	}
 
 	/**
 	 * Update the current mouse state.
 	 */
+	@Override
 	public void update() {
 		MouseButton eventButton = getEventButton();
 		if (eventButton != null) {
@@ -43,15 +48,17 @@ public class MouseState {
 	/**
 	 * Clear the current mouse state, used when changing guis.
 	 */
+	@Override
 	public void clear() {
 		pressedButtons.clear();
 		scrollAmount = 0;
 	}
 
 	/**
-	 * Get the button held down during the last mouse update.
-	 * returns null if no button was held down, or the press was started in a different gui
+	 * Returns true if the button was held down during the last mouse update.
+	 * Returns false if no button was held down, or the press was started in a different gui.
 	 */
+	@Override
 	public boolean isButtonPressed(MouseButton mouseButton) {
 		return pressedButtons.contains(mouseButton);
 	}
@@ -59,6 +66,7 @@ public class MouseState {
 	/**
 	 * Get the scroll amount from the last mouse update.
 	 */
+	@Override
 	public int consumeScrollAmount() {
 		int scrollAmount = this.scrollAmount;
 		this.scrollAmount = 0;

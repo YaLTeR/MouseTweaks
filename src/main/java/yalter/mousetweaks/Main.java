@@ -9,7 +9,9 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
 import yalter.mousetweaks.api.IMTModGuiContainer2Ex;
+import yalter.mousetweaks.forge.ForgeMouseState;
 import yalter.mousetweaks.handlers.*;
+import yalter.mousetweaks.liteloader.LiteMouseState;
 
 import java.io.File;
 import java.util.List;
@@ -23,7 +25,7 @@ public class Main {
 
 	private static Minecraft mc;
 
-	private static final MouseState mouseState = new MouseState();
+	private static IMouseState mouseState = new LiteMouseState();
 	private static GuiScreen oldGuiScreen = null;
 	private static Slot oldSelectedSlot = null;
 	private static Slot firstRightClickedSlot = null;
@@ -74,6 +76,12 @@ public class Main {
 			// No OnTick methods work.
 			disabled = true;
 			return false;
+		}
+
+		if (onTickMethod == OnTickMethod.FORGE) {
+			mouseState = new ForgeMouseState();
+		} else {
+			mouseState = new LiteMouseState();
 		}
 
 		Logger.Log("Mouse Tweaks has been initialized.");
