@@ -135,10 +135,11 @@ public class Main {
 
 			onUpdateInGui(currentScreen);
 		}
+
+		oldRMBDown = mouseState.isButtonPressed(MouseButton.RIGHT);
 	}
 
 	public static void onMouseInput() {
-		oldRMBDown = mouseState.isButtonPressed(MouseButton.RIGHT);
 		mouseState.update();
 	}
 
