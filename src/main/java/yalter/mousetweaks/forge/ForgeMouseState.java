@@ -28,7 +28,7 @@ public class ForgeMouseState implements IMouseState {
 				pressedButtons.remove(eventButton);
 			}
 		} else {
-			scrollAmount = Mouse.getEventDWheel();
+			scrollAmount += Mouse.getEventDWheel();
 		}
 		// clear any pressed buttons in case we missed them being released
 		pressedButtons.removeIf(mouseButton -> !Mouse.isButtonDown(mouseButton.getValue()));
