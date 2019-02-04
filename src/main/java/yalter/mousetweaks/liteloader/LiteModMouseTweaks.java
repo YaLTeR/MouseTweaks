@@ -31,8 +31,8 @@ public class LiteModMouseTweaks implements RenderListener, Configurable {
 	@Override
 	public void onRender() {
 		if (Main.onTickMethod == OnTickMethod.LITELOADER) {
-			Main.onMouseInput();
 			Main.onUpdateInGame();
+			Main.onMouseInput();
 		}
 	}
 
