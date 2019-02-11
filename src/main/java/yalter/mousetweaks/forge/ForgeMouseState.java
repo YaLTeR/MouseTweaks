@@ -7,6 +7,14 @@ import org.lwjgl.input.Mouse;
 import yalter.mousetweaks.IMouseState;
 import yalter.mousetweaks.MouseButton;
 
+/**
+ * Mouse state based on LWJGL input events.
+ *
+ * This mouse state relies on being updated in an LWJGL event handling loop, for example using Forge's mouse input event.
+ * Using it with Forge's mouse input event offers good compatibility with other mods (if a click was handled by the GUI
+ * it won't be delivered to Mouse Tweaks), but due to Forge only processing events every game tick (rather than every
+ * render tick) suffers from the mouse scrolling not being very smooth.
+ */
 public class ForgeMouseState implements IMouseState {
 	private final EnumSet<MouseButton> pressedButtons = EnumSet.noneOf(MouseButton.class);
 	private int scrollAmount = 0;
