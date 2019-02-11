@@ -7,10 +7,11 @@ import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
 import yalter.mousetweaks.api.IMTModGuiContainer2Ex;
+import yalter.mousetweaks.forge.ForgeMouseState;
 import yalter.mousetweaks.handlers.*;
+import yalter.mousetweaks.liteloader.LiteMouseState;
 
 import java.io.File;
 import java.util.List;
@@ -24,6 +25,7 @@ public class Main {
 
 	private static Minecraft mc;
 
+	private static IMouseState mouseState = new LiteMouseState();
 	private static GuiScreen oldGuiScreen = null;
 	private static Slot oldSelectedSlot = null;
 	private static Slot firstRightClickedSlot = null;
@@ -88,6 +90,8 @@ public class Main {
 				case FORGE:
 					if (forge) {
 						onTickMethod = OnTickMethod.FORGE;
+						if (onTickMethod != previous_method)
+							mouseState = new ForgeMouseState();
 						if (print_always || onTickMethod != previous_method)
 							Logger.Log("Using Forge for the mod operation.");
 						return true;
@@ -97,6 +101,8 @@ public class Main {
 				case LITELOADER:
 					if (liteLoader) {
 						onTickMethod = OnTickMethod.LITELOADER;
+						if (onTickMethod != previous_method)
+							mouseState = new LiteMouseState();
 						if (print_always || onTickMethod != previous_method)
 							Logger.Log("Using LiteLoader for the mod operation.");
 						return true;
@@ -130,7 +136,11 @@ public class Main {
 			onUpdateInGui(currentScreen);
 		}
 
-		oldRMBDown = Mouse.isButtonDown(1);
+		oldRMBDown = mouseState.isButtonPressed(MouseButton.RIGHT);
+	}
+
+	public static void onMouseInput() {
+		mouseState.update();
 	}
 
 	private static void onUpdateInGui(GuiScreen currentScreen) {
@@ -141,6 +151,9 @@ public class Main {
 			Logger.DebugLog("You have just opened " + currentScreen.getClass().getSimpleName() + ".");
 
 			handler = findHandler(currentScreen);
+
+			// don't handle any mouse inputs that were started from the old gui
+			mouseState.clear();
 
 			if (handler == null) {
 				disableForThisContainer = true;
@@ -173,7 +186,7 @@ public class Main {
 
 		Slot selectedSlot = handler.getSlotUnderMouse();
 
-		if (Mouse.isButtonDown(1)) {
+		if (mouseState.isButtonPressed(MouseButton.RIGHT)) {
 			if (!oldRMBDown)
 				firstRightClickedSlot = selectedSlot;
 
@@ -217,7 +230,7 @@ public class Main {
 
 			boolean shiftIsDown = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
 
-			if (Mouse.isButtonDown(1)) {
+			if (mouseState.isButtonPressed(MouseButton.RIGHT)) {
 				// Right mouse button
 				if (config.rmbTweak) {
 					if (!handler.isIgnored(selectedSlot)
@@ -228,7 +241,7 @@ public class Main {
 						handler.clickSlot(selectedSlot, MouseButton.RIGHT, false);
 					}
 				}
-			} else if (Mouse.isButtonDown(0)) {
+			} else if (mouseState.isButtonPressed(MouseButton.LEFT)) {
 				// Left mouse button
 				if (!stackOnMouse.isEmpty()) {
 					if (config.lmbTweakWithItem) {
@@ -268,7 +281,7 @@ public class Main {
 	}
 
 	private static void handleWheel(Slot selectedSlot) {
-		int wheel = (config.wheelTweak && !disableWheelForThisContainer) ? Mouse.getDWheel() / 120 : 0;
+		int wheel = (config.wheelTweak && !disableWheelForThisContainer) ? mouseState.consumeScrollAmount() / 120 : 0;
 
 		int numItemsToMove = Math.abs(wheel);
 		if (numItemsToMove == 0 || selectedSlot == null || handler.isIgnored(selectedSlot))
