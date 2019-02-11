@@ -11,7 +11,6 @@ import yalter.mousetweaks.api.IMTModGuiContainer2;
 import yalter.mousetweaks.api.IMTModGuiContainer2Ex;
 import yalter.mousetweaks.forge.ForgeMouseState;
 import yalter.mousetweaks.handlers.*;
-import yalter.mousetweaks.liteloader.LiteMouseState;
 
 import java.io.File;
 import java.util.List;
@@ -25,7 +24,7 @@ public class Main {
 
 	private static Minecraft mc;
 
-	private static IMouseState mouseState = new LiteMouseState();
+	private static IMouseState mouseState = new SimpleMouseState();
 	private static GuiScreen oldGuiScreen = null;
 	private static Slot oldSelectedSlot = null;
 	private static Slot firstRightClickedSlot = null;
@@ -102,7 +101,7 @@ public class Main {
 					if (liteLoader) {
 						onTickMethod = OnTickMethod.LITELOADER;
 						if (onTickMethod != previous_method)
-							mouseState = new LiteMouseState();
+							mouseState = new SimpleMouseState();
 						if (print_always || onTickMethod != previous_method)
 							Logger.Log("Using LiteLoader for the mod operation.");
 						return true;

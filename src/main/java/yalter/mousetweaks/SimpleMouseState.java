@@ -1,10 +1,8 @@
-package yalter.mousetweaks.liteloader;
+package yalter.mousetweaks;
 
 import org.lwjgl.input.Mouse;
-import yalter.mousetweaks.IMouseState;
-import yalter.mousetweaks.MouseButton;
 
-public class LiteMouseState implements IMouseState {
+public class SimpleMouseState implements IMouseState {
 	@Override
 	public boolean isButtonPressed(MouseButton mouseButton) {
 		return Mouse.isButtonDown(mouseButton.getValue());
