@@ -13,7 +13,7 @@ public class Constants {
 	static final String CONFIG_WHEEL_SEARCH_ORDER = "WheelSearchOrder";
 	static final String CONFIG_WHEEL_SCROLL_DIRECTION = "WheelScrollDirection";
 	static final String CONFIG_ONTICK_METHOD_ORDER = "OnTickMethodOrder";
-	static final String CONFIG_MOUSE_HANDLING = "MouseHandling";
+	static final String CONFIG_SCROLL_HANDLING = "ScrollHandling";
 	static final String CONFIG_DEBUG = "Debug";
 
 	// Names for reflection.

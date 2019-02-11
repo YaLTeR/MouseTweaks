@@ -16,7 +16,7 @@ public class Config {
 	public WheelSearchOrder wheelSearchOrder = WheelSearchOrder.LAST_TO_FIRST;
 	public WheelScrollDirection wheelScrollDirection = WheelScrollDirection.NORMAL;
 	public Set<OnTickMethod> onTickMethodOrder = new LinkedHashSet<OnTickMethod>(); // The order has to be preserved.
-	public MouseHandling mouseHandling = MouseHandling.SIMPLE;
+	public ScrollHandling scrollHandling = ScrollHandling.SIMPLE;
 	public static boolean debug = false;
 
 	public Config(String fileName) {
@@ -49,8 +49,8 @@ public class Config {
 			WheelScrollDirection.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION),
 			                                                0));
 		onTickMethodOrderFromString(properties.getProperty(Constants.CONFIG_ONTICK_METHOD_ORDER));
-		mouseHandling = MouseHandling.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_MOUSE_HANDLING),
-		                                                       0));
+		scrollHandling = ScrollHandling.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_SCROLL_HANDLING),
+		                                                         0));
 		debug = parseIntOrDefault(properties.getProperty(Constants.CONFIG_DEBUG), 0) != 0;
 	}
 
@@ -81,7 +81,7 @@ public class Config {
 			            Constants.CONFIG_WHEEL_SCROLL_DIRECTION,
 			            String.valueOf(wheelScrollDirection.ordinal()));
 			writeString(configWriter, Constants.CONFIG_ONTICK_METHOD_ORDER, onTickMethodOrderString());
-			writeString(configWriter, Constants.CONFIG_MOUSE_HANDLING, String.valueOf(mouseHandling.ordinal()));
+			writeString(configWriter, Constants.CONFIG_SCROLL_HANDLING, String.valueOf(scrollHandling.ordinal()));
 			writeBoolean(configWriter, Constants.CONFIG_DEBUG, debug);
 
 			configWriter.close();
@@ -144,7 +144,7 @@ public class Config {
 		defaultValues.setProperty(Constants.CONFIG_WHEEL_SEARCH_ORDER, "1");
 		defaultValues.setProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION, "0");
 		defaultValues.setProperty(Constants.CONFIG_ONTICK_METHOD_ORDER, "Forge, LiteLoader");
-		defaultValues.setProperty(Constants.CONFIG_MOUSE_HANDLING, "0");
+		defaultValues.setProperty(Constants.CONFIG_SCROLL_HANDLING, "0");
 		defaultValues.setProperty(Constants.CONFIG_DEBUG, "0");
 	}
 }

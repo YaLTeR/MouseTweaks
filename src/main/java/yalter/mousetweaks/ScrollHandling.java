@@ -1,11 +1,11 @@
 package yalter.mousetweaks;
 
-public enum MouseHandling {
+public enum ScrollHandling {
 	SIMPLE(0), EVENT_BASED(1);
 
 	private final int id;
 
-	MouseHandling(int id) {
+	ScrollHandling(int id) {
 		this.id = id;
 	}
 
@@ -13,7 +13,7 @@ public enum MouseHandling {
 		return id;
 	}
 
-	public static MouseHandling fromId(int id) {
+	public static ScrollHandling fromId(int id) {
 		if (id == EVENT_BASED.id) {
 			return EVENT_BASED;
 		} else {

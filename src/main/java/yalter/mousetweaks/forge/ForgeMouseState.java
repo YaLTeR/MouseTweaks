@@ -19,6 +19,13 @@ public class ForgeMouseState implements IMouseState {
 	private final EnumSet<MouseButton> pressedButtons = EnumSet.noneOf(MouseButton.class);
 	private int scrollAmount = 0;
 
+	/**
+	 * If set to true, uses the polling scrolling. Allows having the compatibility benefit of event-based handling for
+	 * regular mouse events while keeping the smooth scrolling (the scrolling can still suffer from compatibility
+	 * issues).
+	 */
+	public boolean simpleScrolling = false;
+
 	public ForgeMouseState() {
 
 	}
@@ -78,7 +85,11 @@ public class ForgeMouseState implements IMouseState {
 	public int consumeScrollAmount() {
 		int scrollAmount = this.scrollAmount;
 		this.scrollAmount = 0;
-		return scrollAmount;
+
+		if (simpleScrolling)
+			return Mouse.getDWheel();
+		else
+			return scrollAmount;
 	}
 
 	@Override

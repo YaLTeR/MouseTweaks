@@ -90,17 +90,12 @@ public class Main {
 					if (forge) {
 						onTickMethod = OnTickMethod.FORGE;
 
-						if (config.mouseHandling == MouseHandling.EVENT_BASED) {
-							if (mouseState.getClass() != ForgeMouseState.class) {
-								Logger.DebugLog("Switching to ForgeMouseState.");
-								mouseState = new ForgeMouseState();
-							}
-						} else {
-							if (mouseState.getClass() != SimpleMouseState.class) {
-								Logger.DebugLog("Switching to SimpleMouseState.");
-								mouseState = new SimpleMouseState();
-							}
+						if (mouseState.getClass() != ForgeMouseState.class) {
+							Logger.DebugLog("Switching to ForgeMouseState.");
+							mouseState = new ForgeMouseState();
 						}
+
+						((ForgeMouseState) mouseState).simpleScrolling = (config.scrollHandling == ScrollHandling.SIMPLE);
 
 						if (print_always || onTickMethod != previous_method)
 							Logger.Log("Using Forge for the mod operation.");
