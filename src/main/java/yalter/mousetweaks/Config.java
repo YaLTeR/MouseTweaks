@@ -122,7 +122,7 @@ public class Config {
 
 	public void onTickMethodOrderFromString(String string) {
 		onTickMethodOrder.clear();
-		String onTickMethods[] = string.trim().split("[\\s]*,[\\s]*");
+		String[] onTickMethods = string.trim().split("[\\s]*,[\\s]*");
 		for (String method : onTickMethods) {
 			if (Constants.ONTICKMETHOD_FORGE_NAME.equalsIgnoreCase(method))
 				onTickMethodOrder.add(OnTickMethod.FORGE);
