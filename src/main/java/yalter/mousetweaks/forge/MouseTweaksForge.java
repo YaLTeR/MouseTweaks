@@ -1,5 +1,6 @@
 package yalter.mousetweaks.forge;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -7,8 +8,6 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraft.client.gui.inventory.GuiContainer;
-
 import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.Main;
 import yalter.mousetweaks.OnTickMethod;

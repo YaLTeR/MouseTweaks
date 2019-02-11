@@ -49,7 +49,8 @@ public class Config {
 			WheelScrollDirection.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_WHEEL_SCROLL_DIRECTION),
 			                                                0));
 		onTickMethodOrderFromString(properties.getProperty(Constants.CONFIG_ONTICK_METHOD_ORDER));
-		mouseHandling = MouseHandling.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_MOUSE_HANDLING), 0));
+		mouseHandling = MouseHandling.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_MOUSE_HANDLING),
+		                                                       0));
 		debug = parseIntOrDefault(properties.getProperty(Constants.CONFIG_DEBUG), 0) != 0;
 	}
 

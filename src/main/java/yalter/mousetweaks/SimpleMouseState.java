@@ -4,7 +4,7 @@ import org.lwjgl.input.Mouse;
 
 /**
  * Simple stateless mouse state.
- *
+ * <p>
  * This has an advantage of offering smooth scrolling (if polled every render tick it will return scroll events
  * appropriately). Unfortunately, it doesn't always play well with other mods: clicks handled by other mods will also be
  * reported which sometimes leads to issues, see:

@@ -14,10 +14,12 @@ public interface IMouseState {
 	/**
 	 * Update the current mouse state (if any).
 	 */
-	default void update() {}
+	default void update() {
+	}
 
 	/**
 	 * Clear the current mouse state (if any), used when changing guis.
 	 */
-	default void clear() {}
+	default void clear() {
+	}
 }

@@ -1,19 +1,19 @@
 package yalter.mousetweaks.forge;
 
-import java.util.EnumSet;
-
 import com.google.common.base.MoreObjects;
 import org.lwjgl.input.Mouse;
 import yalter.mousetweaks.IMouseState;
 import yalter.mousetweaks.MouseButton;
 
+import java.util.EnumSet;
+
 /**
  * Mouse state based on LWJGL input events.
- *
- * This mouse state relies on being updated in an LWJGL event handling loop, for example using Forge's mouse input event.
- * Using it with Forge's mouse input event offers good compatibility with other mods (if a click was handled by the GUI
- * it won't be delivered to Mouse Tweaks), but due to Forge only processing events every game tick (rather than every
- * render tick) suffers from the mouse scrolling not being very smooth.
+ * <p>
+ * This mouse state relies on being updated in an LWJGL event handling loop, for example using Forge's mouse input
+ * event. Using it with Forge's mouse input event offers good compatibility with other mods (if a click was handled by
+ * the GUI it won't be delivered to Mouse Tweaks), but due to Forge only processing events every game tick (rather than
+ * every render tick) suffers from the mouse scrolling not being very smooth.
  */
 public class ForgeMouseState implements IMouseState {
 	private final EnumSet<MouseButton> pressedButtons = EnumSet.noneOf(MouseButton.class);
@@ -84,8 +84,8 @@ public class ForgeMouseState implements IMouseState {
 	@Override
 	public String toString() {
 		return MoreObjects.toStringHelper(this)
-			.add("pressedButtons", pressedButtons.toArray())
-			.add("scrollAmount", scrollAmount)
-			.toString();
+		                  .add("pressedButtons", pressedButtons.toArray())
+		                  .add("scrollAmount", scrollAmount)
+		                  .toString();
 	}
 }
