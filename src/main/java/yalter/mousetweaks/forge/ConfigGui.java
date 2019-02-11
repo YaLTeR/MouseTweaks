@@ -8,6 +8,7 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 import yalter.mousetweaks.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ConfigGui extends GuiConfig {
@@ -29,12 +30,19 @@ public class ConfigGui extends GuiConfig {
 	private static Property onTickMethodOrder = new Property("OnTick method order",
 	                                                         "Forge, LiteLoader",
 	                                                         Property.Type.STRING);
+	private static Property mouseHandling = new Property("Mouse handling",
+	                                                     "Smooth scrolling, minor issues",
+	                                                     Property.Type.STRING,
+	                                                     new String[]{ "Smooth scrolling, minor issues",
+	                                                                   "Non-smooth scrolling, no issues" });
 	private static Property debug = new Property("Debug", "false", Property.Type.BOOLEAN);
 
 	private boolean is_open = false;
 
 	public ConfigGui(GuiScreen parentScreen) {
 		super(parentScreen, getConfigElements(), Constants.MOD_ID, false, false, ".minecraft/config/MouseTweaks.cfg");
+
+		mouseHandling.setComment("When set to smooth scrolling, minor issues may be experienced such as scrolling or clicking \"through\" JEI or other mods.");
 	}
 
 	private static List<IConfigElement> getConfigElements() {
@@ -47,6 +55,7 @@ public class ConfigGui extends GuiConfig {
 		list.add(new ConfigElement(wheelSearchOrder));
 		list.add(new ConfigElement(wheelScrollDirection));
 		list.add(new ConfigElement(onTickMethodOrder));
+		list.add(new ConfigElement(mouseHandling));
 		list.add(new ConfigElement(debug));
 
 		return list;
@@ -69,6 +78,7 @@ public class ConfigGui extends GuiConfig {
 			                     : "Last to first");
 			wheelScrollDirection.set(scrollDirectionDescription());
 			onTickMethodOrder.set(Main.config.onTickMethodOrderString());
+			mouseHandling.set(mouseHandling.getValidValues()[Main.config.mouseHandling.ordinal()]);
 			debug.set(Config.debug);
 		}
 
@@ -99,6 +109,7 @@ public class ConfigGui extends GuiConfig {
 		                               : WheelSearchOrder.LAST_TO_FIRST;
 		Main.config.wheelScrollDirection = scrollDirectionFromDescription(wheelScrollDirection.getString());
 		Main.config.onTickMethodOrderFromString(onTickMethodOrder.getString());
+		Main.config.mouseHandling = MouseHandling.fromId(Arrays.asList(mouseHandling.getValidValues()).indexOf(mouseHandling.getString()));
 		Config.debug = debug.getBoolean();
 		Main.config.save();
 		Main.findOnTickMethod(true);

@@ -89,8 +89,10 @@ public class Main {
 				case FORGE:
 					if (forge) {
 						onTickMethod = OnTickMethod.FORGE;
-						if (onTickMethod != previous_method)
+						if (config.mouseHandling == MouseHandling.EVENT_BASED)
 							mouseState = new ForgeMouseState();
+						else
+							mouseState = new SimpleMouseState();
 						if (print_always || onTickMethod != previous_method)
 							Logger.Log("Using Forge for the mod operation.");
 						return true;
@@ -100,8 +102,7 @@ public class Main {
 				case LITELOADER:
 					if (liteLoader) {
 						onTickMethod = OnTickMethod.LITELOADER;
-						if (onTickMethod != previous_method)
-							mouseState = new SimpleMouseState();
+						mouseState = new SimpleMouseState();
 						if (print_always || onTickMethod != previous_method)
 							Logger.Log("Using LiteLoader for the mod operation.");
 						return true;
