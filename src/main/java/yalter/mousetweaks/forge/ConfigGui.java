@@ -42,7 +42,15 @@ public class ConfigGui extends GuiConfig {
 	public ConfigGui(GuiScreen parentScreen) {
 		super(parentScreen, getConfigElements(), Constants.MOD_ID, false, false, ".minecraft/config/MouseTweaks.cfg");
 
-		mouseHandling.setComment("When set to smooth scrolling, minor issues may be experienced such as scrolling or clicking \"through\" JEI or other mods.");
+		rmbTweak.setComment("Like vanilla right click dragging, but dragging over a slot multiple times puts the item there multiple times.");
+		lmbTweakWithItem.setComment("Left click and drag with an item to \"left click\" items of the same type.");
+		lmbTweakWithoutItem.setComment("Hold shift, left click and drag without an item to \"shift left click\" items.");
+		wheelTweak.setComment("Scroll over items to move them between inventories.");
+		wheelSearchOrder.setComment("How to pick the source slot when pulling items via scrolling.");
+		wheelScrollDirection.setComment("Inventory position aware means scroll up to push items from the bottom inventory and pull into the top inventory, and vice versa.");
+		onTickMethodOrder.setComment("This shouldn't really affect anything, but non-smooth scrolling works only with the Forge OnTick method.");
+		mouseHandling.setComment("When set to smooth scrolling, minor issues may be experienced such as scrolling or clicking \"through\" JEI or other mods. Non-smooth scrolling works only with the Forge OnTick method.");
+		debug.setComment("Enables debug logging output.");
 	}
 
 	private static List<IConfigElement> getConfigElements() {
