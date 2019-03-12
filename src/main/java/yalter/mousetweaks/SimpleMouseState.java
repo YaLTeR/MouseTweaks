@@ -20,6 +20,6 @@ public class SimpleMouseState implements IMouseState {
 
 	@Override
 	public int consumeScrollAmount() {
-		return Mouse.getDWheel();
+		return Main.config.scrollItemScaling.scale(Mouse.getDWheel());
 	}
 }

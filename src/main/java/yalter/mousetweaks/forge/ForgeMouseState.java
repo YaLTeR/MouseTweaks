@@ -2,8 +2,7 @@ package yalter.mousetweaks.forge;
 
 import com.google.common.base.MoreObjects;
 import org.lwjgl.input.Mouse;
-import yalter.mousetweaks.IMouseState;
-import yalter.mousetweaks.MouseButton;
+import yalter.mousetweaks.*;
 
 import java.util.EnumSet;
 
@@ -43,7 +42,7 @@ public class ForgeMouseState implements IMouseState {
 				pressedButtons.remove(eventButton);
 			}
 		} else {
-			scrollAmount += Mouse.getEventDWheel();
+			scrollAmount += Main.config.scrollItemScaling.scale(Mouse.getEventDWheel());
 		}
 		// clear any pressed buttons in case we missed them being released
 		pressedButtons.removeIf(mouseButton -> !Mouse.isButtonDown(mouseButton.getValue()));
@@ -87,7 +86,7 @@ public class ForgeMouseState implements IMouseState {
 		this.scrollAmount = 0;
 
 		if (simpleScrolling)
-			return Mouse.getDWheel();
+			return Main.config.scrollItemScaling.scale(Mouse.getDWheel());
 		else
 			return scrollAmount;
 	}

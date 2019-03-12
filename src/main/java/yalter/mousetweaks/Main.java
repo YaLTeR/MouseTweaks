@@ -290,14 +290,10 @@ public class Main {
 	}
 
 	private static void handleWheel(Slot selectedSlot) {
-		int wheel = (config.wheelTweak && !disableWheelForThisContainer) ? mouseState.consumeScrollAmount() : 0;
+		if (!config.wheelTweak || disableWheelForThisContainer) return;
+		int wheel = mouseState.consumeScrollAmount();
 
-		int numItemsToMove;
-		if (config.scrollItemScaling == ScrollItemScaling.PROPORTIONAL) {
-			numItemsToMove = Math.abs(wheel) / 120;
-		} else {
-			numItemsToMove = wheel != 0 ? 1 : 0;
-		}
+		int numItemsToMove = Math.abs(wheel);
 		
 		if (numItemsToMove == 0 || selectedSlot == null || handler.isIgnored(selectedSlot))
 			return;

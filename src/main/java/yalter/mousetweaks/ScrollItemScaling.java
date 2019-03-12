@@ -20,4 +20,18 @@ public enum ScrollItemScaling {
 			return ALWAYS_ONE;
 		}
 	}
+
+	/**
+	 * scales the given scroll distance, resulting in the number of items to move, the sign representing the direction
+	 */
+	public int scale(int scrollDelta) {
+		switch (this) {
+			case PROPORTIONAL:
+				return scrollDelta / 120;
+			case ALWAYS_ONE:
+				return Integer.signum(scrollDelta);
+			default:
+				throw new AssertionError();
+		}
+	}
 }
