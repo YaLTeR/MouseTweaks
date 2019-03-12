@@ -15,6 +15,7 @@ public class Constants {
 	static final String CONFIG_ONTICK_METHOD_ORDER = "OnTickMethodOrder";
 	static final String CONFIG_SCROLL_HANDLING = "ScrollHandling";
 	static final String CONFIG_DEBUG = "Debug";
+	static final String CONFIG_SCROLL_ITEM_SCALING = "ScrollItemScaling";
 
 	// Names for reflection.
 	public static final ObfuscatedName IGNOREMOUSEUP_NAME = new ObfuscatedName("ignoreMouseUp", "field_146995_H", "I");

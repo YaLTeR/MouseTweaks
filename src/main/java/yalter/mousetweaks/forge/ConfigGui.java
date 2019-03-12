@@ -35,6 +35,11 @@ public class ConfigGui extends GuiConfig {
 	                                                      Property.Type.STRING,
 	                                                      new String[]{ "Smooth scrolling, minor issues",
 	                                                                    "Non-smooth scrolling, no issues" });
+	private static Property scrollItemScaling = new Property("Scroll item scaling",
+															 "Relative to scroll amount",
+															 Property.Type.STRING,
+															 new String[]{ "Relative to scroll amount",
+																		   "Always exactly one item" });
 	private static Property debug = new Property("Debug", "false", Property.Type.BOOLEAN);
 
 	private boolean is_open = false;
@@ -57,6 +62,7 @@ public class ConfigGui extends GuiConfig {
 		scrollHandling.setComment(
 			"When set to smooth scrolling, minor issues may be experienced such as scrolling \"through\" "
 			+ "JEI or other mods. Non-smooth scrolling works only with the Forge OnTick method.");
+		scrollItemScaling.setComment("This determines how many items are moved when you scroll.");
 		debug.setComment("Enables debug logging output.");
 	}
 
@@ -71,6 +77,7 @@ public class ConfigGui extends GuiConfig {
 		list.add(new ConfigElement(wheelScrollDirection));
 		list.add(new ConfigElement(onTickMethodOrder));
 		list.add(new ConfigElement(scrollHandling));
+		list.add(new ConfigElement(scrollItemScaling));
 		list.add(new ConfigElement(debug));
 
 		return list;
@@ -94,6 +101,7 @@ public class ConfigGui extends GuiConfig {
 			wheelScrollDirection.set(scrollDirectionDescription());
 			onTickMethodOrder.set(Main.config.onTickMethodOrderString());
 			scrollHandling.set(scrollHandling.getValidValues()[Main.config.scrollHandling.ordinal()]);
+			scrollItemScaling.set(scrollItemScaling.getValidValues()[Main.config.scrollItemScaling.ordinal()]);
 			debug.set(Config.debug);
 		}
 
@@ -120,12 +128,14 @@ public class ConfigGui extends GuiConfig {
 		Main.config.lmbTweakWithoutItem = lmbTweakWithoutItem.getBoolean();
 		Main.config.wheelTweak = wheelTweak.getBoolean();
 		Main.config.wheelSearchOrder = wheelSearchOrder.getString().equals("First to last")
-		                               ? WheelSearchOrder.FIRST_TO_LAST
-		                               : WheelSearchOrder.LAST_TO_FIRST;
+									   ? WheelSearchOrder.FIRST_TO_LAST
+									   : WheelSearchOrder.LAST_TO_FIRST;
 		Main.config.wheelScrollDirection = scrollDirectionFromDescription(wheelScrollDirection.getString());
 		Main.config.onTickMethodOrderFromString(onTickMethodOrder.getString());
 		Main.config.scrollHandling = ScrollHandling.fromId(Arrays.asList(scrollHandling.getValidValues())
 		                                                         .indexOf(scrollHandling.getString()));
+		Main.config.scrollItemScaling = ScrollItemScaling.fromId(Arrays.asList(scrollItemScaling.getValidValues())
+			.indexOf(scrollItemScaling.getString()));
 		Config.debug = debug.getBoolean();
 		Main.config.save();
 		Main.findOnTickMethod(true);
