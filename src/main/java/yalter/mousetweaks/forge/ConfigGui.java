@@ -129,8 +129,8 @@ public class ConfigGui extends GuiConfig {
 		Main.config.lmbTweakWithoutItem = lmbTweakWithoutItem.getBoolean();
 		Main.config.wheelTweak = wheelTweak.getBoolean();
 		Main.config.wheelSearchOrder = wheelSearchOrder.getString().equals("First to last")
-									   ? WheelSearchOrder.FIRST_TO_LAST
-									   : WheelSearchOrder.LAST_TO_FIRST;
+		                               ? WheelSearchOrder.FIRST_TO_LAST
+		                               : WheelSearchOrder.LAST_TO_FIRST;
 		Main.config.wheelScrollDirection = scrollDirectionFromDescription(wheelScrollDirection.getString());
 		Main.config.onTickMethodOrderFromString(onTickMethodOrder.getString());
 		Main.config.scrollHandling = ScrollHandling.fromId(Arrays.asList(scrollHandling.getValidValues())
