@@ -63,7 +63,7 @@ public class ConfigGui extends GuiConfig {
 		scrollHandling.setComment(
 			"When set to smooth scrolling, minor issues may be experienced such as scrolling \"through\" "
 			+ "JEI or other mods. Non-smooth scrolling works only with the Forge OnTick method.");
-		scrollItemScaling.setComment("This determines how many items are moved when you scroll.");
+		scrollItemScaling.setComment("This determines how many items are moved when you scroll. On some setups (notably macOS), scrolling the wheel with different speeds results in different distances scrolled per wheel \"bump\". To make those setups play nicely with Mouse Tweaks, set this option to \"Always exactly one item\".");
 		debug.setComment("Enables debug logging output.");
 	}
 
