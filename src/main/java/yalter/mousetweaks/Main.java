@@ -313,7 +313,6 @@ public class Main {
 
 		List<Slot> slots = handler.getSlots();
 
-		// this could be combined with !=, but it's more readable this way
 		if (config.wheelScrollDirection.isPositionAware() && otherInventoryIsAbove(selectedSlot, slots)) {
 			wheel = -wheel;
 		}
