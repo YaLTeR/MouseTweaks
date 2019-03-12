@@ -290,7 +290,8 @@ public class Main {
 	}
 
 	private static void handleWheel(Slot selectedSlot) {
-		if (!config.wheelTweak || disableWheelForThisContainer) return;
+		if (!config.wheelTweak || disableWheelForThisContainer)
+			return;
 		int wheel = mouseState.consumeScrollAmount();
 
 		int numItemsToMove = Math.abs(wheel);
