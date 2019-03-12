@@ -26,7 +26,8 @@ public class ConfigGui extends GuiConfig {
 	                                                            Property.Type.STRING,
 	                                                            new String[]{ Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_NORMAL,
 	                                                                          Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_INVERTED,
-	                                                                          Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_INVENTORY_POSITION_AWARE });
+	                                                                          Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_INVENTORY_POSITION_AWARE,
+	                                                                          Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_INVENTORY_POSITION_AWARE_INVERTED });
 	private static Property onTickMethodOrder = new Property("OnTick method order",
 	                                                         "Forge, LiteLoader",
 	                                                         Property.Type.STRING);
@@ -150,8 +151,10 @@ public class ConfigGui extends GuiConfig {
 				return WheelScrollDirection.NORMAL;
 			case Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_INVERTED:
 				return WheelScrollDirection.INVERTED;
-			default:
+			case Constants.WHELL_SCROLL_DIRECTION_DESCRIPTION_INVENTORY_POSITION_AWARE:
 				return WheelScrollDirection.INVENTORY_POSITION_AWARE;
+			default:
+				return WheelScrollDirection.INVENTORY_POSITION_AWARE_INVERTED;
 		}
 	}
 }

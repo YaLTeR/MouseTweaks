@@ -316,13 +316,14 @@ public class Main {
 
 		List<Slot> slots = handler.getSlots();
 
-		if (config.wheelScrollDirection == WheelScrollDirection.INVERTED || (config.wheelScrollDirection
-		                                                                     == WheelScrollDirection.INVENTORY_POSITION_AWARE
-		                                                                     && otherInventoryIsAbove(selectedSlot,
-		                                                                                              slots))) {
+		// this could be combined with !=, but it's more readable this way
+		if (config.wheelScrollDirection.isPositionAware() && otherInventoryIsAbove(selectedSlot, slots)) {
 			wheel = -wheel;
 		}
-		boolean pushItems = (wheel < 0);
+		if (config.wheelScrollDirection.isInverted()) {
+			wheel = -wheel;
+		}
+		boolean pushItems = wheel < 0;
 
 		if (isCraftingOutput) {
 			if (pushItems) {
