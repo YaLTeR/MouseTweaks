@@ -38,21 +38,21 @@ public class ConfigGui extends GuiConfig {
 		"Always exactly one item"
 	);
 	private static Property debug = booleanProperty("Debug", false);
-	
+
 	private static Property booleanProperty(String name, boolean defaultValue) {
 		return new Property(name, Boolean.toString(defaultValue), Property.Type.BOOLEAN);
 	}
-	
+
 	/** creates a new string property with the given valid values, taking the first valid value as default */
 	private static Property choiceProperty(String name, String... values) {
 		return new Property(name, values[0], Property.Type.STRING, values);
 	}
-	
+
 	private boolean is_open = false;
-	
+
 	public ConfigGui(GuiScreen parentScreen) {
 		super(parentScreen, getConfigElements(), Constants.MOD_ID, false, false, ".minecraft/config/MouseTweaks.cfg");
-		
+
 		rmbTweak.setComment("Like vanilla right click dragging, but dragging over a slot multiple times puts the item there multiple times.");
 		lmbTweakWithItem.setComment("Left click and drag with an item to \"left click\" items of the same type.");
 		lmbTweakWithoutItem.setComment("Hold shift, left click and drag without an item to \"shift left click\" items.");
@@ -64,10 +64,10 @@ public class ConfigGui extends GuiConfig {
 		scrollItemScaling.setComment("This determines how many items are moved when you scroll. On some setups (notably macOS), scrolling the wheel with different speeds results in different distances scrolled per wheel \"bump\". To make those setups play nicely with Mouse Tweaks, set this option to \"Always exactly one item\".");
 		debug.setComment("Enables debug logging output.");
 	}
-	
+
 	private static List<IConfigElement> getConfigElements() {
 		List<IConfigElement> list = new ArrayList<IConfigElement>();
-		
+
 		list.add(new ConfigElement(rmbTweak));
 		list.add(new ConfigElement(lmbTweakWithItem));
 		list.add(new ConfigElement(lmbTweakWithoutItem));
@@ -78,17 +78,17 @@ public class ConfigGui extends GuiConfig {
 		list.add(new ConfigElement(scrollHandling));
 		list.add(new ConfigElement(scrollItemScaling));
 		list.add(new ConfigElement(debug));
-		
+
 		return list;
 	}
-	
+
 	@Override
 	public void initGui() {
 		Logger.DebugLog("initGui()");
-		
+
 		if (!is_open) {
 			is_open = true;
-			
+
 			Main.config.read();
 			rmbTweak.set(Main.config.rmbTweak);
 			lmbTweakWithItem.set(Main.config.lmbTweakWithItem);
@@ -103,14 +103,14 @@ public class ConfigGui extends GuiConfig {
 			scrollItemScaling.set(scrollItemScaling.getValidValues()[Main.config.scrollItemScaling.ordinal()]);
 			debug.set(Config.debug);
 		}
-		
+
 		super.initGui();
 	}
-	
+
 	@Override
 	public void onGuiClosed() {
 		Logger.DebugLog("onGuiClosed()");
-		
+
 		Main.config.rmbTweak = rmbTweak.getBoolean();
 		Main.config.lmbTweakWithItem = lmbTweakWithItem.getBoolean();
 		Main.config.lmbTweakWithoutItem = lmbTweakWithoutItem.getBoolean();
@@ -128,7 +128,7 @@ public class ConfigGui extends GuiConfig {
 		Config.debug = debug.getBoolean();
 		Main.config.save();
 		Main.findOnTickMethod(true);
-		
+
 		is_open = false;
 		super.onGuiClosed();
 	}
