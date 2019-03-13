@@ -313,13 +313,13 @@ public class Main {
 
 		List<Slot> slots = handler.getSlots();
 
+		boolean pushItems = wheel < 0;
 		if (config.wheelScrollDirection.isPositionAware() && otherInventoryIsAbove(selectedSlot, slots)) {
-			wheel = -wheel;
+			pushItems = !pushItems;
 		}
 		if (config.wheelScrollDirection.isInverted()) {
-			wheel = -wheel;
+			pushItems = !pushItems;
 		}
-		boolean pushItems = wheel < 0;
 
 		if (isCraftingOutput) {
 			if (pushItems) {
