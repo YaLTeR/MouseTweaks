@@ -15,6 +15,7 @@ public class Constants {
 	static final String CONFIG_ONTICK_METHOD_ORDER = "OnTickMethodOrder";
 	static final String CONFIG_SCROLL_HANDLING = "ScrollHandling";
 	static final String CONFIG_DEBUG = "Debug";
+	static final String CONFIG_SCROLL_ITEM_SCALING = "ScrollItemScaling";
 
 	// Names for reflection.
 	public static final ObfuscatedName IGNOREMOUSEUP_NAME = new ObfuscatedName("ignoreMouseUp", "field_146995_H", "I");
@@ -31,12 +32,6 @@ public class Constants {
 
 	static final String ONTICKMETHOD_FORGE_NAME = "Forge";
 	static final String ONTICKMETHOD_LITELOADER_NAME = "LiteLoader";
-
-	public static final String WHELL_SCROLL_DIRECTION_DESCRIPTION_NORMAL = "Down to push, up to pull";
-	public static final String WHELL_SCROLL_DIRECTION_DESCRIPTION_INVERTED = "Up to push, down to pull";
-	public static final String WHELL_SCROLL_DIRECTION_DESCRIPTION_INVENTORY_POSITION_AWARE = "Inventory position aware";
-
-	static final int INVENTORY_SIZE = 36; // Size of the player inventory
 
 	public enum EntryPoint {
 		UNDEFINED, FORGE, LITELOADER

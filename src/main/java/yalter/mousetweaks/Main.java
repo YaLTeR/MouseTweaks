@@ -290,9 +290,12 @@ public class Main {
 	}
 
 	private static void handleWheel(Slot selectedSlot) {
-		int wheel = (config.wheelTweak && !disableWheelForThisContainer) ? mouseState.consumeScrollAmount() / 120 : 0;
+		if (!config.wheelTweak || disableWheelForThisContainer)
+			return;
+		int wheel = mouseState.consumeScrollAmount();
 
 		int numItemsToMove = Math.abs(wheel);
+		
 		if (numItemsToMove == 0 || selectedSlot == null || handler.isIgnored(selectedSlot))
 			return;
 
@@ -310,13 +313,13 @@ public class Main {
 
 		List<Slot> slots = handler.getSlots();
 
-		if (config.wheelScrollDirection == WheelScrollDirection.INVERTED || (config.wheelScrollDirection
-		                                                                     == WheelScrollDirection.INVENTORY_POSITION_AWARE
-		                                                                     && otherInventoryIsAbove(selectedSlot,
-		                                                                                              slots))) {
-			wheel = -wheel;
+		boolean pushItems = wheel < 0;
+		if (config.wheelScrollDirection.isPositionAware() && otherInventoryIsAbove(selectedSlot, slots)) {
+			pushItems = !pushItems;
 		}
-		boolean pushItems = (wheel < 0);
+		if (config.wheelScrollDirection.isInverted()) {
+			pushItems = !pushItems;
+		}
 
 		if (isCraftingOutput) {
 			if (pushItems) {
