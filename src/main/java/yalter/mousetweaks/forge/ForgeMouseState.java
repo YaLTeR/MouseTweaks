@@ -16,7 +16,7 @@ import java.util.EnumSet;
  */
 public class ForgeMouseState implements IMouseState {
 	private final EnumSet<MouseButton> pressedButtons = EnumSet.noneOf(MouseButton.class);
-	private double scrollAmount = 0;
+	private int scrollAmount = 0;
 
 	/**
 	 * If set to true, uses the polling scrolling. Allows having the compatibility benefit of event-based handling for
@@ -88,9 +88,9 @@ public class ForgeMouseState implements IMouseState {
 			scrollAmount += Main.config.scrollItemScaling.scale(Mouse.getDWheel());
 		}
 
-		int amountToConsume = (int) scrollAmount;
-		this.scrollAmount -= amountToConsume;
-		return amountToConsume;
+		int amountConsumed = scrollAmount / ScrollItemScaling.scrollStep;
+		this.scrollAmount -= amountConsumed * ScrollItemScaling.scrollStep;
+		return amountConsumed;
 	}
 
 	@Override

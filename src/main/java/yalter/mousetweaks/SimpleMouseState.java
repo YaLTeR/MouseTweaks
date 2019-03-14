@@ -13,7 +13,7 @@ import org.lwjgl.input.Mouse;
  * - https://github.com/YaLTeR/MouseTweaks/issues/19
  */
 public class SimpleMouseState implements IMouseState {
-	private double scrollAmount = 0;
+	private int scrollAmount = 0;
 
 	@Override
 	public boolean isButtonPressed(MouseButton mouseButton) {
@@ -29,8 +29,8 @@ public class SimpleMouseState implements IMouseState {
 	public int consumeScrollAmount() {
 		scrollAmount += Main.config.scrollItemScaling.scale(Mouse.getDWheel());
 
-		int amountToConsume = (int) scrollAmount;
-		scrollAmount -= amountToConsume;
-		return amountToConsume;
+		int amountConsumed = scrollAmount / ScrollItemScaling.scrollStep;
+		scrollAmount -= amountConsumed * ScrollItemScaling.scrollStep;
+		return amountConsumed;
 	}
 }
