@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[25,)"
+issueTrackerURL="https://github.com/YaLTeR/MouseTweaks/issues"
+
+[[mods]]
+modId="mousetweaks"
+version="${file.jarVersion}"
+displayName="Mouse Tweaks"
+updateJSONURL="http://play.sourceruns.org/yalter/MouseTweaks/update.json"
+displayURL="https://minecraft.curseforge.com/projects/mouse-tweaks"
+logoFile="mousetweaks_logo.png"
+credits="Contributors: mezz, juliand665, panoskj."
+authors="Ivan Molodetskikh (YaLTeR)"
+description='''
+A mod that enhances the inventory management by adding various additional functions to the usual mouse buttons.
+'''

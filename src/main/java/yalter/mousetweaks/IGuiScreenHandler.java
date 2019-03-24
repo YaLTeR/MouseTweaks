@@ -11,7 +11,7 @@ public interface IGuiScreenHandler {
 
 	List<Slot> getSlots();
 
-	Slot getSlotUnderMouse();
+	Slot getSlotUnderMouse(double mouseX, double mouseY);
 
 	boolean disableRMBDraggingFunctionality();
 

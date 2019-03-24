@@ -2,9 +2,9 @@ package yalter.mousetweaks;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.ReportedException;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
-import net.minecraft.util.ReportedException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -52,12 +52,12 @@ public class Reflection {
 
 		try {
 			Method m = getMethod(GuiContainer.class,
-			                     getObfuscatedName(Constants.GETSLOTATPOSITION_NAME),
-			                     int.class,
-			                     int.class);
-			guiContainerClass.storeMethod(Constants.GETSLOTATPOSITION_NAME.forgeName, m);
+			                     getObfuscatedName(Constants.GETSELECTEDSLOT_NAME),
+			                     double.class,
+			                     double.class);
+			guiContainerClass.storeMethod(Constants.GETSELECTEDSLOT_NAME.forgeName, m);
 		} catch (NoSuchMethodException e) {
-			Logger.Log("Could not retrieve GuiContainer.getSlotAtPosition().");
+			Logger.Log("Could not retrieve GuiContainer.getSelectedSlot().");
 			guiContainerClass = null;
 			return;
 		}

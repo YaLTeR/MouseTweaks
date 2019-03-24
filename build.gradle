@@ -1,108 +1,96 @@
 buildscript {
-	repositories {
-		mavenLocal()
-		mavenCentral()
-		jcenter()
-		maven {
-			name = "sonatype"
-			url = "https://oss.sonatype.org/content/repositories/snapshots/"
-		}
-		maven {
-			name = "forge"
-			url = "http://files.minecraftforge.net/maven"
-		}
-		maven {
-			name = 'sponge'
-			url = 'http://repo.spongepowered.org/maven'
-		}
-	}
-	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-		classpath 'org.spongepowered:mixingradle:0.4-SNAPSHOT'
-	}
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
 }
-
-//plugins {
-//	id "org.gradle.java"
-//	id "com.scuilion.syntastic" version "0.3.8"
-//}
-
-apply plugin: 'net.minecraftforge.gradle.liteloader'
-apply plugin: 'org.spongepowered.mixin'
-//apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 
 version = "2.10"
 group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
-minecraft {
-	//version = "1.12.1-14.22.0.2452"
-	version = "1.12.2"
-	runDir = "run"
-	mappings = "snapshot_20170919"
+def minecraftVersion = "1.13.2" // Used for output JAR filenames.
 
-	replace '@VERSION@', project.version
-}
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
-mixin {
-	defaultObfuscationEnv notch
-}
-
-jar {
-	from sourceSets.api.output
-	archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}.jar"
-}
-
-sourceJar {
-	from sourceSets.api.allSource
-	archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}-src.jar"
-}
-
-dependencies {
-	provided files('forgeSrc-1.12.1-14.22.0.2452.jar')
+configurations {
+    // Make Minecraft classes visible from the API classes.
+	apiCompile.extendsFrom(compile)
 }
 
 sourceSets {
-	main {
-//		java {
-//			exclude '**/liteloader/*'
-//		}
-		resources {
-			exclude 'litemod.json'
-		}
-	}
+    api
+    main {
+        // Make API classes visible from the main classes.
+        compileClasspath += sourceSets.api.output
+        runtimeClasspath += sourceSets.api.output
+
+        java {
+            exclude 'yalter/mousetweaks/forge/ConfigGui.java'
+            exclude 'yalter/mousetweaks/forge/ConfigGuiFactory.java'
+        }
+    }
 }
 
-processResources {
-	inputs.property "version", project.version
-	inputs.property "mcversion", project.minecraft.version
+minecraft {
+    mappings channel: 'snapshot', version: '20180921-1.13'
 
-	from(sourceSets.main.resources.srcDirs) {
-		include 'mcmod.info'
-		include 'litemod.json'
+    runs {
+        client {
+            workingDirectory project.file('run')
 
-		expand 'version':project.version, 'mcversion':project.minecraft.version
-	}
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
 
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'mcmod.info'
-		exclude 'litemod.json'
-	}
+            mods {
+                mousetweaks {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.90'
+}
+
+jar {
+    classifier = "mc${minecraftVersion}"
+
+    // Add API classes to the JAR.
+    from sourceSets.api.output.classesDirs
+
+    manifest {
+        attributes([
+            "Specification-Title": "Mouse Tweaks",
+            "Specification-Vendor": "YaLTeR",
+            "Specification-Version": "${version}",
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor": "YaLTeR",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+task srcJar(type: Jar) {
+	classifier = "mc${minecraftVersion}-src"
+	from sourceSets.main.allJava
+	from sourceSets.api.allJava
 }
 
 task apiJar(type: Jar) {
-	from sourceSets.api.output
-	archiveName = "${project.archivesBaseName}-${version}-mc${project.minecraft.version}-api.jar"
+    classifier = "mc${minecraftVersion}-api"
+    from sourceSets.api.output
 }
 
 artifacts {
-	archives apiJar
+    archives srcJar
+    archives apiJar
 }
-
-//allprojects {
-//	gradle.projectsEvaluated {
-//		tasks.withType(JavaCompile) {
-//			options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-//		}
-//	}
-//}

@@ -3,9 +3,8 @@ package yalter.mousetweaks.handlers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.ReportedException;
 import net.minecraft.inventory.*;
-import net.minecraft.util.ReportedException;
-import org.lwjgl.input.Mouse;
 import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.IGuiScreenHandler;
 import yalter.mousetweaks.MouseButton;
@@ -18,30 +17,14 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class GuiContainerHandler implements IGuiScreenHandler {
-	protected Minecraft mc;
-	protected GuiContainer guiContainer;
-	protected Method handleMouseClick;
+	Minecraft mc;
+	private GuiContainer guiContainer;
+	private Method handleMouseClick;
 
 	public GuiContainerHandler(GuiContainer guiContainer) {
-		this.mc = Minecraft.getMinecraft();
+		this.mc = Minecraft.getInstance();
 		this.guiContainer = guiContainer;
 		this.handleMouseClick = Reflection.getHMCMethod(guiContainer);
-	}
-
-	private int getDisplayWidth() {
-		return mc.displayWidth;
-	}
-
-	private int getDisplayHeight() {
-		return mc.displayHeight;
-	}
-
-	private int getRequiredMouseX() {
-		return (Mouse.getX() * guiContainer.width) / getDisplayWidth();
-	}
-
-	private int getRequiredMouseY() {
-		return guiContainer.height - ((Mouse.getY() * guiContainer.height) / getDisplayHeight()) - 1;
 	}
 
 	@Override
@@ -61,12 +44,12 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 	}
 
 	@Override
-	public Slot getSlotUnderMouse() {
+	public Slot getSlotUnderMouse(double mouseX, double mouseY) {
 		try {
 			return (Slot) Reflection.guiContainerClass.invokeMethod(guiContainer,
-			                                                        Constants.GETSLOTATPOSITION_NAME.forgeName,
-			                                                        getRequiredMouseX(),
-			                                                        getRequiredMouseY());
+			                                                        Constants.GETSELECTEDSLOT_NAME.forgeName,
+			                                                        mouseX,
+			                                                        mouseY);
 		} catch (InvocationTargetException e) {
 			CrashReport crashreport = CrashReport.makeCrashReport(e,
 			                                                      "GuiContainer.getSlotAtPosition() threw an exception"

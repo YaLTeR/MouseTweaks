@@ -1,7 +1,7 @@
 package yalter.mousetweaks;
 
 import net.minecraft.crash.CrashReport;
-import net.minecraft.util.ReportedException;
+import net.minecraft.crash.ReportedException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

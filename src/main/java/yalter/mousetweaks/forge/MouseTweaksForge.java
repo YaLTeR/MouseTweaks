@@ -1,39 +1,87 @@
 package yalter.mousetweaks.forge;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.MouseClickedEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.MouseReleasedEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.MouseDragEvent;
+import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.Constants;
+import yalter.mousetweaks.Logger;
 import yalter.mousetweaks.Main;
-import yalter.mousetweaks.OnTickMethod;
+import yalter.mousetweaks.MouseButton;
 
-@Mod(modid = Constants.MOD_ID, // If this isn't here, the mod doesn't load.
-     version = Constants.VERSION, // If this isn't here, FML complains in the log.
-     updateJSON = Constants.UPDATE_URL, // If this isn't here, updating doesn't work.
-     useMetadata = true, // The rest of stuff is fine being exclusively in mcmod.info.
-     clientSideOnly = true, guiFactory = "yalter.mousetweaks.forge.ConfigGuiFactory")
+@Mod(Constants.MOD_ID)
 public class MouseTweaksForge {
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
-		Main.initialize(Constants.EntryPoint.FORGE);
+	public MouseTweaksForge() {
+		Main.initialize();
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
+//	@SubscribeEvent
+//	public void onRenderTick(TickEvent.RenderTickEvent event) {
+//		if (Main.onTickMethod == OnTickMethod.FORGE && event.phase == TickEvent.Phase.START)
+//			Main.onUpdateInGame();
+//	}
+
 	@SubscribeEvent
-	public void onRenderTick(TickEvent.RenderTickEvent event) {
-		if (Main.onTickMethod == OnTickMethod.FORGE && event.phase == TickEvent.Phase.START)
-			Main.onUpdateInGame();
+	public void onGuiOpen(GuiOpenEvent event) {
+	    // Send when a gui is opened or closed (with null in getGui() in the latter case).
+		Logger.DebugLog("onGuiOpen gui = " + event.getGui());
+		Main.onGuiOpen(event.getGui());
 	}
 
 	@SubscribeEvent
-	public void onGuiMouseInput(GuiScreenEvent.MouseInputEvent.Post event) {
-		if (Main.onTickMethod == OnTickMethod.FORGE && event.getGui() instanceof GuiContainer) {
-			Main.onMouseInput();
+	public void onGuiMouseClickedPre(MouseClickedEvent.Pre event) {
+		Logger.DebugLog("onGuiMouseClickedPre button = " + event.getButton());
+
+		MouseButton button = eventButtonToMouseButton(event.getButton());
+		if (button != null) {
+			if (Main.onMouseClicked(event.getMouseX(), event.getMouseY(), button))
+				event.setCanceled(true);
+		}
+	}
+
+	@SubscribeEvent
+	public void onGuiMouseReleasedPre(MouseReleasedEvent.Pre event) {
+		Logger.DebugLog("onGuiMouseReleasedPre button = " + event.getButton());
+
+		MouseButton button = eventButtonToMouseButton(event.getButton());
+		if (button != null) {
+			if (Main.onMouseReleased(event.getMouseX(), event.getMouseY(), button))
+				event.setCanceled(true);
+		}
+	}
+
+	@SubscribeEvent
+	public void onGuiMouseScrollPost(MouseScrollEvent.Post event) {
+	    // Sent when nothing handled the scroll itself. For example, the creative inventory handles scroll anywhere on
+		// screen, so this event is suppressed. Quick scrolls at limited FPS result in multiple scroll events rather
+		// than one with a bigger delta.
+		Logger.DebugLog("onGuiMouseScrollPost delta = " + event.getScrollDelta());
+
+		if (Main.onMouseScrolled(event.getMouseX(), event.getMouseY(), event.getScrollDelta()))
+			event.setCanceled(true);
+	}
+
+	@SubscribeEvent
+	public void onGuiMouseDragPre(MouseDragEvent.Pre event) {
+	    // Sent when a mouse is dragged while a mouse button is down (so between Clicked and Released events). The
+		// rate of reporting is high even when the FPS is limited through the options.
+		Logger.DebugLog("onGuiMouseDragPre dx = " + event.getDragX() + ", dy = " + event.getDragY());
+	}
+
+	private static MouseButton eventButtonToMouseButton(int eventButton) {
+		switch (eventButton) {
+			case GLFW.GLFW_MOUSE_BUTTON_LEFT:
+				return MouseButton.LEFT;
+			case GLFW.GLFW_MOUSE_BUTTON_RIGHT:
+				return MouseButton.RIGHT;
+            default:
+                return null;
 		}
 	}
 }
