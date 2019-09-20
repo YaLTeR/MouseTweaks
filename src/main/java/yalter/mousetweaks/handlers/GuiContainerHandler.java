@@ -1,10 +1,10 @@
 package yalter.mousetweaks.handlers;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.ReportedException;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.container.*;
 import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.IGuiScreenHandler;
 import yalter.mousetweaks.MouseButton;
@@ -18,10 +18,10 @@ import java.util.List;
 
 public class GuiContainerHandler implements IGuiScreenHandler {
 	Minecraft mc;
-	private GuiContainer guiContainer;
+	private ContainerScreen guiContainer;
 	private Method handleMouseClick;
 
-	public GuiContainerHandler(GuiContainer guiContainer) {
+	public GuiContainerHandler(ContainerScreen guiContainer) {
 		this.mc = Minecraft.getInstance();
 		this.guiContainer = guiContainer;
 		this.handleMouseClick = Reflection.getHMCMethod(guiContainer);
@@ -40,7 +40,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
 	@Override
 	public List<Slot> getSlots() {
-		return guiContainer.inventorySlots.inventorySlots;
+		return guiContainer.getContainer().inventorySlots;
 	}
 
 	@Override
@@ -97,10 +97,10 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
 	@Override
 	public boolean isCraftingOutput(Slot slot) {
-		return (slot instanceof SlotCrafting
-		        || slot instanceof SlotFurnaceOutput
-		        || slot instanceof SlotMerchantResult
-		        || (guiContainer.inventorySlots instanceof ContainerRepair && slot.slotNumber == 2));
+		return (slot instanceof CraftingResultSlot
+		        || slot instanceof FurnaceResultSlot
+		        || slot instanceof MerchantResultSlot
+		        || (guiContainer.getContainer() instanceof RepairContainer && slot.slotNumber == 2));
 	}
 
 	@Override

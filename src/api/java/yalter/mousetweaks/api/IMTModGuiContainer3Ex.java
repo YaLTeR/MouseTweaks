@@ -1,7 +1,7 @@
 package yalter.mousetweaks.api;
 
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.ClickType;
+import net.minecraft.inventory.container.Slot;
 
 import java.util.List;
 

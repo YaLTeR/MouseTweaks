@@ -1,7 +1,7 @@
 package yalter.mousetweaks.api;
 
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 
 /**
  * This is the interface you want to implement in your GuiScreen to make it compatible with Mouse Tweaks.

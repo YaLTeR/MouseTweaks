@@ -14,13 +14,13 @@ version = "2.10"
 group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
-def minecraftVersion = "1.13.2" // Used for output JAR filenames.
+def minecraftVersion = "1.14.4" // Used for output JAR filenames.
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 configurations {
     // Make Minecraft classes visible from the API classes.
-	apiCompile.extendsFrom(compile)
+    apiCompile.extendsFrom(compile)
 }
 
 sourceSets {
@@ -38,7 +38,7 @@ sourceSets {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20180921-1.13'
+    mappings channel: 'snapshot', version: '20190719-1.14.3'
 
     runs {
         client {
@@ -57,7 +57,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.13.2-25.0.90'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.1.10'
 }
 
 jar {
@@ -80,9 +80,9 @@ jar {
 }
 
 task srcJar(type: Jar) {
-	classifier = "mc${minecraftVersion}-src"
-	from sourceSets.main.allJava
-	from sourceSets.api.allJava
+    classifier = "mc${minecraftVersion}-src"
+    from sourceSets.main.allJava
+    from sourceSets.api.allJava
 }
 
 task apiJar(type: Jar) {

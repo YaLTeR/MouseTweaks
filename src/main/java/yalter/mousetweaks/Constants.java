@@ -14,13 +14,13 @@ public class Constants {
 
 	// Names for reflection.
 	public static final ObfuscatedName IGNOREMOUSEUP_NAME
-			= new ObfuscatedName("ignoreMouseUp", "field_146995_H", "I");
+			= new ObfuscatedName("ignoreMouseUp", "field_146995_H", "w");
 	public static final ObfuscatedName DRAGSPLITTING_NAME
-			= new ObfuscatedName("dragSplitting", "field_147007_t", "u");
+			= new ObfuscatedName("dragSplitting", "field_147007_t", "j");
 	public static final ObfuscatedName DRAGSPLITTINGBUTTON_NAME
-			= new ObfuscatedName("dragSplittingButton", "field_146988_G", "H");
+			= new ObfuscatedName("dragSplittingButton", "field_146988_G", "v");
 	public static final ObfuscatedName GETSELECTEDSLOT_NAME
-			= new ObfuscatedName("getSelectedSlot", "func_195360_a", "a");
+			= new ObfuscatedName("getSelectedSlot", "func_195360_a", "c");
 	static final ObfuscatedName HANDLEMOUSECLICK_NAME
 			= new ObfuscatedName("handleMouseClick", "func_184098_a", "a");
 }

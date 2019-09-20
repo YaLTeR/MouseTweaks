@@ -1,10 +1,10 @@
 package yalter.mousetweaks;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.inventory.Slot;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.screen.inventory.CreativeScreen;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import yalter.mousetweaks.api.IMTModGuiContainer3;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
@@ -48,7 +48,7 @@ public class Main {
 	 * Call on opening or closing a GuiScreen.
 	 * @param newScreen The newly opened screen, or null on closing.
 	 */
-	public static void onGuiOpen(GuiScreen newScreen) {
+	public static void onGuiOpen(Screen newScreen) {
 	    // Reset the state.
 		handler = null;
 		oldSelectedSlot = null;
@@ -455,15 +455,15 @@ public class Main {
 	}
 
 	// Finds the appropriate handler to use with this GuiScreen. Returns null if no handler was found.
-	private static IGuiScreenHandler findHandler(GuiScreen currentScreen) {
+	private static IGuiScreenHandler findHandler(Screen currentScreen) {
 		if (currentScreen instanceof IMTModGuiContainer3Ex) {
 			return new IMTModGuiContainer3ExHandler((IMTModGuiContainer3Ex) currentScreen);
 		} else if (currentScreen instanceof IMTModGuiContainer3) {
 			return new IMTModGuiContainer3Handler((IMTModGuiContainer3) currentScreen);
-		} else if (currentScreen instanceof GuiContainerCreative) {
-			return new GuiContainerCreativeHandler((GuiContainerCreative) currentScreen);
-		} else if (currentScreen instanceof GuiContainer) {
-			return new GuiContainerHandler((GuiContainer) currentScreen);
+		} else if (currentScreen instanceof CreativeScreen) {
+			return new GuiContainerCreativeHandler((CreativeScreen) currentScreen);
+		} else if (currentScreen instanceof ContainerScreen) {
+			return new GuiContainerHandler((ContainerScreen) currentScreen);
 		}
 
 		return null;
