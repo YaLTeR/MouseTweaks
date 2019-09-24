@@ -168,7 +168,8 @@ public class Main {
 			if (selectedSlotStack.isEmpty())
 				return false;
 
-			boolean shiftIsDown = InputMappings.isKeyDown(mc.mainWindow.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputMappings.isKeyDown(mc.mainWindow.getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT);
+			boolean shiftIsDown = InputMappings.isKeyDown(mc.mainWindow.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)
+					|| InputMappings.isKeyDown(mc.mainWindow.getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT);
 
 			if (stackOnMouse.isEmpty()) {
 				// Shift-LMB drag without item.
@@ -177,6 +178,35 @@ public class Main {
 
 				// Shift-left click the newly selected slot.
 				handler.clickSlot(selectedSlot, MouseButton.LEFT, true);
+			} else {
+				// (Shift-)LMB drag with item.
+				if (!config.lmbTweakWithItem)
+					return false;
+
+				// Here we only click on slots with the same item.
+				if (!areStacksCompatible(selectedSlotStack, stackOnMouse))
+					return false;
+
+				if (shiftIsDown) {
+					// If shift is down, just shift-click on the slot, and the items get moved to the other inventory.
+					handler.clickSlot(selectedSlot, MouseButton.LEFT, true);
+				} else {
+					// If shift is not down, we need to merge the item stack on the mouse with the one in the slot.
+					// However, if the slot stack contains more items than can still fit on mouse, clicking on it will
+					// result in filling the slot with the maximum item count and leaving only the remaining items on
+					// the mouse, without any way to get the items back onto the mouse, which is not what we want for
+					// the LMB tweak.
+					if (stackOnMouse.getCount() + selectedSlotStack.getCount() > stackOnMouse.getMaxStackSize())
+						return false;
+
+					// We need to click on the slot so that our item stack gets merged with it, and then click again to
+					// return the stack to the mouse. However, if the slot is crafting output, then the item is added to
+					// the mouse stack on the first click and we don't need to click the second time.
+					handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
+
+					if (!handler.isCraftingOutput(selectedSlot))
+						handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
+				}
 			}
 		}
 
