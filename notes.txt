@@ -1,0 +1,66 @@
+Scroll event
+
+Probably just handle Post; then it won't ever break GUIs which handle scrolling
+(e.g. the creative inventory). When the creative inventory switches to
+inventory mode (no scroll container), it starts delivering scroll Post events.
+
+Idea: handle Pre instead and cancel it.
+a) Cancel if the mouse was over any slot:
+  - will break creative and probably other scrolling
+    - can special case creative specifically
+  - what if scrolling with item held is added, not necessarily over a slot
+b) Cancel if the scrolling did something (moved an item)
+  - inconsistent if scrolling items, then the items run out and suddenly a
+    scrollable container starts scrolling
+
+Mouse events
+
+Post click and release don't seem to ever be delivered (GuiContainer eats them
+unconditionally: https://github.com/MinecraftForge/MinecraftForge/issues/5627).
+Therefore handle Pre and cancel them. Cancel when Mouse Tweaks did something.
+Need to be careful to leave basic functionality (simply clicking a slot)
+handled by the container and not by Mouse Tweaks.
+
+Post dragging similarly doesn't seem to ever be delivered
+(https://github.com/MinecraftForge/MinecraftForge/issues/5627), so handle Pre.
+Not clear if it needs to be cancelled though. Drag only gets sent when a mouse
+button is down, so in the middle between Click and Release events. It reports
+at a very high rate, even if the FPS is limited in the settings.
+
+Item drop: on release
+Item pickup: on click
+Dragging within a slot: nothing happens
+Dragging when starting on a slot: as soon as another slot is dragged over, drag splitting visually starts
+Dragging when starting outside: drag splitting doesn't occur, item dropped on release on the final slot
+
+RMB drag:
+dragSplitting is already set on right click. Ideally we should cancel the right click to not have to disable dragSplitting, but that means potentially interfering with other mods' right click?
+
+On right click: if there's an item on the mouse, cancel, set RMB drag flag and put item.
+On right drag: if the flag is set, do RMB drag stuff.
+On right release: if the flag is set, reset the flag.
+
+LMB drag with item:
+Shift-LMB drag with item:
+Just handle this in Drag when there's something on mouse and not dragSplitting?
+Don't want to depend on dragSplitting.
+Main issue: left clicking and holding with item triggers drag splitting, and can mouse over slots with the same item, which should be drag splitting.
+Want to start this when left hold picked up an item. => There was no item on the mouse when left was held.
+
+On left click: if there's no item on the mouse, set a flag for "good for LMB drag with item".
+On left drag: if the flag is set and there's an item on the mouse, do LMB drag with item. If there's no item, reset the flag?
+On left release: reset the flag.
+
+Shift-LMB drag without item:
+Once again, don't want to trigger during dragSplitting.
+Same logic as above?
+
+On left click: if there's no item on the mouse, set a flag for "good for LMB drag without item".
+On left drag: if the flag is set and there's no item on the mouse, do shift-lmb drag without item.
+On left release: reset the flag.
+
+Overall:
+
+On left click: if there's no item on the mouse, set a flag for "good for LMB drag".
+On left drag: if the flag is set and there's an item on the mouse, do LMB drag with item; if there's no item on the mouse, do (Shift-)LMB drag without item.
+On left release: reset the flag.
