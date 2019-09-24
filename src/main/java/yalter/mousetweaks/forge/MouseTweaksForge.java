@@ -21,12 +21,6 @@ public class MouseTweaksForge {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-//	@SubscribeEvent
-//	public void onRenderTick(TickEvent.RenderTickEvent event) {
-//		if (Main.onTickMethod == OnTickMethod.FORGE && event.phase == TickEvent.Phase.START)
-//			Main.onUpdateInGame();
-//	}
-
 	@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent event) {
 	    // Send when a gui is opened or closed (with null in getGui() in the latter case).
