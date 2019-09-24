@@ -4,8 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.IMTModGuiContainer3;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
 import yalter.mousetweaks.handlers.*;
@@ -24,6 +26,7 @@ public class Main {
 	private static Slot oldSelectedSlot = null;
 	private static Slot firstRightClickedSlot = null;
 	private static double accumulatedScrollDelta = 0;
+	private static boolean canDoLMBDrag = false;
 
 	private static boolean initialized = false;
 
@@ -54,6 +57,7 @@ public class Main {
 		oldSelectedSlot = null;
 		firstRightClickedSlot = null;
 		accumulatedScrollDelta = 0;
+		canDoLMBDrag = false;
 
 		if (newScreen != null) {
 			Logger.DebugLog("You have just opened a " + newScreen.getClass().getSimpleName() + ".");
@@ -92,6 +96,17 @@ public class Main {
 	    if (handler == null)
 	    	return false;
 
+	    if (button == MouseButton.LEFT) {
+			// Stack that the player is currently "holding" on the mouse cursor.
+			ItemStack stackOnMouse = mc.player.inventory.getItemStack();
+
+			if (stackOnMouse.isEmpty())
+				canDoLMBDrag = true;
+		}
+
+	    // Store the currently selected slot.
+		oldSelectedSlot = handler.getSlotUnderMouse(x, y);
+
 		return false;
 	}
 
@@ -106,6 +121,9 @@ public class Main {
 		if (handler == null)
 			return false;
 
+		if (button == MouseButton.LEFT)
+			canDoLMBDrag = false;
+
 		return false;
 	}
 
@@ -119,6 +137,48 @@ public class Main {
 	public static boolean onMouseDrag(double x, double y, MouseButton button) {
 		if (handler == null)
 			return false;
+
+		Slot selectedSlot = handler.getSlotUnderMouse(x, y);
+
+		// If the mouse hasn't moved to a new slot, we don't need to do anything.
+		if (selectedSlot == oldSelectedSlot)
+			return false;
+
+		oldSelectedSlot = selectedSlot;
+
+		// If no slot was selected, we don't need to do anything.
+		if (selectedSlot == null)
+			return false;
+
+		// If the selected slot is ignored, we don't need to do anything.
+		if (handler.isIgnored(selectedSlot))
+			return false;
+
+		// Stack that the player is currently "holding" on the mouse cursor.
+		ItemStack stackOnMouse = mc.player.inventory.getItemStack();
+
+		// At this point the mouse has just entered a new, non-ignored slot.
+
+		if (button == MouseButton.LEFT) {
+			if (!canDoLMBDrag)
+				return false;
+
+			// LMB tweaks don't do anything for empty slots.
+			ItemStack selectedSlotStack = selectedSlot.getStack();
+			if (selectedSlotStack.isEmpty())
+				return false;
+
+			boolean shiftIsDown = InputMappings.isKeyDown(mc.mainWindow.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputMappings.isKeyDown(mc.mainWindow.getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT);
+
+			if (stackOnMouse.isEmpty()) {
+				// Shift-LMB drag without item.
+				if (!config.lmbTweakWithoutItem || !shiftIsDown)
+					return false;
+
+				// Shift-left click the newly selected slot.
+				handler.clickSlot(selectedSlot, MouseButton.LEFT, true);
+			}
+		}
 
 		return false;
 	}
