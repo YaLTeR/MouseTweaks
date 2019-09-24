@@ -240,6 +240,10 @@ public class Main {
             // Always non-null because mustDistributeAll is false.
 			assert targetSlots != null;
 
+			// If no target slots were found, don't pick up the items in first place.
+			if (targetSlots.isEmpty())
+				return true;
+
             // Click the selected slot to pick the items up.
 			handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
 
