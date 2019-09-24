@@ -24,9 +24,9 @@ public class Main {
 	private static IGuiScreenHandler handler = null;
 	private static boolean disableWheelForThisContainer = false;
 	private static Slot oldSelectedSlot = null;
-	private static Slot firstRightClickedSlot = null;
 	private static double accumulatedScrollDelta = 0;
 	private static boolean canDoLMBDrag = false;
+	private static boolean canDoRMBDrag = false;
 
 	private static boolean initialized = false;
 
@@ -55,9 +55,9 @@ public class Main {
 	    // Reset the state.
 		handler = null;
 		oldSelectedSlot = null;
-		firstRightClickedSlot = null;
 		accumulatedScrollDelta = 0;
 		canDoLMBDrag = false;
+		canDoRMBDrag = false;
 
 		if (newScreen != null) {
 			Logger.DebugLog("You have just opened a " + newScreen.getClass().getSimpleName() + ".");
@@ -96,18 +96,71 @@ public class Main {
 	    if (handler == null)
 	    	return false;
 
-	    if (button == MouseButton.LEFT) {
-			// Stack that the player is currently "holding" on the mouse cursor.
-			ItemStack stackOnMouse = mc.player.inventory.getItemStack();
+		// Store the currently selected slot.
+		Slot selectedSlot = handler.getSlotUnderMouse(x, y);
+		oldSelectedSlot = selectedSlot;
 
+		// Stack that the player is currently "holding" on the mouse cursor.
+		ItemStack stackOnMouse = mc.player.inventory.getItemStack();
+
+		if (button == MouseButton.LEFT) {
+			// If the stack on mouse isn't empty, the vanilla LMB dragging mechanic is going to start. We don't want to
+			// interfere with that.
 			if (stackOnMouse.isEmpty())
 				canDoLMBDrag = true;
+		} else if (button == MouseButton.RIGHT) {
+			// We're only interested in the RMB tweak when there's something on the mouse.
+			if (stackOnMouse.isEmpty())
+				return false;
+
+			// Check if the RMB tweak is enabled right away, as otherwise the vanilla RMB dragging mechanic should
+			// occur.
+			if (!config.rmbTweak)
+				return false;
+
+			// Set the flag, right-click an item right away, and cancel the event so the vanilla RMB dragging doesn't
+			// happen.
+			canDoRMBDrag = true;
+
+			if (selectedSlot != null)
+				rmbTweakNewSlot(selectedSlot, stackOnMouse);
+
+			return true;
 		}
 
-	    // Store the currently selected slot.
-		oldSelectedSlot = handler.getSlotUnderMouse(x, y);
-
 		return false;
+	}
+
+	/**
+	 * Call to handle a new selected slot for the RMB tweak.
+	 *
+	 * This method assumes a number of checks have already been done, such as that RMB tweak is enabled, or that the
+	 * selected slot isn't null, or the stack on mouse isn't empty.
+	 * @param selectedSlot The new selected slot.
+	 * @param stackOnMouse The stack currently "held" on the mouse cursor.
+	 */
+	private static void rmbTweakNewSlot(Slot selectedSlot, ItemStack stackOnMouse) {
+		assert selectedSlot != null;
+		assert !stackOnMouse.isEmpty();
+
+		// Don't act on ignored slots.
+		if (handler.isIgnored(selectedSlot))
+			return;
+
+		// Can't put items into crafting output slots.
+		if (handler.isCraftingOutput(selectedSlot))
+			return;
+
+		// If the stacks are incompatible, we can't right click.
+		ItemStack selectedSlotStack = selectedSlot.getStack();
+		if (!areStacksCompatible(selectedSlotStack, stackOnMouse))
+			return;
+
+		// Return if we cannot put any more items into the slot.
+		if (selectedSlotStack.getCount() == selectedSlotStack.getMaxStackSize())
+			return;
+
+		handler.clickSlot(selectedSlot, MouseButton.RIGHT, false);
 	}
 
 	/**
@@ -121,8 +174,17 @@ public class Main {
 		if (handler == null)
 			return false;
 
+		// Reset the flags.
 		if (button == MouseButton.LEFT)
 			canDoLMBDrag = false;
+		else if (button == MouseButton.RIGHT) {
+			if (canDoRMBDrag) {
+				canDoRMBDrag = false;
+
+				// Cancel the release event to prevent an extra item from being inserted into the selected slot.
+				return true;
+			}
+		}
 
 		return false;
 	}
@@ -208,6 +270,17 @@ public class Main {
 						handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
 				}
 			}
+		} else if (button == MouseButton.RIGHT) {
+			if (!canDoRMBDrag)
+				return false;
+
+			// RMB tweak doesn't do anything when the stack on mouse is empty.
+			if (stackOnMouse.isEmpty())
+				return false;
+
+			// We don't check config.rmbTweak here because it's already checked when setting canDoRMBDrag.
+
+			rmbTweakNewSlot(selectedSlot, stackOnMouse);
 		}
 
 		return false;
@@ -431,107 +504,6 @@ public class Main {
 
 		return true;
 	}
-
-//	private static void onUpdateInGui(GuiScreen currentScreen) {
-//		// If everything is disabled there's nothing to do.
-//		if (!config.rmbTweak && !config.lmbTweakWithItem && !config.lmbTweakWithoutItem && !config.wheelTweak)
-//			return;
-//
-//		Slot selectedSlot = handler.getSlotUnderMouse();
-//
-//		if (mouseState.isButtonPressed(MouseButton.RIGHT)) {
-//			if (!oldRMBDown)
-//				firstRightClickedSlot = selectedSlot;
-//
-//			if (config.rmbTweak && handler.disableRMBDraggingFunctionality()) {
-//				// Check some conditions to see if we really need to click the first slot.
-//				if (firstRightClickedSlot != null
-//				    // This condition is here to prevent double-clicking.
-//				    && (firstRightClickedSlot != selectedSlot || oldSelectedSlot == selectedSlot)
-//				    && !handler.isIgnored(firstRightClickedSlot)
-//				    && !handler.isCraftingOutput(firstRightClickedSlot)) {
-//					ItemStack targetStack = firstRightClickedSlot.getStack();
-//					ItemStack stackOnMouse = mc.player.inventory.getItemStack();
-//
-//					if (!stackOnMouse.isEmpty()
-//					    && areStacksCompatible(stackOnMouse, targetStack)
-//					    && firstRightClickedSlot.isItemValid(stackOnMouse)) {
-//						handler.clickSlot(firstRightClickedSlot, MouseButton.RIGHT, false);
-//					}
-//				}
-//			}
-//		} else {
-//			firstRightClickedSlot = null;
-//		}
-//
-//		if (oldSelectedSlot != selectedSlot) {
-//			oldSelectedSlot = selectedSlot;
-//
-//			// Nothing to do if no slot is selected.
-//			if (selectedSlot == null)
-//				return;
-//
-//			// Prevent double-clicking.
-//			if (firstRightClickedSlot == selectedSlot)
-//				firstRightClickedSlot = null;
-//
-//			Logger.DebugLog("You have selected a new slot, it's slot number is " + selectedSlot.slotNumber);
-//
-//			// Copy stacks, otherwise when we click stuff they get updated and mess up the logic.
-//			ItemStack targetStack = selectedSlot.getStack().copy();
-//			ItemStack stackOnMouse = mc.player.inventory.getItemStack().copy();
-//
-//			boolean shiftIsDown = InputMappings.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) || InputMappings.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT);
-//
-//			if (mouseState.isButtonPressed(MouseButton.RIGHT)) {
-//				// Right mouse button
-//				if (config.rmbTweak) {
-//					if (!handler.isIgnored(selectedSlot)
-//					    && !handler.isCraftingOutput(selectedSlot)
-//					    && !stackOnMouse.isEmpty()
-//					    && areStacksCompatible(stackOnMouse, targetStack)
-//					    && selectedSlot.isItemValid(stackOnMouse)) {
-//						handler.clickSlot(selectedSlot, MouseButton.RIGHT, false);
-//					}
-//				}
-//			} else if (mouseState.isButtonPressed(MouseButton.LEFT)) {
-//				// Left mouse button
-//				if (!stackOnMouse.isEmpty()) {
-//					if (config.lmbTweakWithItem) {
-//						if (!handler.isIgnored(selectedSlot)
-//						    && !targetStack.isEmpty()
-//						    && areStacksCompatible(stackOnMouse, targetStack)) {
-//							if (shiftIsDown) {
-//								// If shift is down, we just shift-click the slot and the item gets moved into another
-//								// inventory.
-//								handler.clickSlot(selectedSlot, MouseButton.LEFT, true);
-//							} else {
-//								// If shift is not down, we need to merge the item stack on the mouse with the one in
-//								// the slot.
-//								if ((stackOnMouse.getCount() + targetStack.getCount())
-//								    <= stackOnMouse.getMaxStackSize()) {
-//									// We need to click on the slot so that our item stack gets merged with it, and
-//									// then click again to return the stack to the mouse. However, if the slot is
-//									// crafting output, then the item is added to the mouse stack on the first click
-//									// and we don't need to click the second time.
-//									handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
-//
-//									if (!handler.isCraftingOutput(selectedSlot))
-//										handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
-//								}
-//							}
-//						}
-//					}
-//				} else if (config.lmbTweakWithoutItem) {
-//					if (!targetStack.isEmpty() && shiftIsDown && !handler.isIgnored(selectedSlot)) {
-//						handler.clickSlot(selectedSlot, MouseButton.LEFT, true);
-//					}
-//				}
-//			}
-//		}
-//
-//		handleWheel(selectedSlot);
-//	}
 
 	// Returns true if the other inventory is above the selected slot inventory.
 	//
