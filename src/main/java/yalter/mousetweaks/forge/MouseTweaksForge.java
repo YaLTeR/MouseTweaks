@@ -71,7 +71,13 @@ public class MouseTweaksForge {
 	public void onGuiMouseDragPre(MouseDragEvent.Pre event) {
 	    // Sent when a mouse is dragged while a mouse button is down (so between Clicked and Released events). The
 		// rate of reporting is high even when the FPS is limited through the options.
-		Logger.DebugLog("onGuiMouseDragPre dx = " + event.getDragX() + ", dy = " + event.getDragY());
+		Logger.DebugLog("onGuiMouseDragPre button = " + event.getMouseButton() + ", dx = " + event.getDragX() + ", dy = " + event.getDragY());
+
+		MouseButton button = eventButtonToMouseButton(event.getMouseButton());
+		if (button != null) {
+			if (Main.onMouseDrag(event.getMouseX(), event.getMouseY(), button))
+				event.setCanceled(true);
+		}
 	}
 
 	private static MouseButton eventButtonToMouseButton(int eventButton) {
