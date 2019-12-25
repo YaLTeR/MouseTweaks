@@ -230,8 +230,8 @@ public class Main {
 			if (selectedSlotStack.isEmpty())
 				return false;
 
-			boolean shiftIsDown = InputMappings.isKeyDown(mc.mainWindow.getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)
-					|| InputMappings.isKeyDown(mc.mainWindow.getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT);
+			boolean shiftIsDown = InputMappings.isKeyDown(mc.func_228018_at_().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)
+					|| InputMappings.isKeyDown(mc.func_228018_at_().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT);
 
 			if (stackOnMouse.isEmpty()) {
 				// Shift-LMB drag without item.

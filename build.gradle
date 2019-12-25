@@ -14,7 +14,7 @@ version = "2.13"
 group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
-def minecraftVersion = "1.14.4" // Used for output JAR filenames.
+def minecraftVersion = "1.15.1" // Used for output JAR filenames.
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
@@ -57,7 +57,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.39'
+    minecraft 'net.minecraftforge:forge:1.15.1-30.0.16'
 }
 
 jar {
