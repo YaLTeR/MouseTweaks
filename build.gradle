@@ -10,7 +10,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 
-version = "2.12"
+version = "2.13"
 group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
