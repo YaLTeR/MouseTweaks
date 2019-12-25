@@ -1,5 +1,6 @@
 package yalter.mousetweaks.forge;
 
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseClickedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseReleasedEvent;
@@ -8,6 +9,7 @@ import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.Logger;
@@ -17,6 +19,11 @@ import yalter.mousetweaks.MouseButton;
 @Mod(Constants.MOD_ID)
 public class MouseTweaksForge {
 	public MouseTweaksForge() {
+		if (FMLEnvironment.dist != Dist.CLIENT) {
+			Logger.Log("Disabled because not running on the client.");
+			return;
+		}
+
 		Main.initialize();
 		MinecraftForge.EVENT_BUS.register(this);
 	}
