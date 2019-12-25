@@ -28,6 +28,10 @@ public class Config {
 			properties.load(configReader);
 			configReader.close();
 		} catch (FileNotFoundException ignored) {
+			// If the config does not exist, generate the default one.
+			Logger.Log("Generating the config file at: " + fileName);
+			save();
+			return;
 		} catch (IOException e) {
 			Logger.Log("Failed to read the config file: " + fileName);
 			e.printStackTrace();
