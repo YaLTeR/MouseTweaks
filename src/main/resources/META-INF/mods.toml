@@ -1,5 +1,6 @@
 modLoader="javafml"
-loaderVersion="[25,)"
+loaderVersion="[33,)"
+license="BSD-3-Clause"
 issueTrackerURL="https://github.com/YaLTeR/MouseTweaks/issues"
 
 [[mods]]
