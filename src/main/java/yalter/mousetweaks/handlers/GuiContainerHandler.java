@@ -1,10 +1,10 @@
 package yalter.mousetweaks.handlers;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.crash.ReportedException;
-import net.minecraft.inventory.container.*;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.CrashReport;
+import net.minecraft.ReportedException;
+import net.minecraft.world.inventory.*;
 import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.IGuiScreenHandler;
 import yalter.mousetweaks.MouseButton;
@@ -18,10 +18,10 @@ import java.util.List;
 
 public class GuiContainerHandler implements IGuiScreenHandler {
 	Minecraft mc;
-	private ContainerScreen guiContainer;
+	private AbstractContainerScreen guiContainer;
 	private Method handleMouseClick;
 
-	public GuiContainerHandler(ContainerScreen guiContainer) {
+	public GuiContainerHandler(AbstractContainerScreen guiContainer) {
 		this.mc = Minecraft.getInstance();
 		this.guiContainer = guiContainer;
 		this.handleMouseClick = Reflection.getHMCMethod(guiContainer);
@@ -40,7 +40,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
 	@Override
 	public List<Slot> getSlots() {
-		return guiContainer.getContainer().inventorySlots;
+		return guiContainer.getMenu().slots;
 	}
 
 	@Override
@@ -51,9 +51,9 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 			                                                        mouseX,
 			                                                        mouseY);
 		} catch (InvocationTargetException e) {
-			CrashReport crashreport = CrashReport.makeCrashReport(e,
-			                                                      "GuiContainer.getSlotAtPosition() threw an exception"
-			                                                      + " when called from MouseTweaks.");
+			CrashReport crashreport = CrashReport.forThrowable(e,
+					                                  "GuiContainer.getSlotAtPosition() threw an exception"
+			                                                   + " when called from MouseTweaks.");
 			throw new ReportedException(crashreport);
 		}
 	}
@@ -81,26 +81,25 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 		try {
 			handleMouseClick.invoke(guiContainer,
 			                        slot,
-			                        slot.slotNumber,
+			                        slot.index,
 			                        mouseButton.getValue(),
 			                        shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP);
 		} catch (InvocationTargetException e) {
-			CrashReport crashreport = CrashReport.makeCrashReport(e,
-			                                                      "handleMouseClick() threw an exception when called "
-			                                                      + "from MouseTweaks.");
+			CrashReport crashreport = CrashReport.forThrowable(e,
+					                                  "handleMouseClick() threw an exception when called "
+							                                   + "from MouseTweaks.");
 			throw new ReportedException(crashreport);
 		} catch (IllegalAccessException e) {
-			CrashReport crashreport = CrashReport.makeCrashReport(e, "Calling handleMouseClick() from MouseTweaks.");
+			CrashReport crashreport = CrashReport.forThrowable(e, "Calling handleMouseClick() from MouseTweaks.");
 			throw new ReportedException(crashreport);
 		}
 	}
 
 	@Override
 	public boolean isCraftingOutput(Slot slot) {
-		return (slot instanceof CraftingResultSlot
+		return (slot instanceof ResultSlot
 		        || slot instanceof FurnaceResultSlot
-		        || slot instanceof MerchantResultSlot
-		        || (guiContainer.getContainer() instanceof RepairContainer && slot.slotNumber == 2));
+		        || slot instanceof MerchantResultSlot);
 	}
 
 	@Override

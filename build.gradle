@@ -1,11 +1,10 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
+        maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -14,22 +13,12 @@ version = "2.14"
 group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks"
 
-def minecraftVersion = "1.16.2" // Used for output JAR filenames.
+def minecraftVersion = "1.17.1" // Used for output JAR filenames.
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
-
-configurations {
-    // Make Minecraft classes visible from the API classes.
-    apiCompile.extendsFrom(compile)
-}
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 sourceSets {
-    api
     main {
-        // Make API classes visible from the main classes.
-        compileClasspath += sourceSets.api.output
-        runtimeClasspath += sourceSets.api.output
-
         java {
             exclude 'yalter/mousetweaks/forge/ConfigGui.java'
             exclude 'yalter/mousetweaks/forge/ConfigGuiFactory.java'
@@ -38,13 +27,13 @@ sourceSets {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200514-1.16'
+    mappings channel: 'official', version: '1.17.1'
 
     runs {
         client {
             workingDirectory project.file('run')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -57,37 +46,35 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.2-33.0.5'
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.2'
 }
 
 jar {
-    classifier = "mc${minecraftVersion}"
+    archiveClassifier.set("mc${minecraftVersion}")
 
-    // Add API classes to the JAR.
-    from sourceSets.api.output.classesDirs
+    manifest.attributes([
+        "Specification-Title": "Mouse Tweaks",
+        "Specification-Vendor": "YaLTeR",
+        "Specification-Version": "${project.version}",
+        "Implementation-Title": project.name,
+        "Implementation-Version": "${project.version}",
+        "Implementation-Vendor": "YaLTeR",
+        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+    ])
 
-    manifest {
-        attributes([
-            "Specification-Title": "Mouse Tweaks",
-            "Specification-Vendor": "YaLTeR",
-            "Specification-Version": "${version}",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor": "YaLTeR",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
+    finalizedBy 'reobfJar'
 }
 
 task srcJar(type: Jar) {
-    classifier = "mc${minecraftVersion}-src"
+    archiveClassifier.set("mc${minecraftVersion}-src")
     from sourceSets.main.allJava
-    from sourceSets.api.allJava
 }
 
 task apiJar(type: Jar) {
-    classifier = "mc${minecraftVersion}-api"
-    from sourceSets.api.output
+    archiveClassifier.set("mc${minecraftVersion}-api")
+    from(sourceSets.main.output) {
+        include 'yalter/mousetweaks/api/**'
+    }
 }
 
 artifacts {

@@ -1,12 +1,12 @@
 package yalter.mousetweaks;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.screen.inventory.CreativeScreen;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.IMTModGuiContainer3;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
@@ -38,7 +38,7 @@ public class Main {
 
 		mc = Minecraft.getInstance();
 
-		config = new Config(mc.gameDir + File.separator + "config" + File.separator + "MouseTweaks.cfg");
+		config = new Config(mc.gameDirectory.getAbsolutePath() + File.separator + "config" + File.separator + "MouseTweaks.cfg");
 		config.read();
 
 		Reflection.reflectGuiContainer();
@@ -101,7 +101,7 @@ public class Main {
 		oldSelectedSlot = selectedSlot;
 
 		// Stack that the player is currently "holding" on the mouse cursor.
-		ItemStack stackOnMouse = mc.player.inventory.getItemStack();
+		ItemStack stackOnMouse = mc.player.containerMenu.getCarried();
 
 		if (button == MouseButton.LEFT) {
 			// If the stack on mouse isn't empty, the vanilla LMB dragging mechanic is going to start. We don't want to
@@ -152,7 +152,7 @@ public class Main {
 			return;
 
 		// If the stacks are incompatible, we can't right click.
-		ItemStack selectedSlotStack = selectedSlot.getStack();
+		ItemStack selectedSlotStack = selectedSlot.getItem();
 		if (!areStacksCompatible(selectedSlotStack, stackOnMouse))
 			return;
 
@@ -217,7 +217,7 @@ public class Main {
 			return false;
 
 		// Stack that the player is currently "holding" on the mouse cursor.
-		ItemStack stackOnMouse = mc.player.inventory.getItemStack();
+		ItemStack stackOnMouse = mc.player.containerMenu.getCarried();
 
 		// At this point the mouse has just entered a new, non-ignored slot.
 
@@ -226,12 +226,12 @@ public class Main {
 				return false;
 
 			// LMB tweaks don't do anything for empty slots.
-			ItemStack selectedSlotStack = selectedSlot.getStack();
+			ItemStack selectedSlotStack = selectedSlot.getItem();
 			if (selectedSlotStack.isEmpty())
 				return false;
 
-			boolean shiftIsDown = InputMappings.isKeyDown(mc.getMainWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)
-					|| InputMappings.isKeyDown(mc.getMainWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT);
+			boolean shiftIsDown = InputConstants.isKeyDown(mc.getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)
+					|| InputConstants.isKeyDown(mc.getWindow().getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT);
 
 			if (stackOnMouse.isEmpty()) {
 				// Shift-LMB drag without item.
@@ -333,12 +333,12 @@ public class Main {
 		}
 
 		// Return if the selected slot is empty.
-		ItemStack selectedSlotStack = selectedSlot.getStack();
+		ItemStack selectedSlotStack = selectedSlot.getItem();
 		if (selectedSlotStack.isEmpty())
 			return true;
 
 		// Stack that the player is currently "holding" on the mouse cursor.
-		ItemStack stackOnMouse = mc.player.inventory.getItemStack();
+		ItemStack stackOnMouse = mc.player.containerMenu.getCarried();
 
 		// Scrolling over a crafting output slot requires special handling as those slots behave differently.
 		if (handler.isCraftingOutput(selectedSlot)) {
@@ -371,7 +371,7 @@ public class Main {
 							handler.clickSlot(slot, MouseButton.LEFT, false);
 						} else {
 							// Otherwise right click the needed number of times.
-                            int clickTimes = slot.getStack().getMaxStackSize() - slot.getStack().getCount();
+                            int clickTimes = slot.getItem().getMaxStackSize() - slot.getItem().getCount();
 							while (clickTimes-- > 0)
 								handler.clickSlot(slot, MouseButton.RIGHT, false);
 						}
@@ -392,7 +392,7 @@ public class Main {
 
         if (pushItems) {
 			// If the stack on mouse isn't empty, it should be possible to put it into the selected slot.
-			if (!stackOnMouse.isEmpty() && !selectedSlot.isItemValid(stackOnMouse))
+			if (!stackOnMouse.isEmpty() && !selectedSlot.mayPlace(stackOnMouse))
 				return true;
 
         	// Clip the number of items to move by the available item count.
@@ -416,7 +416,7 @@ public class Main {
 				//
 				// Can't do the last slot left click optimization, because we usually want to move less items (1) than
 				// the whole available stack.
-				int clickTimes = slot.getStack().getMaxStackSize() - slot.getStack().getCount();
+				int clickTimes = slot.getItem().getMaxStackSize() - slot.getItem().getCount();
 				clickTimes = Math.min(clickTimes, numItemsToMove);
 				numItemsToMove -= clickTimes;
 
@@ -443,7 +443,7 @@ public class Main {
 			if (targetSlot == null)
 				break;
 
-			int numItemsInTargetSlot = targetSlot.getStack().getCount();
+			int numItemsInTargetSlot = targetSlot.getItem().getCount();
 
 			if (handler.isCraftingOutput(targetSlot)) {
 				// When pulling from the crafting output slot, one mouse wheel tick equals one batch of crafted items.
@@ -461,7 +461,7 @@ public class Main {
 				numItemsToMove = Math.min(numItemsToMove - 1, maxItemsToMove);
 
 				// If the stack on mouse isn't empty, it should be possible to put it into the selected slot.
-				if (!stackOnMouse.isEmpty() && !selectedSlot.isItemValid(stackOnMouse))
+				if (!stackOnMouse.isEmpty() && !selectedSlot.mayPlace(stackOnMouse))
 					break;
 
 				// Click the selected slot to put down the possibly non-empty stack on mouse and pick up the items.
@@ -482,7 +482,7 @@ public class Main {
 			numItemsToMove -= numItemsToMoveFromTargetSlot;
 
 			// If the stack on mouse isn't empty, it should be possible to put it into the target slot.
-			if (!stackOnMouse.isEmpty() && !targetSlot.isItemValid(stackOnMouse))
+			if (!stackOnMouse.isEmpty() && !targetSlot.mayPlace(stackOnMouse))
 				break;
 
 			// Click the target slot to pick up the items and put the items on mouse there.
@@ -510,10 +510,10 @@ public class Main {
 	// This is used for the inventory position aware scroll direction. To prevent any surprises, this should have the
 	// same logic for what constitutes the "other" inventory as findWheelApplicableSlot().
 	private static boolean otherInventoryIsAbove(Slot selectedSlot, List<Slot> slots) {
-		boolean selectedIsInPlayerInventory = selectedSlot.inventory == mc.player.inventory;
+		boolean selectedIsInPlayerInventory = selectedSlot.container == mc.player.getInventory();
 		for (Slot slot : slots) {
-			if ((slot.inventory == mc.player.inventory) != selectedIsInPlayerInventory
-			    && slot.yPos < selectedSlot.yPos) {
+			if ((slot.container == mc.player.getInventory()) != selectedIsInPlayerInventory
+			    && slot.y < selectedSlot.y) {
 				return true;
 			}
 		}
@@ -526,10 +526,10 @@ public class Main {
 			return new IMTModGuiContainer3ExHandler((IMTModGuiContainer3Ex) currentScreen);
 		} else if (currentScreen instanceof IMTModGuiContainer3) {
 			return new IMTModGuiContainer3Handler((IMTModGuiContainer3) currentScreen);
-		} else if (currentScreen instanceof CreativeScreen) {
-			return new GuiContainerCreativeHandler((CreativeScreen) currentScreen);
-		} else if (currentScreen instanceof ContainerScreen) {
-			return new GuiContainerHandler((ContainerScreen) currentScreen);
+		} else if (currentScreen instanceof CreativeModeInventoryScreen) {
+			return new GuiContainerCreativeHandler((CreativeModeInventoryScreen) currentScreen);
+		} else if (currentScreen instanceof AbstractContainerScreen) {
+			return new GuiContainerHandler((AbstractContainerScreen) currentScreen);
 		}
 
 		return null;
@@ -538,7 +538,7 @@ public class Main {
 	// Returns true if we can put items from one stack into another.
 	// This is different from ItemStack.areItemsEqual() because here empty stacks are compatible with anything.
 	private static boolean areStacksCompatible(ItemStack a, ItemStack b) {
-		return a.isEmpty() || b.isEmpty() || (a.isItemEqual(b) && ItemStack.areItemStackTagsEqual(a, b));
+		return a.isEmpty() || b.isEmpty() || (a.sameItem(b) && ItemStack.tagMatches(a, b));
 	}
 
 	/**
@@ -559,8 +559,8 @@ public class Main {
 			direction = -1;
 		}
 
-		ItemStack selectedSlotStack = selectedSlot.getStack();
-		boolean findInPlayerInventory = (selectedSlot.inventory != mc.player.inventory);
+		ItemStack selectedSlotStack = selectedSlot.getItem();
+		boolean findInPlayerInventory = (selectedSlot.container != mc.player.getInventory());
 
 		for (int i = startIndex; i != endIndex; i += direction) {
 			Slot slot = slots.get(i);
@@ -569,11 +569,11 @@ public class Main {
 			if (handler.isIgnored(slot))
 				continue;
 
-			boolean slotInPlayerInventory = (slot.inventory == mc.player.inventory);
+			boolean slotInPlayerInventory = (slot.container == mc.player.getInventory());
 			if (findInPlayerInventory != slotInPlayerInventory)
 				continue;
 
-			ItemStack stack = slot.getStack();
+			ItemStack stack = slot.getItem();
 
 			// Can't pull from an empty stack.
 			if (stack.isEmpty())
@@ -598,8 +598,8 @@ public class Main {
 	 * @return List of target slots among which all items can be distributed, in order of priority.
 	 */
 	private static List<Slot> findPushSlots(List<Slot> slots, Slot selectedSlot, int itemCount, boolean mustDistributeAll) {
-		ItemStack selectedSlotStack = selectedSlot.getStack();
-		boolean findInPlayerInventory = (selectedSlot.inventory != mc.player.inventory);
+		ItemStack selectedSlotStack = selectedSlot.getItem();
+		boolean findInPlayerInventory = (selectedSlot.container != mc.player.getInventory());
 
 		List<Slot> rv = new ArrayList<>();
 		// Applicable empty slots, they can be used once applicable non-empty slots run out.
@@ -612,7 +612,7 @@ public class Main {
 			if (handler.isIgnored(slot))
 				continue;
 
-			boolean slotInPlayerInventory = (slot.inventory == mc.player.inventory);
+			boolean slotInPlayerInventory = (slot.container == mc.player.getInventory());
 			if (findInPlayerInventory != slotInPlayerInventory)
 				continue;
 
@@ -620,11 +620,11 @@ public class Main {
 			if (handler.isCraftingOutput(slot))
 				continue;
 
-			ItemStack stack = slot.getStack();
+			ItemStack stack = slot.getItem();
 
 			if (stack.isEmpty()) {
 			    // Empty slots need to be able to accept the target item.
-				if (slot.isItemValid(selectedSlotStack)) {
+				if (slot.mayPlace(selectedSlotStack)) {
                     goodEmptySlots.add(slot);
 				}
 			} else {
@@ -640,7 +640,7 @@ public class Main {
 		for (int i = 0; i != goodEmptySlots.size() && itemCount > 0; i++) {
 		    Slot slot = goodEmptySlots.get(i);
 		    rv.add(slot);
-		    itemCount -= Math.min(itemCount, slot.getStack().getMaxStackSize() - slot.getStack().getCount());
+		    itemCount -= Math.min(itemCount, slot.getItem().getMaxStackSize() - slot.getItem().getCount());
 		}
 
 		// If we were unable to distribute all items as requested, return null.

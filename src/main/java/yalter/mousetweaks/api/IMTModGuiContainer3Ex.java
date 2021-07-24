@@ -1,19 +1,18 @@
 package yalter.mousetweaks.api;
 
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
+
+import java.util.List;
 
 /**
- * This is the interface you want to implement in your GuiScreen to make it compatible with Mouse Tweaks.
- * If this interface is not enough (for example, you need a custom slot click function, or if you use a custom Container
- * which happens to be incompatible), check IMTModGuiContainer3Ex instead.
- * If you just need to disable Mouse Tweaks or the wheel tweak, see the MouseTweaksIgnore
- * or the MouseTweaksDisableWheelTweak annotations.
+ * This is the extended version of the interface you want to implement in your GuiScreen to make it compatible
+ * with Mouse Tweaks. It has MT_getSlots() instead of MT_getContainer(), and adds MT_clickSlot().
  *
  * Changelog:
  * - version 3 (Minecraft 1.13): added mouse X and Y arguments to MT_getSlotUnderMouse().
  */
-public interface IMTModGuiContainer3 {
+public interface IMTModGuiContainer3Ex {
 	/**
 	 * If you want to disable Mouse Tweaks in your GuiScreen, return true from this method.
 	 *
@@ -29,11 +28,12 @@ public interface IMTModGuiContainer3 {
 	boolean MT_isWheelTweakDisabled();
 
 	/**
-	 * Returns the Container.
+	 * Returns a list of Slots currently present in the inventory.
+	 * For vanilla containers it is this.inventorySlots.inventorySlots.
 	 *
-	 * @return Container that is currently in use.
+	 * @return List of Slots currently present in the inventory.
 	 */
-	Container MT_getContainer();
+	List<Slot> MT_getSlots();
 
 	/**
 	 * Returns the Slot located under the given mouse coordinates, or null if no Slot is selected.
@@ -89,4 +89,22 @@ public interface IMTModGuiContainer3 {
 	 * @return True if Mouse Tweaks should click the slot on which the RMB was pressed.
 	 */
 	boolean MT_disableRMBDraggingFunctionality();
+
+	/**
+	 * Click the given slot.
+	 *
+	 * For vanilla containers this method looks like this (mc is Minecraft):
+	 * <pre>
+	 * this.handleMouseClick(slot,
+	 *                       slot.slotNumber,
+	 *                       mouseButton,
+	 *                       clickType);
+	 * </pre>
+	 *
+	 * @param slot the slot to click
+	 * @param mouseButton the mouse button to click, left is 0 and right is 1
+	 * @param clickType click type, most frequently used ones are PICKUP (normal left or right click)
+	 *                  and QUICK_MOVE (shift click)
+	 */
+	void MT_clickSlot(Slot slot, int mouseButton, ClickType clickType);
 }

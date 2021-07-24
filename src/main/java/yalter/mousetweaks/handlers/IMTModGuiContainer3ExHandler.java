@@ -1,7 +1,7 @@
 package yalter.mousetweaks.handlers;
 
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
 import yalter.mousetweaks.IGuiScreenHandler;
 import yalter.mousetweaks.MouseButton;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
