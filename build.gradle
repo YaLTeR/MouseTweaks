@@ -24,6 +24,10 @@ sourceSets {
             exclude 'yalter/mousetweaks/forge/ConfigGuiFactory.java'
             exclude 'yalter/mousetweaks/fabric'
         }
+
+        resources {
+            exclude 'fabric.mod.json'
+        }
     }
 }
 

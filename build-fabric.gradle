@@ -15,6 +15,10 @@ sourceSets {
         java {
             exclude 'yalter/mousetweaks/forge'
         }
+
+        resources {
+            exclude 'META-INF/mods.toml'
+        }
     }
 }
 
