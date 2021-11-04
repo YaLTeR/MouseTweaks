@@ -12,7 +12,6 @@ import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.Logger;
 import yalter.mousetweaks.Main;
@@ -42,7 +41,7 @@ public class MouseTweaksForge {
 	public void onGuiMouseClickedPre(MouseClickedEvent.Pre event) {
 		Logger.DebugLog("onGuiMouseClickedPre button = " + event.getButton());
 
-		MouseButton button = eventButtonToMouseButton(event.getButton());
+		MouseButton button = MouseButton.fromEventButton(event.getButton());
 		if (button != null) {
 			if (Main.onMouseClicked(event.getMouseX(), event.getMouseY(), button))
 				event.setCanceled(true);
@@ -53,7 +52,7 @@ public class MouseTweaksForge {
 	public void onGuiMouseReleasedPre(MouseReleasedEvent.Pre event) {
 		Logger.DebugLog("onGuiMouseReleasedPre button = " + event.getButton());
 
-		MouseButton button = eventButtonToMouseButton(event.getButton());
+		MouseButton button = MouseButton.fromEventButton(event.getButton());
 		if (button != null) {
 			if (Main.onMouseReleased(event.getMouseX(), event.getMouseY(), button))
 				event.setCanceled(true);
@@ -77,21 +76,10 @@ public class MouseTweaksForge {
 		// rate of reporting is high even when the FPS is limited through the options.
 		Logger.DebugLog("onGuiMouseDragPre button = " + event.getMouseButton() + ", dx = " + event.getDragX() + ", dy = " + event.getDragY());
 
-		MouseButton button = eventButtonToMouseButton(event.getMouseButton());
+		MouseButton button = MouseButton.fromEventButton(event.getMouseButton());
 		if (button != null) {
 			if (Main.onMouseDrag(event.getMouseX(), event.getMouseY(), button))
 				event.setCanceled(true);
-		}
-	}
-
-	private static MouseButton eventButtonToMouseButton(int eventButton) {
-		switch (eventButton) {
-			case GLFW.GLFW_MOUSE_BUTTON_LEFT:
-				return MouseButton.LEFT;
-			case GLFW.GLFW_MOUSE_BUTTON_RIGHT:
-				return MouseButton.RIGHT;
-            default:
-                return null;
 		}
 	}
 }
