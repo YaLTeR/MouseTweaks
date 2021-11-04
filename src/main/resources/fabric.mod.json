@@ -6,6 +6,7 @@
   "description": "A mod that enhances the inventory management by adding various additional functions to the usual mouse buttons.",
   "authors": ["Ivan Molodetskikh (YaLTeR)"],
   "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks",
     "issues": "https://github.com/YaLTeR/MouseTweaks/issues",
     "sources": "https://github.com/YaLTeR/MouseTweaks"
   },
