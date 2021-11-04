@@ -11,7 +11,12 @@ public class MouseTweaksFabric implements ClientModInitializer {
     public void onInitializeClient() {
         Main.initialize();
 
-        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+        // We need BEFORE_INIT rather than AFTER_INIT to get the correct ordering on the creative inventory.
+        // The game always opens InventoryScreen, calling its init() first, then if the player is in creative mode,
+        // InventoryScreen sets the screen to CreativeInventoryScreen within its init(). Thus, when using AFTER_INIT,
+        // CreativeInventoryScreen is called first, but then InventoryScreen is called right after as its init() exits.
+        // This breaks special creative inventory handling.
+        ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             Main.onGuiOpen(screen);
 
             ScreenMouseEvents.allowMouseClick(screen).register((_screen, x, y, eventButton) -> {
