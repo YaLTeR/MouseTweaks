@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "mousetweaks",
+  "version": "${version}",
+  "name": "Mouse Tweaks",
+  "description": "A mod that enhances the inventory management by adding various additional functions to the usual mouse buttons.",
+  "authors": ["Ivan Molodetskikh (YaLTeR)"],
+  "contact": {
+    "issues": "https://github.com/YaLTeR/MouseTweaks/issues",
+    "sources": "https://github.com/YaLTeR/MouseTweaks"
+  },
+  "license": "BSD-3-Clause",
+  "icon": "mousetweaks_logo.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "yalter.mousetweaks.fabric.MouseTweaksFabric"
+    ]
+  },
+  "mixins": ["mousetweaks.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.17.x",
+    "java": ">=16"
+  },
+  "suggests": {}
+}

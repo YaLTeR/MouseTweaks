@@ -22,6 +22,7 @@ sourceSets {
         java {
             exclude 'yalter/mousetweaks/forge/ConfigGui.java'
             exclude 'yalter/mousetweaks/forge/ConfigGuiFactory.java'
+            exclude 'yalter/mousetweaks/fabric'
         }
     }
 }
