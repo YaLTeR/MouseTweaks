@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.IMTModGuiContainer3;
@@ -117,6 +118,14 @@ public class Main {
 			// occur.
 			if (!config.rmbTweak)
 				return false;
+
+			// Let players right click bundles. Cancel the event so vanilla RMB dragging doesn't start.
+			// FIXME: a better solution would be to still start the RMB drag and then forward through the release event,
+			// so that you can still start a Mouse Tweaks RMB drag from a bundle, as you can with the vanilla mechanic.
+			// FIXME: an even better solution would be to *not* cancel any events so Mouse Tweaks doesn't break any
+			// mod items similar to bundles too.
+			if (selectedSlot != null && selectedSlot.getItem().getItem() instanceof BundleItem)
+				return true;
 
 			// Set the flag, right-click an item right away, and cancel the event so the vanilla RMB dragging doesn't
 			// happen.
