@@ -9,11 +9,11 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 
+def minecraftVersion = "1.17.1" // Used for output JAR filenames.
+
 version = project.mod_version
 group = "yalter.mousetweaks"
-archivesBaseName = "MouseTweaks"
-
-def minecraftVersion = "1.17.1" // Used for output JAR filenames.
+archivesBaseName = "MouseTweaks-forge-mc${minecraftVersion}"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
@@ -51,8 +51,6 @@ dependencies {
 }
 
 jar {
-    archiveClassifier.set("mc${minecraftVersion}")
-
     manifest.attributes([
         "Specification-Title": "Mouse Tweaks",
         "Specification-Vendor": "YaLTeR",
@@ -67,12 +65,12 @@ jar {
 }
 
 task srcJar(type: Jar) {
-    archiveClassifier.set("mc${minecraftVersion}-src")
+    archiveClassifier.set("src")
     from sourceSets.main.allJava
 }
 
 task apiJar(type: Jar) {
-    archiveClassifier.set("mc${minecraftVersion}-api")
+    archiveClassifier.set("api")
     from(sourceSets.main.output) {
         include 'yalter/mousetweaks/api/**'
     }
