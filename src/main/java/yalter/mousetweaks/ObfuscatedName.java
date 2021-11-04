@@ -3,11 +3,13 @@ package yalter.mousetweaks;
 public class ObfuscatedName {
 	public final String mcpName;
 	public final String forgeName;
+	public final String loomName;
 	public final String vanillaName;
 
-	ObfuscatedName(String mcpName, String forgeName, String vanillaName) {
+	ObfuscatedName(String mcpName, String forgeName, String loomName, String vanillaName) {
 		this.mcpName = mcpName;
 		this.forgeName = forgeName;
+		this.loomName = loomName;
 		this.vanillaName = vanillaName;
 	}
 
@@ -18,6 +20,9 @@ public class ObfuscatedName {
 
 			case FORGE:
 				return forgeName;
+
+			case LOOM:
+				return loomName;
 
 			case VANILLA:
 			default:

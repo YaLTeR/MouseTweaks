@@ -186,7 +186,12 @@ public class Reflection {
 				getField(AbstractContainerScreen.class, Constants.IGNOREMOUSEUP_NAME.forgeName);
 				obfuscation = Obfuscation.FORGE;
 			} catch (NoSuchFieldException ex) {
-				obfuscation = Obfuscation.VANILLA;
+				try {
+					getField(AbstractContainerScreen.class, Constants.IGNOREMOUSEUP_NAME.loomName);
+					obfuscation = Obfuscation.LOOM;
+				} catch (NoSuchFieldException exc) {
+					obfuscation = Obfuscation.VANILLA;
+				}
 			}
 		}
 
