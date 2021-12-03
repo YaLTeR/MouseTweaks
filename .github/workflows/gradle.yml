@@ -16,11 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 16
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           distribution: adopt
-          java-version: 16
+          java-version: 17
       - name: Build (Forge)
         run: ./gradlew build
       - name: Build (Fabric)

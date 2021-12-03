@@ -9,13 +9,13 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 
-def minecraftVersion = "1.17.1" // Used for output JAR filenames.
+def minecraftVersion = "1.18" // Used for output JAR filenames.
 
 version = project.mod_version
 group = "yalter.mousetweaks"
 archivesBaseName = "MouseTweaks-forge-mc${minecraftVersion}"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 sourceSets {
     main {
@@ -32,7 +32,7 @@ sourceSets {
 }
 
 minecraft {
-    mappings channel: 'official', version: '1.17.1'
+    mappings channel: 'official', version: '1.18'
 
     runs {
         client {
@@ -51,7 +51,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.2'
+    minecraft 'net.minecraftforge:forge:1.18-38.0.12'
 }
 
 jar {

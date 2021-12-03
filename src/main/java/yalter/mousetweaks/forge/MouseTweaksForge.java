@@ -1,11 +1,11 @@
 package yalter.mousetweaks.forge;
 
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseClickedEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseReleasedEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseDragEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseScrollEvent;
+import net.minecraftforge.client.event.ScreenOpenEvent;
+import net.minecraftforge.client.event.ScreenEvent.MouseClickedEvent;
+import net.minecraftforge.client.event.ScreenEvent.MouseReleasedEvent;
+import net.minecraftforge.client.event.ScreenEvent.MouseDragEvent;
+import net.minecraftforge.client.event.ScreenEvent.MouseScrollEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.IExtensionPoint;
@@ -31,10 +31,10 @@ public class MouseTweaksForge {
 	}
 
 	@SubscribeEvent
-	public void onGuiOpen(GuiOpenEvent event) {
+	public void onGuiOpen(ScreenOpenEvent event) {
 	    // Send when a gui is opened or closed (with null in getGui() in the latter case).
-		Logger.DebugLog("onGuiOpen gui = " + event.getGui());
-		Main.onGuiOpen(event.getGui());
+		Logger.DebugLog("onGuiOpen gui = " + event.getScreen());
+		Main.onGuiOpen(event.getScreen());
 	}
 
 	@SubscribeEvent
