@@ -9,20 +9,20 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(AbstractContainerScreen.class)
 public interface AbstractContainerScreenAccessor {
-    @Invoker("findSlot")
-    public Slot invokeFindSlot(double x, double y);
+    @Invoker
+    Slot invokeFindSlot(double x, double y);
 
-    @Invoker("slotClicked")
-    public void invokeSlotClicked(Slot slot, int index, int button, ClickType clickType);
-
-    @Accessor
-    public boolean getIsQuickCrafting();
-    @Accessor("isQuickCrafting")
-    public void setIsQuickCrafting(boolean value);
+    @Invoker
+    void invokeSlotClicked(Slot slot, int index, int button, ClickType clickType);
 
     @Accessor
-    public int getQuickCraftingButton();
+    boolean getIsQuickCrafting();
+    @Accessor
+    void setIsQuickCrafting(boolean value);
 
-    @Accessor("skipNextRelease")
-    public void setSkipNextRelease(boolean value);
+    @Accessor
+    int getQuickCraftingButton();
+
+    @Accessor
+    void setSkipNextRelease(boolean value);
 }
