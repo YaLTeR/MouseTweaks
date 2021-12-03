@@ -9,7 +9,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
-import yalter.mousetweaks.api.IMTModGuiContainer3;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
 import yalter.mousetweaks.handlers.*;
 
@@ -41,8 +40,6 @@ public class Main {
 
 		config = new Config(mc.gameDirectory.getAbsolutePath() + File.separator + "config" + File.separator + "MouseTweaks.cfg");
 		config.read();
-
-		Reflection.reflectGuiContainer();
 
 		Logger.Log("Initialized.");
 		initialized = true;
@@ -533,8 +530,6 @@ public class Main {
 	private static IGuiScreenHandler findHandler(Screen currentScreen) {
 		if (currentScreen instanceof IMTModGuiContainer3Ex) {
 			return new IMTModGuiContainer3ExHandler((IMTModGuiContainer3Ex) currentScreen);
-		} else if (currentScreen instanceof IMTModGuiContainer3) {
-			return new IMTModGuiContainer3Handler((IMTModGuiContainer3) currentScreen);
 		} else if (currentScreen instanceof CreativeModeInventoryScreen) {
 			return new GuiContainerCreativeHandler((CreativeModeInventoryScreen) currentScreen);
 		} else if (currentScreen instanceof AbstractContainerScreen) {

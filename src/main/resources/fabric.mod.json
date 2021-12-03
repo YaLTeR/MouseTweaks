@@ -19,7 +19,10 @@
       "yalter.mousetweaks.fabric.MouseTweaksFabric"
     ]
   },
-  "mixins": ["mousetweaks.mixins.json"],
+  "mixins": [
+    "mousetweaks.mixins.json",
+    "mousetweaks-fabric.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.11.3",
     "fabric": "*",

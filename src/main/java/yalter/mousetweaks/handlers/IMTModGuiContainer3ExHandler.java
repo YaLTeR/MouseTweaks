@@ -9,7 +9,7 @@ import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
 import java.util.List;
 
 public class IMTModGuiContainer3ExHandler implements IGuiScreenHandler {
-	private IMTModGuiContainer3Ex modGuiContainer;
+	private final IMTModGuiContainer3Ex modGuiContainer;
 
 	public IMTModGuiContainer3ExHandler(IMTModGuiContainer3Ex modGuiContainer) {
 		this.modGuiContainer = modGuiContainer;

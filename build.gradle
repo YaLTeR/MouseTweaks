@@ -5,9 +5,11 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
 
 def minecraftVersion = "1.18" // Used for output JAR filenames.
 
@@ -31,6 +33,11 @@ sourceSets {
     }
 }
 
+mixin {
+    add sourceSets.main, 'mousetweaks.mixins.refmap.json'
+    config 'mousetweaks.mixins.json'
+}
+
 minecraft {
     mappings channel: 'official', version: '1.18'
 
@@ -52,6 +59,7 @@ minecraft {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18-38.0.12'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 jar {

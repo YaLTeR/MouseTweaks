@@ -1,11 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "yalter.mousetweaks.fabric.mixin",
+  "package": "yalter.mousetweaks.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
-  "client": ["MixinMouseHandler"],
+  "client": ["AbstractContainerScreenAccessor"],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "refmap": "mousetweaks.mixins.refmap.json"
 }
