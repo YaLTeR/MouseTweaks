@@ -21,7 +21,7 @@ public abstract class MixinMouseHandler {
     private void onMouseDragged(Screen screen, double x, double y, double dx, double dy, CallbackInfo ci) {
         MouseButton button = MouseButton.fromEventButton(this.activeButton);
         if (button != null) {
-            if (Main.onMouseDrag(x, y, button)) {
+            if (Main.onMouseDrag(screen, x, y, button)) {
                 ci.cancel();
             }
         }

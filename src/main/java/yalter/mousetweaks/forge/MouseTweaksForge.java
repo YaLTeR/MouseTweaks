@@ -1,7 +1,6 @@
 package yalter.mousetweaks.forge;
 
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ScreenOpenEvent;
 import net.minecraftforge.client.event.ScreenEvent.MouseClickedEvent;
 import net.minecraftforge.client.event.ScreenEvent.MouseReleasedEvent;
 import net.minecraftforge.client.event.ScreenEvent.MouseDragEvent;
@@ -31,19 +30,12 @@ public class MouseTweaksForge {
 	}
 
 	@SubscribeEvent
-	public void onGuiOpen(ScreenOpenEvent event) {
-	    // Send when a gui is opened or closed (with null in getGui() in the latter case).
-		Logger.DebugLog("onGuiOpen gui = " + event.getScreen());
-		Main.onGuiOpen(event.getScreen());
-	}
-
-	@SubscribeEvent
 	public void onGuiMouseClickedPre(MouseClickedEvent.Pre event) {
 		Logger.DebugLog("onGuiMouseClickedPre button = " + event.getButton());
 
 		MouseButton button = MouseButton.fromEventButton(event.getButton());
 		if (button != null) {
-			if (Main.onMouseClicked(event.getMouseX(), event.getMouseY(), button))
+			if (Main.onMouseClicked(event.getScreen(), event.getMouseX(), event.getMouseY(), button))
 				event.setCanceled(true);
 		}
 	}
@@ -54,7 +46,7 @@ public class MouseTweaksForge {
 
 		MouseButton button = MouseButton.fromEventButton(event.getButton());
 		if (button != null) {
-			if (Main.onMouseReleased(event.getMouseX(), event.getMouseY(), button))
+			if (Main.onMouseReleased(event.getScreen(), event.getMouseX(), event.getMouseY(), button))
 				event.setCanceled(true);
 		}
 	}
@@ -66,7 +58,7 @@ public class MouseTweaksForge {
 		// than one with a bigger delta.
 		Logger.DebugLog("onGuiMouseScrollPost delta = " + event.getScrollDelta());
 
-		if (Main.onMouseScrolled(event.getMouseX(), event.getMouseY(), event.getScrollDelta()))
+		if (Main.onMouseScrolled(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDelta()))
 			event.setCanceled(true);
 	}
 
@@ -78,7 +70,7 @@ public class MouseTweaksForge {
 
 		MouseButton button = MouseButton.fromEventButton(event.getMouseButton());
 		if (button != null) {
-			if (Main.onMouseDrag(event.getMouseX(), event.getMouseY(), button))
+			if (Main.onMouseDrag(event.getScreen(), event.getMouseX(), event.getMouseY(), button))
 				event.setCanceled(true);
 		}
 	}

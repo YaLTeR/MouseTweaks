@@ -4,7 +4,7 @@
   "package": "yalter.mousetweaks.fabric.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
-  "client": ["MixinMouseHandler", "MixinMinecraft"],
+  "client": ["MixinMouseHandler"],
   "injectors": {
     "defaultRequire": 1
   }

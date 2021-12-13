@@ -21,6 +21,7 @@ public class Main {
 
 	private static Minecraft mc;
 
+	private static Screen openScreen = null;
 	private static IGuiScreenHandler handler = null;
 	private static boolean disableWheelForThisContainer = false;
 	private static Slot oldSelectedSlot = null;
@@ -45,24 +46,25 @@ public class Main {
 		initialized = true;
 	}
 
-	/**
-	 * Call on opening or closing a GuiScreen.
-	 * @param newScreen The newly opened screen, or null on closing.
-	 */
-	public static void onGuiOpen(Screen newScreen) {
-	    // Reset the state.
+	private static void updateScreen(Screen newScreen) {
+		if (newScreen == openScreen)
+			return;
+
+		openScreen = newScreen;
+
+		// Reset the state.
 		handler = null;
 		oldSelectedSlot = null;
 		accumulatedScrollDelta = 0;
 		canDoLMBDrag = false;
 		canDoRMBDrag = false;
 
-		if (newScreen != null) {
-			Logger.DebugLog("You have just opened a " + newScreen.getClass().getSimpleName() + ".");
+		if (openScreen != null) {
+			Logger.DebugLog("You have just opened a " + openScreen.getClass().getSimpleName() + ".");
 
 			config.read();
 
-            handler = findHandler(newScreen);
+            handler = findHandler(openScreen);
             if (handler == null) {
                 Logger.DebugLog("No valid handler found; Mouse Tweaks is disabled.");
             } else {
@@ -85,12 +87,14 @@ public class Main {
 
 	/**
 	 * Call when a mouse button is clicked.
+	 * @param screen The screen for this event.
 	 * @param x Mouse X.
 	 * @param y Mouse Y.
 	 * @param button The button that was clicked.
 	 * @return True if the event was handled and should be cancelled.
 	 */
-	public static boolean onMouseClicked(double x, double y, MouseButton button) {
+	public static boolean onMouseClicked(Screen screen, double x, double y, MouseButton button) {
+		updateScreen(screen);
 	    if (handler == null)
 	    	return false;
 
@@ -171,12 +175,14 @@ public class Main {
 
 	/**
 	 * Call when a mouse button is released.
+	 * @param screen The screen for this event.
 	 * @param x Mouse X.
 	 * @param y Mouse Y.
 	 * @param button The button that was released.
 	 * @return True if the event was handled and should be cancelled.
 	 */
-	public static boolean onMouseReleased(double x, double y, MouseButton button) {
+	public static boolean onMouseReleased(Screen screen, double x, double y, MouseButton button) {
+		updateScreen(screen);
 		if (handler == null)
 			return false;
 
@@ -197,12 +203,14 @@ public class Main {
 
 	/**
 	 * Call when the mouse is dragged.
+	 * @param screen The screen for this event.
 	 * @param x New mouse X.
 	 * @param y New mouse Y.
 	 * @param button Currently active button.
 	 * @return True if the event was handled and should be cancelled.
 	 */
-	public static boolean onMouseDrag(double x, double y, MouseButton button) {
+	public static boolean onMouseDrag(Screen screen, double x, double y, MouseButton button) {
+		updateScreen(screen);
 		if (handler == null)
 			return false;
 
@@ -294,12 +302,14 @@ public class Main {
 
 	/**
 	 * Call when a scroll is registered.
+	 * @param screen The screen for this event.
 	 * @param x Mouse X.
 	 * @param y Mouse Y.
 	 * @param scrollDelta The scroll delta.
 	 * @return True if the event was handled and should be cancelled.
 	 */
-	public static boolean onMouseScrolled(double x, double y, double scrollDelta) {
+	public static boolean onMouseScrolled(Screen screen, double x, double y, double scrollDelta) {
+		updateScreen(screen);
 	    // Check if the wheel tweak is disabled.
 		if (handler == null || disableWheelForThisContainer || !config.wheelTweak)
 			return false;
