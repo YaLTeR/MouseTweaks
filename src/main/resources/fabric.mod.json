@@ -4,8 +4,15 @@
   "version": "${version}",
   "name": "Mouse Tweaks",
   "description": "A mod that enhances the inventory management by adding various additional functions to the usual mouse buttons.",
-  "authors": ["Ivan Molodetskikh (YaLTeR)"],
-  "contributors": ["mezz", "juliand665", "panoskj", "FabiClawZ"],
+  "authors": [
+    "Ivan Molodetskikh (YaLTeR)"
+  ],
+  "contributors": [
+    "mezz",
+    "juliand665",
+    "panoskj",
+    "FabiClawZ"
+  ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/mouse-tweaks",
     "issues": "https://github.com/YaLTeR/MouseTweaks/issues",

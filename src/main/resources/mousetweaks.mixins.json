@@ -4,7 +4,9 @@
   "package": "yalter.mousetweaks.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [],
-  "client": ["AbstractContainerScreenAccessor"],
+  "client": [
+    "AbstractContainerScreenAccessor"
+  ],
   "injectors": {
     "defaultRequire": 1
   },

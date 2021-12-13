@@ -17,6 +17,7 @@ public interface AbstractContainerScreenAccessor {
 
     @Accessor
     boolean getIsQuickCrafting();
+
     @Accessor
     void setIsQuickCrafting(boolean value);
 

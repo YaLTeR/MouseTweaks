@@ -5,19 +5,19 @@ import net.minecraft.world.inventory.Slot;
 import java.util.List;
 
 public interface IGuiScreenHandler {
-	boolean isMouseTweaksDisabled();
+    boolean isMouseTweaksDisabled();
 
-	boolean isWheelTweakDisabled();
+    boolean isWheelTweakDisabled();
 
-	List<Slot> getSlots();
+    List<Slot> getSlots();
 
-	Slot getSlotUnderMouse(double mouseX, double mouseY);
+    Slot getSlotUnderMouse(double mouseX, double mouseY);
 
-	boolean disableRMBDraggingFunctionality();
+    boolean disableRMBDraggingFunctionality();
 
-	void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed);
+    void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed);
 
-	boolean isCraftingOutput(Slot slot);
+    boolean isCraftingOutput(Slot slot);
 
-	boolean isIgnored(Slot slot);
+    boolean isIgnored(Slot slot);
 }

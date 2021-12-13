@@ -12,67 +12,67 @@ import yalter.mousetweaks.mixin.AbstractContainerScreenAccessor;
 import java.util.List;
 
 public class GuiContainerHandler implements IGuiScreenHandler {
-	Minecraft mc;
-	private final AbstractContainerScreen screen;
-	private final AbstractContainerScreenAccessor screenAccessor;
+    Minecraft mc;
+    private final AbstractContainerScreen screen;
+    private final AbstractContainerScreenAccessor screenAccessor;
 
-	public GuiContainerHandler(AbstractContainerScreen screen) {
-		this.mc = Minecraft.getInstance();
-		this.screen = screen;
-		this.screenAccessor = (AbstractContainerScreenAccessor) screen;
-	}
+    public GuiContainerHandler(AbstractContainerScreen screen) {
+        this.mc = Minecraft.getInstance();
+        this.screen = screen;
+        this.screenAccessor = (AbstractContainerScreenAccessor) screen;
+    }
 
-	@Override
-	public boolean isMouseTweaksDisabled() {
-		return screen.getClass().isAnnotationPresent(MouseTweaksIgnore.class);
-	}
+    @Override
+    public boolean isMouseTweaksDisabled() {
+        return screen.getClass().isAnnotationPresent(MouseTweaksIgnore.class);
+    }
 
-	@Override
-	public boolean isWheelTweakDisabled() {
-		return screen.getClass().isAnnotationPresent(MouseTweaksDisableWheelTweak.class);
-	}
+    @Override
+    public boolean isWheelTweakDisabled() {
+        return screen.getClass().isAnnotationPresent(MouseTweaksDisableWheelTweak.class);
+    }
 
-	@Override
-	public List<Slot> getSlots() {
-		return screen.getMenu().slots;
-	}
+    @Override
+    public List<Slot> getSlots() {
+        return screen.getMenu().slots;
+    }
 
-	@Override
-	public Slot getSlotUnderMouse(double mouseX, double mouseY) {
-		return screenAccessor.invokeFindSlot(mouseX, mouseY);
-	}
+    @Override
+    public Slot getSlotUnderMouse(double mouseX, double mouseY) {
+        return screenAccessor.invokeFindSlot(mouseX, mouseY);
+    }
 
-	@Override
-	public boolean disableRMBDraggingFunctionality() {
-		screenAccessor.setSkipNextRelease(true);
+    @Override
+    public boolean disableRMBDraggingFunctionality() {
+        screenAccessor.setSkipNextRelease(true);
 
-		if (screenAccessor.getIsQuickCrafting() && screenAccessor.getQuickCraftingButton() == 1) {
-			screenAccessor.setIsQuickCrafting(true);
-			return true;
-		}
+        if (screenAccessor.getIsQuickCrafting() && screenAccessor.getQuickCraftingButton() == 1) {
+            screenAccessor.setIsQuickCrafting(true);
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	@Override
-	public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-		screenAccessor.invokeSlotClicked(
-			slot,
-			slot.index,
-			mouseButton.getValue(),
-			shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP
-		);
-	}
+    @Override
+    public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
+        screenAccessor.invokeSlotClicked(
+                slot,
+                slot.index,
+                mouseButton.getValue(),
+                shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP
+        );
+    }
 
-	@Override
-	public boolean isCraftingOutput(Slot slot) {
-		return (slot instanceof ResultSlot
-		        || slot instanceof FurnaceResultSlot
-		        || slot instanceof MerchantResultSlot);
-	}
+    @Override
+    public boolean isCraftingOutput(Slot slot) {
+        return (slot instanceof ResultSlot
+                || slot instanceof FurnaceResultSlot
+                || slot instanceof MerchantResultSlot);
+    }
 
-	@Override
-	public boolean isIgnored(Slot slot) {
-		return false;
-	}
+    @Override
+    public boolean isIgnored(Slot slot) {
+        return false;
+    }
 }
