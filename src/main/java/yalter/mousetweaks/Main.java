@@ -62,7 +62,7 @@ public class Main {
         canDoRMBDrag = false;
 
         if (openScreen != null) {
-            Logger.DebugLog("You have just opened a " + openScreen.getClass().getSimpleName() + ".");
+            Logger.DebugLog("You have just opened a " + openScreen.getClass().getName() + ".");
 
             config.read();
 
