@@ -15,6 +15,7 @@ import yalter.mousetweaks.handlers.GuiContainerHandler;
 import yalter.mousetweaks.handlers.IMTModGuiContainer3ExHandler;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,21 @@ public class Main {
     }
 
     private static void updateScreen(Screen newScreen) {
+        // Workaround for Architectury wrapping the screen for the mouse drag handler.
+        // https://github.com/architectury/architectury-api/issues/152
+        if (newScreen.getClass().getName().equals("dev.architectury.impl.fabric.ScreenInputDelegate$DelegateScreen")) {
+            try {
+                Field field = newScreen.getClass().getDeclaredField("parent");
+                field.setAccessible(true);
+                newScreen = (Screen) field.get(newScreen);
+            } catch (Exception e) {
+                if (Config.debug) {
+                    Logger.Log("Error unwrapping Architectury's DelegateScreen.");
+                    e.printStackTrace();
+                }
+            }
+        }
+
         if (newScreen == openScreen)
             return;
 
