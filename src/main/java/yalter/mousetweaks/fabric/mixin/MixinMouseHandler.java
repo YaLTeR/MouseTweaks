@@ -16,6 +16,7 @@ public abstract class MixinMouseHandler {
     @Shadow
     private int activeButton;
 
+    @SuppressWarnings("target")
     @Dynamic("Lambda that calls screen.mouseDragged()")
     @Inject(method = "lambda$onMove$11(Lnet/minecraft/client/gui/screens/Screen;DDDD)V", at = @At("HEAD"), cancellable = true)
     private void onMouseDragged(Screen screen, double x, double y, double dx, double dy, CallbackInfo ci) {
