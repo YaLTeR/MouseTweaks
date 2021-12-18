@@ -47,7 +47,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
         screenAccessor.setSkipNextRelease(true);
 
         if (screenAccessor.getIsQuickCrafting() && screenAccessor.getQuickCraftingButton() == 1) {
-            screenAccessor.setIsQuickCrafting(true);
+            screenAccessor.setIsQuickCrafting(false);
             return true;
         }
 
