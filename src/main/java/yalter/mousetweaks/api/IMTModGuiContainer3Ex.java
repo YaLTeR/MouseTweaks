@@ -6,11 +6,7 @@ import net.minecraft.world.inventory.Slot;
 import java.util.List;
 
 /**
- * This is the extended version of the interface you want to implement in your GuiScreen to make it compatible
- * with Mouse Tweaks. It has MT_getSlots() instead of MT_getContainer(), and adds MT_clickSlot().
- * <p>
- * Changelog:
- * - version 3 (Minecraft 1.13): added mouse X and Y arguments to MT_getSlotUnderMouse().
+ * This is the interface you want to implement in your custom container screen to make it compatible with Mouse Tweaks.
  */
 public interface IMTModGuiContainer3Ex {
     /**
@@ -21,7 +17,7 @@ public interface IMTModGuiContainer3Ex {
     boolean MT_isMouseTweaksDisabled();
 
     /**
-     * If you want to disable the Wheel Tweak in your GuiScreen, return true from this method.
+     * If you want to disable the Wheel Tweak in your AbstractContainerScreen, return true from this method.
      *
      * @return True if the Wheel Tweak should be disabled, false otherwise.
      */
@@ -29,17 +25,18 @@ public interface IMTModGuiContainer3Ex {
 
     /**
      * Returns a list of Slots currently present in the inventory.
-     * For vanilla containers it is this.inventorySlots.inventorySlots.
+     * For vanilla containers it is this.getMenu().slots.
      *
      * @return List of Slots currently present in the inventory.
      */
     List<Slot> MT_getSlots();
 
     /**
-     * Returns the Slot located under the given mouse coordinates, or null if no Slot is selected.
+     * Returns the Slot located under the given mouse coordinates, or null if no Slot is selected. For vanilla
+     * containers it is this.findSlot().
      *
-     * @param mouseX Mouse X as given to IGuiEventListener.mouseClicked().
-     * @param mouseY Mouse Y as given to IGuiEventListener.mouseClicked().
+     * @param mouseX Mouse X.
+     * @param mouseY Mouse Y.
      * @return Slot that is located under the mouse, or null if no Slot it currently under the mouse.
      */
     Slot MT_getSlotUnderMouse(double mouseX, double mouseY);
@@ -63,42 +60,35 @@ public interface IMTModGuiContainer3Ex {
     boolean MT_isIgnored(Slot slot);
 
     /**
-     * If your container has an RMB dragging functionality (like vanilla containers), disable it inside this method.
-     * This method is called every frame (render tick), which is after all mouseClicked / mouseClickMove / mouseReleased
-     * events are handled (although note these events are handled every game tick, which is far less frequent than every
-     * render tick).<br><br>
-     * <p>
-     * If true is returned from this method, Mouse Tweaks (after checking other conditions like isIgnored) will click
-     * the slot on which the right mouse button was initially pressed (in most cases this is the slot currently under
-     * mouse). This is needed because the vanilla RMB dragging functionality prevents the initial slot click.<br><br>
+     * Disables the vanilla quick crafting functionality and sets the next mouse release to be ignored.<br><br>
      * <p>
      * For vanilla containers this method looks like this:
      * <pre>
-     * this.ignoreMouseUp = true;
+     * this.skipNextRelease = true;
      *
-     * if (this.dragSplitting) {
-     *     if (this.dragSplittingButton == 1) {
-     *         this.dragSplitting = false;
-     *         return true;
-     *     }
+     * if (this.isQuickCrafting && this.quickCraftingButton == 1) {
+     *     this.isQuickCrafting = false;
+     *     return true;
      * }
      *
      * return false;
      * </pre>
+     * <p>
+     * The return value is currently ignored by Mouse Tweaks.
      *
-     * @return True if Mouse Tweaks should click the slot on which the RMB was pressed.
+     * @return True if quick crafting was disabled.
      */
     boolean MT_disableRMBDraggingFunctionality();
 
     /**
      * Click the given slot.
      * <p>
-     * For vanilla containers this method looks like this (mc is Minecraft):
+     * For vanilla containers this method looks like this:
      * <pre>
-     * this.handleMouseClick(slot,
-     *                       slot.slotNumber,
-     *                       mouseButton,
-     *                       clickType);
+     * this.slotClicked(slot,
+     *                  slot.index,
+     *                  mouseButton,
+     *                  clickType);
      * </pre>
      *
      * @param slot        the slot to click
