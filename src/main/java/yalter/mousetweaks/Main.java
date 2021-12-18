@@ -161,28 +161,30 @@ public class Main {
     }
 
     /**
-     * Call to handle a new selected slot for the RMB tweak.
-     * <p>
-     * This method assumes a number of checks have already been done, such as that RMB tweak is enabled, or that the
-     * selected slot isn't null, or the stack on mouse isn't empty.
+     * Clicks a slot as RMB tweak.
      *
-     * @param selectedSlot The new selected slot.
+     * @param slot         The slot.
      * @param stackOnMouse The stack currently "held" on the mouse cursor.
      */
-    private static void rmbTweakNewSlot(Slot selectedSlot, ItemStack stackOnMouse) {
-        assert selectedSlot != null;
-        assert !stackOnMouse.isEmpty();
+    private static void rmbTweakMaybeClickSlot(Slot slot, ItemStack stackOnMouse) {
+        // Can't click if there's no slot.
+        if (slot == null)
+            return;
+
+        // Don't click if there's nothing on the mouse.
+        if (stackOnMouse.isEmpty())
+            return;
 
         // Don't act on ignored slots.
-        if (handler.isIgnored(selectedSlot))
+        if (handler.isIgnored(slot))
             return;
 
         // Can't put items into crafting output slots.
-        if (handler.isCraftingOutput(selectedSlot))
+        if (handler.isCraftingOutput(slot))
             return;
 
         // If the stacks are incompatible, we can't right click.
-        ItemStack selectedSlotStack = selectedSlot.getItem();
+        ItemStack selectedSlotStack = slot.getItem();
         if (!areStacksCompatible(selectedSlotStack, stackOnMouse))
             return;
 
@@ -190,7 +192,7 @@ public class Main {
         if (selectedSlotStack.getCount() == selectedSlotStack.getMaxStackSize())
             return;
 
-        handler.clickSlot(selectedSlot, MouseButton.RIGHT, false);
+        handler.clickSlot(slot, MouseButton.RIGHT, false);
     }
 
     /**
@@ -310,13 +312,7 @@ public class Main {
             if (!canDoRMBDrag)
                 return false;
 
-            // RMB tweak doesn't do anything when the stack on mouse is empty.
-            if (stackOnMouse.isEmpty())
-                return false;
-
-            // We don't check config.rmbTweak here because it's already checked when setting canDoRMBDrag.
-
-            rmbTweakNewSlot(selectedSlot, stackOnMouse);
+            rmbTweakMaybeClickSlot(selectedSlot, stackOnMouse);
         }
 
         return false;
