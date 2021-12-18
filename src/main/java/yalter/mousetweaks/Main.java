@@ -6,7 +6,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
@@ -31,6 +30,7 @@ public class Main {
     private static double accumulatedScrollDelta = 0;
     private static boolean canDoLMBDrag = false;
     private static boolean canDoRMBDrag = false;
+    private static boolean rmbTweakLeftOriginalSlot = false;
 
     private static boolean initialized = false;
 
@@ -76,6 +76,7 @@ public class Main {
         accumulatedScrollDelta = 0;
         canDoLMBDrag = false;
         canDoRMBDrag = false;
+        rmbTweakLeftOriginalSlot = false;
 
         if (openScreen != null) {
             Logger.DebugLog("You have just opened a " + openScreen.getClass().getName() + ".");
@@ -118,8 +119,7 @@ public class Main {
             return false;
 
         // Store the currently selected slot.
-        Slot selectedSlot = handler.getSlotUnderMouse(x, y);
-        oldSelectedSlot = selectedSlot;
+        oldSelectedSlot = handler.getSlotUnderMouse(x, y);
 
         // Stack that the player is currently "holding" on the mouse cursor.
         ItemStack stackOnMouse = mc.player.containerMenu.getCarried();
@@ -139,22 +139,9 @@ public class Main {
             if (!config.rmbTweak)
                 return false;
 
-            // Let players right click bundles. Cancel the event so vanilla RMB dragging doesn't start.
-            // FIXME: a better solution would be to still start the RMB drag and then forward through the release event,
-            // so that you can still start a Mouse Tweaks RMB drag from a bundle, as you can with the vanilla mechanic.
-            // FIXME: an even better solution would be to *not* cancel any events so Mouse Tweaks doesn't break any
-            // mod items similar to bundles too.
-            if (selectedSlot != null && selectedSlot.getItem().getItem() instanceof BundleItem)
-                return true;
-
-            // Set the flag, right-click an item right away, and cancel the event so the vanilla RMB dragging doesn't
-            // happen.
+            // Set the flags.
             canDoRMBDrag = true;
-
-            if (selectedSlot != null)
-                rmbTweakNewSlot(selectedSlot, stackOnMouse);
-
-            return true;
+            rmbTweakLeftOriginalSlot = false;
         }
 
         return false;
@@ -212,14 +199,8 @@ public class Main {
         // Reset the flags.
         if (button == MouseButton.LEFT)
             canDoLMBDrag = false;
-        else if (button == MouseButton.RIGHT) {
-            if (canDoRMBDrag) {
-                canDoRMBDrag = false;
-
-                // Cancel the release event to prevent an extra item from being inserted into the selected slot.
-                return true;
-            }
-        }
+        else if (button == MouseButton.RIGHT)
+            canDoRMBDrag = false;
 
         return false;
     }
@@ -244,6 +225,16 @@ public class Main {
         if (selectedSlot == oldSelectedSlot)
             return false;
 
+        // Stack that the player is currently "holding" on the mouse cursor.
+        ItemStack stackOnMouse = mc.player.containerMenu.getCarried();
+
+        // When leaving the original slot for the first time, set the flag and click it to put an item there.
+        if (canDoRMBDrag && button == MouseButton.RIGHT && !rmbTweakLeftOriginalSlot) {
+            rmbTweakLeftOriginalSlot = true;
+            handler.disableRMBDraggingFunctionality();
+            rmbTweakMaybeClickSlot(oldSelectedSlot, stackOnMouse);
+        }
+
         oldSelectedSlot = selectedSlot;
 
         // If no slot was selected, we don't need to do anything.
@@ -253,9 +244,6 @@ public class Main {
         // If the selected slot is ignored, we don't need to do anything.
         if (handler.isIgnored(selectedSlot))
             return false;
-
-        // Stack that the player is currently "holding" on the mouse cursor.
-        ItemStack stackOnMouse = mc.player.containerMenu.getCarried();
 
         // At this point the mouse has just entered a new, non-ignored slot.
 
