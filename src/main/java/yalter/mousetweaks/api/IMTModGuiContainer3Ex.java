@@ -55,7 +55,7 @@ public interface IMTModGuiContainer3Ex {
      * slots and the Destroy Item slot in the vanilla creative inventory.
      *
      * @param slot the slot to check
-     * @return Tru if slot should be ignored by Mouse Tweaks.
+     * @return True if slot should be ignored by Mouse Tweaks.
      */
     boolean MT_isIgnored(Slot slot);
 
