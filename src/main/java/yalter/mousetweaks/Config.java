@@ -7,7 +7,7 @@ public class Config {
     private static final Properties defaultValues = new Properties();
     private String fileName;
 
-    public boolean rmbTweak = false;
+    public boolean rmbTweak = true;
     public boolean lmbTweakWithItem = true;
     public boolean lmbTweakWithoutItem = true;
     public boolean wheelTweak = true;
@@ -37,7 +37,7 @@ public class Config {
             e.printStackTrace();
         }
 
-        rmbTweak = parseIntOrDefault(properties.getProperty(Constants.CONFIG_RMB_TWEAK), 0) != 0;
+        rmbTweak = parseIntOrDefault(properties.getProperty(Constants.CONFIG_RMB_TWEAK), 1) != 0;
         lmbTweakWithItem = parseIntOrDefault(properties.getProperty(Constants.CONFIG_LMB_TWEAK_WITH_ITEM), 1) != 0;
         lmbTweakWithoutItem = parseIntOrDefault(properties.getProperty(Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM), 1)
                 != 0;
@@ -101,7 +101,7 @@ public class Config {
     }
 
     static {
-        defaultValues.setProperty(Constants.CONFIG_RMB_TWEAK, "0");
+        defaultValues.setProperty(Constants.CONFIG_RMB_TWEAK, "1");
         defaultValues.setProperty(Constants.CONFIG_LMB_TWEAK_WITH_ITEM, "1");
         defaultValues.setProperty(Constants.CONFIG_LMB_TWEAK_WITHOUT_ITEM, "1");
         defaultValues.setProperty(Constants.CONFIG_WHEEL_TWEAK, "1");
