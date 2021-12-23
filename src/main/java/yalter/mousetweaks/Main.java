@@ -531,16 +531,23 @@ public class Main {
     // Returns true if the other inventory is above the selected slot inventory.
     //
     // This is used for the inventory position aware scroll direction. To prevent any surprises, this should have the
-    // same logic for what constitutes the "other" inventory as findWheelApplicableSlot().
+    // same logic for what constitutes the "other" inventory as elsewhere.
     private static boolean otherInventoryIsAbove(Slot selectedSlot, List<Slot> slots) {
         boolean selectedIsInPlayerInventory = selectedSlot.container == mc.player.getInventory();
+
+        // Count the number of "other inventory" slots below and above the selected slot.
+        int otherInventorySlotsBelow = 0, otherInventorySlotsAbove = 0;
         for (Slot slot : slots) {
-            if ((slot.container == mc.player.getInventory()) != selectedIsInPlayerInventory
-                    && slot.y < selectedSlot.y) {
-                return true;
+            if ((slot.container == mc.player.getInventory()) != selectedIsInPlayerInventory) {
+                if (slot.y < selectedSlot.y)
+                    otherInventorySlotsAbove++;
+                else
+                    otherInventorySlotsBelow++;
             }
         }
-        return false;
+
+        // If there are more "other inventory" slots above the selected slot, consider the other inventory above.
+        return otherInventorySlotsAbove > otherInventorySlotsBelow;
     }
 
     // Finds the appropriate handler to use with this GuiScreen. Returns null if no handler was found.
