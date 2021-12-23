@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
@@ -170,14 +171,17 @@ public class Main {
         if (handler.isCraftingOutput(slot))
             return;
 
-        // If the stacks are incompatible, we can't right click.
-        ItemStack selectedSlotStack = slot.getItem();
-        if (!areStacksCompatible(selectedSlotStack, stackOnMouse))
-            return;
+        // Skip two conditions below for bundles to enable RMB-dragging with a bundle to put items into it.
+        if (!(stackOnMouse.getItem() instanceof BundleItem)) {
+            // If the stacks are incompatible, we can't right click.
+            ItemStack selectedSlotStack = slot.getItem();
+            if (!areStacksCompatible(selectedSlotStack, stackOnMouse))
+                return;
 
-        // Return if we cannot put any more items into the slot.
-        if (selectedSlotStack.getCount() == selectedSlotStack.getMaxStackSize())
-            return;
+            // Return if we cannot put any more items into the slot.
+            if (selectedSlotStack.getCount() == selectedSlotStack.getMaxStackSize())
+                return;
+        }
 
         handler.clickSlot(slot, MouseButton.RIGHT, false);
     }
