@@ -24,6 +24,9 @@
   "entrypoints": {
     "client": [
       "yalter.mousetweaks.fabric.MouseTweaksFabric"
+    ],
+    "modmenu": [
+      "yalter.mousetweaks.ModMenuApiImpl"
     ]
   },
   "mixins": [

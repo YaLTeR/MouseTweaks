@@ -25,6 +25,7 @@ sourceSets {
             exclude 'yalter/mousetweaks/forge/ConfigGui.java'
             exclude 'yalter/mousetweaks/forge/ConfigGuiFactory.java'
             exclude 'yalter/mousetweaks/fabric'
+            exclude 'yalter/mousetweaks/ModMenuApiImpl.java'
         }
 
         resources {
