@@ -22,8 +22,6 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 sourceSets {
     main {
         java {
-            exclude 'yalter/mousetweaks/forge/ConfigGui.java'
-            exclude 'yalter/mousetweaks/forge/ConfigGuiFactory.java'
             exclude 'yalter/mousetweaks/fabric'
             exclude 'yalter/mousetweaks/ModMenuApiImpl.java'
         }
