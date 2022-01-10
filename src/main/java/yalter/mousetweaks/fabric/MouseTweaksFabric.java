@@ -26,8 +26,8 @@ public class MouseTweaksFabric implements ClientModInitializer {
                 return true;
             });
 
-            ScreenMouseEvents.allowMouseScroll(screen).register((_screen, x, y, horiz, vert) ->
-                    !Main.onMouseScrolled(screen, x, y, vert));
+            ScreenMouseEvents.afterMouseScroll(screen).register((_screen, x, y, horiz, vert) ->
+                    Main.onMouseScrolled(screen, x, y, vert));
         });
     }
 }
