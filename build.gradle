@@ -1,106 +1,46 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7.+'
-    }
+plugins {
+    id 'fabric-loom' version '0.10-SNAPSHOT'
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
 
-def minecraftVersion = "1.18" // Used for output JAR filenames.
+def minecraftVersion = "1.16.5" // Used for output JAR filenames.
 
 version = project.mod_version
 group = "yalter.mousetweaks"
-archivesBaseName = "MouseTweaks-forge-mc${minecraftVersion}"
+archivesBaseName = "MouseTweaks-fabric-mc${minecraftVersion}"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 sourceSets {
     main {
         java {
-            exclude 'yalter/mousetweaks/fabric'
-            exclude 'yalter/mousetweaks/ModMenuApiImpl.java'
+            exclude 'yalter/mousetweaks/forge'
         }
 
         resources {
-            exclude 'fabric.mod.json'
+            exclude 'META-INF/mods.toml'
         }
     }
 }
 
-mixin {
-    add sourceSets.main, 'mousetweaks.mixins.refmap.json'
-    config 'mousetweaks.mixins.json'
-}
-
-minecraft {
-    mappings channel: 'official', version: '1.18'
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                mousetweaks {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                mousetweaks {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
+loom {
+    mixin.defaultRefmapName = 'mousetweaks.mixins.refmap.json'
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18-38.0.12'
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    minecraft "com.mojang:minecraft:${minecraftVersion}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:0.12.12"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.42.0+1.16"
 }
 
-jar {
-    manifest.attributes([
-            "Specification-Title"     : "Mouse Tweaks",
-            "Specification-Vendor"    : "YaLTeR",
-            "Specification-Version"   : "${project.version}",
-            "Implementation-Title"    : project.name,
-            "Implementation-Version"  : "${project.version}",
-            "Implementation-Vendor"   : "YaLTeR",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-    ])
+processResources {
+    inputs.property "version", project.version
 
-    finalizedBy 'reobfJar'
-}
-
-task srcJar(type: Jar) {
-    archiveClassifier.set("src")
-    from sourceSets.main.allJava
-}
-
-task apiJar(type: Jar) {
-    archiveClassifier.set("api")
-    from(sourceSets.main.output) {
-        include 'yalter/mousetweaks/api/**'
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
     }
 }
 
-artifacts {
-    archives srcJar
-    archives apiJar
+java {
+    withSourcesJar()
 }

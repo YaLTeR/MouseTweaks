@@ -1,6 +1,7 @@
 package yalter.mousetweaks.fabric.mixin;
 
 import net.minecraft.client.MouseHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,11 +19,11 @@ public abstract class MixinMouseHandler {
 
     @SuppressWarnings("target")
     @Dynamic("Lambda that calls screen.mouseDragged()")
-    @Inject(method = "lambda$onMove$11(Lnet/minecraft/client/gui/screens/Screen;DDDD)V", at = @At("HEAD"), cancellable = true)
-    private void onMouseDragged(Screen screen, double x, double y, double dx, double dy, CallbackInfo ci) {
+    @Inject(method = "lambda$onMove$11(Lnet/minecraft/client/gui/components/events/GuiEventListener;DDDD)V", at = @At("HEAD"), cancellable = true)
+    private void onMouseDragged(GuiEventListener screen, double x, double y, double dx, double dy, CallbackInfo ci) {
         MouseButton button = MouseButton.fromEventButton(this.activeButton);
-        if (button != null) {
-            if (Main.onMouseDrag(screen, x, y, button)) {
+        if (button != null && screen instanceof Screen) {
+            if (Main.onMouseDrag((Screen) screen, x, y, button)) {
                 ci.cancel();
             }
         }

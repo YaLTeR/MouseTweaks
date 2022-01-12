@@ -10,6 +10,6 @@ public class GuiContainerCreativeHandler extends GuiContainerHandler {
 
     @Override
     public boolean isIgnored(Slot slot) {
-        return (super.isIgnored(slot) || slot.container != mc.player.getInventory());
+        return (super.isIgnored(slot) || slot.container != mc.player.inventory);
     }
 }

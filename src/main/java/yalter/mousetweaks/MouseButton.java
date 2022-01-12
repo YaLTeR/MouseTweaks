@@ -16,10 +16,13 @@ public enum MouseButton {
     }
 
     public static MouseButton fromEventButton(int eventButton) {
-        return switch (eventButton) {
-            case GLFW.GLFW_MOUSE_BUTTON_LEFT -> MouseButton.LEFT;
-            case GLFW.GLFW_MOUSE_BUTTON_RIGHT -> MouseButton.RIGHT;
-            default -> null;
-        };
+        switch (eventButton) {
+            case GLFW.GLFW_MOUSE_BUTTON_LEFT:
+                return MouseButton.LEFT;
+            case GLFW.GLFW_MOUSE_BUTTON_RIGHT:
+                return MouseButton.RIGHT;
+            default:
+                return null;
+        }
     }
 }
