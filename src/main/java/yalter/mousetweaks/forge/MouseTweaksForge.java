@@ -61,8 +61,8 @@ public class MouseTweaksForge {
         // than one with a bigger delta.
         Logger.DebugLog("onGuiMouseScrollPost delta = " + event.getScrollDelta());
 
-        if (Main.onMouseScrolled(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDelta()))
-            event.setCanceled(true);
+        // Post events aren't cancellable, but that's okay.
+        Main.onMouseScrolled(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDelta());
     }
 
     @SubscribeEvent

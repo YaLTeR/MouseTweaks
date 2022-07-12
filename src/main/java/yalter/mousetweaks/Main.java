@@ -302,7 +302,7 @@ public class Main {
      * @param x           Mouse X.
      * @param y           Mouse Y.
      * @param scrollDelta The scroll delta.
-     * @return True if the event was handled and should be cancelled.
+     * @return True if the event was handled by Mouse Tweaks.
      */
     public static boolean onMouseScrolled(Screen screen, double x, double y, double scrollDelta) {
         updateScreen(screen);
