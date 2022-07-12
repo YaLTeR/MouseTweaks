@@ -1,6 +1,6 @@
 package yalter.mousetweaks.forge;
 
-import net.minecraftforge.client.ConfigGuiHandler;
+import net.minecraftforge.client.ConfigScreenHandler.ConfigScreenFactory;
 import yalter.mousetweaks.ConfigScreen;
 
 /**
@@ -8,7 +8,7 @@ import yalter.mousetweaks.ConfigScreen;
  * without causing class-loading errors on the server.
  */
 public class ClientHelper {
-    public static ConfigGuiHandler.ConfigGuiFactory createConfigGuiFactory() {
-        return new ConfigGuiHandler.ConfigGuiFactory((minecraft, screen) -> new ConfigScreen(screen));
+    public static ConfigScreenFactory createConfigScreenFactory() {
+        return new ConfigScreenFactory((minecraft, screen) -> new ConfigScreen(screen));
     }
 }
