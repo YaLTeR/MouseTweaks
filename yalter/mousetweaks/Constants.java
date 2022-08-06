@@ -16,8 +16,8 @@ public class Constants {
 	static final String CONFIG_DEBUG                  = "Debug";
 
 	// Names for reflection.
-	public static final ObfuscatedName GETSLOTATPOSITION_NAME = new ObfuscatedName("getSlotAtPosition", "func_588_a", "a");
-	public static final ObfuscatedName HANDLEMOUSECLICK_NAME = new ObfuscatedName("handleMouseClick", "func_35309_a", "a");
+	public static final ObfuscatedName GETSLOTATPOSITION_NAME = new ObfuscatedName("getSlotAtPosition", "a");
+	public static final ObfuscatedName INVENTORY_FIELD_NAME = new ObfuscatedName("inventory", "e");
 
 	static final String ONTICKMETHOD_FORGE_NAME      = "Forge";
 	static final String ONTICKMETHOD_LITELOADER_NAME = "LiteLoader";

@@ -1,28 +1,30 @@
 package yalter.mousetweaks.handlers;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.ScaledResolution;
 import net.minecraft.src.GuiContainer;
+import net.minecraft.src.ModLoader;
+import net.minecraft.src.ScaledResolution;
 import net.minecraft.src.Slot;
 import net.minecraft.src.SlotCrafting;
 import net.minecraft.src.SlotFurnace;
-import net.minecraft.src.ModLoader;
-import org.lwjgl.input.Mouse;
-import yalter.mousetweaks.*;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
+import org.lwjgl.input.Mouse;
+
+import yalter.mousetweaks.Constants;
+import yalter.mousetweaks.IGuiScreenHandler;
+import yalter.mousetweaks.MouseButton;
+import yalter.mousetweaks.Reflection;
 
 public class GuiContainerHandler implements IGuiScreenHandler {
 	protected Minecraft mc;
 	protected GuiContainer guiContainer;
-	protected Method handleMouseClick;
 
 	public GuiContainerHandler(GuiContainer guiContainer) {
 		this.mc = ModLoader.getMinecraftInstance();
 		this.guiContainer = guiContainer;
-		this.handleMouseClick = Reflection.getHMCMethod(guiContainer);
 	}
 
 	private int getDisplayWidth() {
@@ -56,15 +58,15 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
 	@Override
 	public List<Slot> getSlots() {
-		return guiContainer.inventorySlots.inventorySlots;
+		return guiContainer.inventorySlots.slots;
 	}
 
 	@Override
 	public Slot getSlotUnderMouse() {
 		try {
-			return (Slot)Reflection.guiContainerClass.invokeMethod(guiContainer, Constants.GETSLOTATPOSITION_NAME.forgeName, getRequiredMouseX(), getRequiredMouseY());
+			return (Slot)Reflection.guiContainerClass.invokeMethod(guiContainer, Constants.GETSLOTATPOSITION_NAME.mcpName, getRequiredMouseX(), getRequiredMouseY());
 		} catch (InvocationTargetException e) {
-			ModLoader.throwException("GuiContainer.getSlotAtPosition() threw an exception when called from MouseTweaks.", e);
+			ModLoader.ThrowException("GuiContainer.getSlotAtPosition() threw an exception when called from MouseTweaks.", e);
 			return null;
 		}
 	}
@@ -76,17 +78,11 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
 	@Override
 	public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-		try {
-			handleMouseClick.invoke(guiContainer,
-			                        slot,
-			                        slot.slotNumber,
-			                        mouseButton.getValue(),
-			                        shiftPressed);
-		} catch (InvocationTargetException e) {
-			ModLoader.throwException("handleMouseClick() threw an exception when called from MouseTweaks.", e);
-		} catch (IllegalAccessException e) {
-			ModLoader.throwException("Calling handleMouseClick() from MouseTweaks.", e);
-		}
+		mc.playerController.func_27174_a(guiContainer.inventorySlots.windowId,
+                    slot.slotNumber,
+                    mouseButton.getValue(),
+                    shiftPressed,
+                    mc.thePlayer);
 	}
 
 	@Override
