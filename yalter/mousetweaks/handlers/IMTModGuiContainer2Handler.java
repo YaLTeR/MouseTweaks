@@ -30,7 +30,7 @@ public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
 
 	@Override
 	public List<Slot> getSlots() {
-		return modGuiContainer.MT_getContainer().inventorySlots;
+		return modGuiContainer.MT_getContainer().slots;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class IMTModGuiContainer2Handler implements IGuiScreenHandler {
 
 	@Override
 	public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-		mc.playerController.windowClick(modGuiContainer.MT_getContainer().windowId,
+		mc.playerController.func_27174_a(modGuiContainer.MT_getContainer().windowId,
 		                                slot.slotNumber,
 		                                mouseButton.getValue(),
 		                                shiftPressed,
