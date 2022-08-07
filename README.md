@@ -3,7 +3,8 @@ A mod that enhances the inventory management by adding various additional functi
 
 # How to build
 - Set up MCP v4.2 or v4.3 for Minecraft 1.7.2 or 1.7.3 with ModLoader.
-- Copy stuff from this repository into `src/minecraft/`.
+- Copy the folders from this repository into `src/minecraft/`.
+- Copy `mousetweaks_logo.png` into `bin/minecraft/`.
 - Recompile / reobfuscate.
 
 # Compatibility

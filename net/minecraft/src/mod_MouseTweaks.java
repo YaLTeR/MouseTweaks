@@ -5,6 +5,18 @@ import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.Main;
 
 public class mod_MouseTweaks extends BaseMod {
+	
+	public String Name() {
+		return Constants.MOD_NAME;
+	}
+	
+	public String Description() {
+		return Constants.MOD_DESC;
+	}
+	
+	public String Icon() {
+		return Constants.ICON;
+	}
 
 	public mod_MouseTweaks() {
 		Main.initialize(Constants.EntryPoint.FORGE);
