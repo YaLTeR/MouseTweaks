@@ -2,7 +2,7 @@ package yalter.mousetweaks;
 
 public class Constants {
 	public static final String MOD_NAME    = "Mouse Tweaks";
-	public static final String MOD_DESC    = "A mod that adds inventory mouse dragging and scrolling.";
+	public static final String MOD_DESC    = "Inventory mouse dragging and scrolling";
 	public static final String MOD_ID      = "mod_MouseTweaks"; // Has to be this, otherwise Forge won't read mcmod.info.
 	public static final String VERSION     = "2.7.2";
 	public static final String UPDATE_URL  = "http://play.sourceruns.org/yalter/MouseTweaks/update.json";
