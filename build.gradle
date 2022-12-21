@@ -11,7 +11,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
-def minecraftVersion = "1.19" // Used for output JAR filenames.
+def minecraftVersion = "1.19.3" // Used for output JAR filenames.
 
 version = project.mod_version
 group = "yalter.mousetweaks"
@@ -38,7 +38,7 @@ mixin {
 }
 
 minecraft {
-    mappings channel: 'official', version: '1.19'
+    mappings channel: 'official', version: '1.19.3'
 
     runs {
         client {
@@ -70,7 +70,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19-41.0.94'
+    minecraft 'net.minecraftforge:forge:1.19.3-44.0.37'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
