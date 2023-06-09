@@ -555,7 +555,7 @@ public class Main {
     // Returns true if we can put items from one stack into another.
     // This is different from ItemStack.areItemsEqual() because here empty stacks are compatible with anything.
     private static boolean areStacksCompatible(ItemStack a, ItemStack b) {
-        return a.isEmpty() || b.isEmpty() || (a.sameItem(b) && ItemStack.tagMatches(a, b));
+        return a.isEmpty() || b.isEmpty() || (ItemStack.isSameItem(a, b) && ItemStack.isSameItemSameTags(a, b));
     }
 
     /**

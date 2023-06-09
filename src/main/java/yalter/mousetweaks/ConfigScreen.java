@@ -1,6 +1,7 @@
 package yalter.mousetweaks;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.screens.Screen;
@@ -81,10 +82,10 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int i, int j, float f) {
-        this.renderDirtBackground(poseStack);
-        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 15, 0xFFFFFF);
-        super.render(poseStack, i, j, f);
+    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
+        this.renderDirtBackground(guiGraphics);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 15, 0xFFFFFF);
+        super.render(guiGraphics, i, j, f);
     }
 
     @Override
