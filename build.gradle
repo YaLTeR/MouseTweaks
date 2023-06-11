@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[6.0,6.2)', changing: true
         classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
@@ -15,7 +15,7 @@ def minecraftVersion = "1.20" // Used for output JAR filenames.
 
 version = project.mod_version
 group = "yalter.mousetweaks"
-archivesBaseName = "MouseTweaks-forge-mc${minecraftVersion}"
+base.archivesName = "MouseTweaks-forge-mc${minecraftVersion}"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
