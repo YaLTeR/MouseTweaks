@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
 }
 
 def minecraftVersion = "1.20" // Used for output JAR filenames.
