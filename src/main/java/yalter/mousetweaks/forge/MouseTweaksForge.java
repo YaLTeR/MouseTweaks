@@ -59,10 +59,10 @@ public class MouseTweaksForge {
         // Sent when nothing handled the scroll itself. For example, the creative inventory handles scroll anywhere on
         // screen, so this event is suppressed. Quick scrolls at limited FPS result in multiple scroll events rather
         // than one with a bigger delta.
-        Logger.DebugLog("onGuiMouseScrollPost delta = " + event.getScrollDelta());
+        Logger.DebugLog("onGuiMouseScrollPost delta = " + event.getDeltaY());
 
         // Post events aren't cancellable, but that's okay.
-        Main.onMouseScrolled(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getScrollDelta());
+        Main.onMouseScrolled(event.getScreen(), event.getMouseX(), event.getMouseY(), event.getDeltaY());
     }
 
     @SubscribeEvent
