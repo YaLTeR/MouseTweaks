@@ -12,6 +12,7 @@ import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.FMLLoader;
 import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.Logger;
 import yalter.mousetweaks.Main;
@@ -23,6 +24,11 @@ public class MouseTweaksForge {
         ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "ANY", (remote, isServer) -> true));
         if (FMLEnvironment.dist != Dist.CLIENT) {
             Logger.Log("Disabled because not running on the client.");
+            return;
+        }
+
+        if (FMLLoader.getLaunchHandler().isData()) {
+            Logger.Log("Disabled because running data generation.");
             return;
         }
 
