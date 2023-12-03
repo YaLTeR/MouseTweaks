@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
 import yalter.mousetweaks.handlers.GuiContainerCreativeHandler;
@@ -37,6 +38,9 @@ public class Main {
 
     public static void initialize() {
         Logger.Log("Main.initialize()");
+
+        if (FMLLoader.getLaunchHandler().isData())
+            return;
 
         if (initialized)
             return;
