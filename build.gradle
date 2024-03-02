@@ -24,10 +24,12 @@ sourceSets {
         java {
             exclude 'yalter/mousetweaks/fabric'
             exclude 'yalter/mousetweaks/ModMenuApiImpl.java'
+            exclude 'yalter/mousetweaks/neoforge'
         }
 
         resources {
             exclude 'fabric.mod.json'
+            exclude 'META-INF/mods-neo.toml'
         }
     }
 }
