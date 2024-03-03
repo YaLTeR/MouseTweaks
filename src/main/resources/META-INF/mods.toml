@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[2,)"
+loaderVersion="[48,)"
 license="BSD-3-Clause"
 issueTrackerURL="https://github.com/YaLTeR/MouseTweaks/issues"
 
 [[mods]]
 modId="mousetweaks"
-version="${version}"
+version="${file.jarVersion}"
 displayName="Mouse Tweaks"
 displayURL="https://minecraft.curseforge.com/projects/mouse-tweaks"
 logoFile="mousetweaks_logo.png"
