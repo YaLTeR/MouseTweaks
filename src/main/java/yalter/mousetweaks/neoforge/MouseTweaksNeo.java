@@ -1,7 +1,6 @@
 package yalter.mousetweaks.neoforge;
 
 import net.neoforged.neoforge.client.ConfigScreenHandler;
-import net.neoforged.neoforge.client.ConfigScreenHandler.ConfigScreenFactory;
 import net.neoforged.neoforge.client.event.ScreenEvent.MouseButtonPressed;
 import net.neoforged.neoforge.client.event.ScreenEvent.MouseButtonReleased;
 import net.neoforged.neoforge.client.event.ScreenEvent.MouseDragged;
@@ -18,8 +17,8 @@ import yalter.mousetweaks.Main;
 import yalter.mousetweaks.MouseButton;
 
 @Mod(Constants.MOD_ID)
-public class MouseTweaksForge {
-    public MouseTweaksForge() {
+public class MouseTweaksNeo {
+    public MouseTweaksNeo() {
         ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "ANY", (remote, isServer) -> true));
         if (FMLEnvironment.dist != net.neoforged.api.distmarker.Dist.CLIENT) {
             Logger.Log("Disabled because not running on the client.");

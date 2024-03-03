@@ -4,7 +4,7 @@ import net.neoforged.neoforge.client.ConfigScreenHandler;
 import yalter.mousetweaks.ConfigScreen;
 
 /**
- * Functions accessing client-only classes, extracted so that they can be called from MouseTweaksForge
+ * Functions accessing client-only classes, extracted so that they can be called from MouseTweaksNeo
  * without causing class-loading errors on the server.
  */
 public class ClientHelper {
