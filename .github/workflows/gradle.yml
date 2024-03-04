@@ -32,8 +32,8 @@ jobs:
       - name: Build (Fabric)
         run: ./gradlew --build-file build-fabric.gradle build
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: MouseTweaks
-          path: build/libs
+          path: build/libs/
           if-no-files-found: error
