@@ -1,0 +1,90 @@
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.neoforged.gradle.userdev' version '7.0.80'
+}
+
+def minecraftVersion = "1.20.4" // Used for output JAR filenames.
+
+version = project.mod_version
+group = "yalter.mousetweaks"
+
+base {
+    archivesName = "MouseTweaks-neoforge-mc${minecraftVersion}"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+sourceSets {
+    main {
+        java {
+            exclude 'yalter/mousetweaks/fabric'
+            exclude 'yalter/mousetweaks/ModMenuApiImpl.java'
+            exclude 'yalter/mousetweaks/forge'
+        }
+
+        resources {
+            exclude 'fabric.mod.json'
+            exclude 'META-INF/mods-neo.toml'
+        }
+    }
+}
+
+tasks.register("fixModsToml", Copy) {
+    // Copy the mods-neo.toml file to mods.toml
+    from "src/main/resources/META-INF"
+    include "mods-neo.toml"
+    rename "mods-neo.toml", "mods.toml"
+    into "src/main/resources/META-INF"
+}
+
+// Make the fixModsToml task run before the processResources task
+processResources.dependsOn(fixModsToml)
+
+processResources {
+    inputs.property "version", project.mod_version
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.mod_version
+    }
+}
+
+runs {
+    configureEach {
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.console.level', 'debug'
+
+        modSource project.sourceSets.main
+    }
+
+    client {
+        systemProperty 'forge.enabledGameTestNamespaces', "mousetweaks"
+    }
+
+    server {
+        systemProperty 'forge.enabledGameTestNamespaces', "mousetweaks"
+        programArgument '--nogui'
+    }
+}
+
+dependencies {
+    implementation "net.neoforged:neoforge:20.4.190"
+}
+
+task srcJar(type: Jar) {
+    archiveClassifier.set("src")
+    from sourceSets.main.allJava
+}
+
+task apiJar(type: Jar) {
+    archiveClassifier.set("api")
+    from(sourceSets.main.output) {
+        include 'yalter/mousetweaks/api/**'
+    }
+}
+
+artifacts {
+    archives srcJar
+    archives apiJar
+}
