@@ -15,18 +15,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          show-progress: false
+
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: adopt
           java-version: 17
+
       - name: Build (Forge)
         run: ./gradlew build
       - name: Build (NeoForge)
         run: ./gradlew --build-file build-neoforge.gradle build
       - name: Build (Fabric)
         run: ./gradlew --build-file build-fabric.gradle build
+
       - uses: actions/upload-artifact@v2
         with:
           name: MouseTweaks
