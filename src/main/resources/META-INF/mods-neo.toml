@@ -9,7 +9,7 @@ version="${version}"
 displayName="Mouse Tweaks"
 displayURL="https://minecraft.curseforge.com/projects/mouse-tweaks"
 logoFile="mousetweaks_logo.png"
-credits="Contributors: mezz, juliand665, panoskj, FabiClawZ."
+credits="Contributors: mezz, juliand665, panoskj, FabiClawZ, ErrorMikey."
 authors="Ivan Molodetskikh (YaLTeR)"
 description='''
 A mod that enhances the inventory management by adding various additional functions to the usual mouse buttons.
