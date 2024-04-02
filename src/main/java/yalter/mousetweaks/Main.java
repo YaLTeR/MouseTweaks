@@ -164,7 +164,7 @@ public class Main {
                 return;
 
             // Return if we cannot put any more items into the slot.
-            if (selectedSlotStack.getCount() == selectedSlotStack.getMaxStackSize())
+            if (selectedSlotStack.getCount() == slot.getMaxStackSize(selectedSlotStack))
                 return;
         }
 
@@ -383,7 +383,7 @@ public class Main {
                             handler.clickSlot(slot, MouseButton.LEFT, false);
                         } else {
                             // Otherwise right click the needed number of times.
-                            int clickTimes = slot.getItem().getMaxStackSize() - slot.getItem().getCount();
+                            int clickTimes = slot.getMaxStackSize(slot.getItem()) - slot.getItem().getCount();
                             while (clickTimes-- > 0)
                                 handler.clickSlot(slot, MouseButton.RIGHT, false);
                         }
@@ -428,7 +428,7 @@ public class Main {
                 //
                 // Can't do the last slot left click optimization, because we usually want to move less items (1) than
                 // the whole available stack.
-                int clickTimes = slot.getItem().getMaxStackSize() - slot.getItem().getCount();
+                int clickTimes = slot.getMaxStackSize(slot.getItem()) - slot.getItem().getCount();
                 clickTimes = Math.min(clickTimes, numItemsToMove);
                 numItemsToMove -= clickTimes;
 
@@ -446,7 +446,7 @@ public class Main {
 
         // Handle pulling items.
         // Clip the number of items to move by the maximum item count that would fit in the slot.
-        int maxItemsToMove = selectedSlotStack.getMaxStackSize() - selectedSlotStack.getCount();
+        int maxItemsToMove = selectedSlot.getMaxStackSize(selectedSlotStack) - selectedSlotStack.getCount();
         numItemsToMove = Math.min(numItemsToMove, maxItemsToMove);
 
         while (numItemsToMove > 0) {
@@ -648,9 +648,9 @@ public class Main {
                 }
             } else {
                 // Non-empty slots should have a compatible stack, not maxed out.
-                if (areStacksCompatible(selectedSlotStack, stack) && stack.getCount() < stack.getMaxStackSize()) {
+                if (areStacksCompatible(selectedSlotStack, stack) && stack.getCount() < slot.getMaxStackSize(stack)) {
                     rv.add(slot);
-                    itemCount -= Math.min(itemCount, stack.getMaxStackSize() - stack.getCount());
+                    itemCount -= Math.min(itemCount, slot.getMaxStackSize(stack) - stack.getCount());
                 }
             }
         }
@@ -659,7 +659,7 @@ public class Main {
         for (int i = 0; i != goodEmptySlots.size() && itemCount > 0; i++) {
             Slot slot = goodEmptySlots.get(i);
             rv.add(slot);
-            itemCount -= Math.min(itemCount, slot.getItem().getMaxStackSize() - slot.getItem().getCount());
+            itemCount -= Math.min(itemCount, slot.getMaxStackSize());
         }
 
         // If we were unable to distribute all items as requested, return null.
