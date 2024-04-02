@@ -71,6 +71,24 @@ minecraft {
     }
 }
 
+tasks.register("fixModsToml", Copy) {
+    // Copy the mods-forge.toml file to mods.toml
+    from "src/main/resources/META-INF"
+    include "mods-forge.toml"
+    rename "mods-forge.toml", "mods.toml"
+    into "src/main/resources/META-INF"
+}
+
+// Make the fixModsToml task run before the processResources task
+processResources.dependsOn(fixModsToml)
+
+processResources {
+    inputs.property "version", project.mod_version
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.mod_version
+    }
+}
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20.2-48.0.13'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'

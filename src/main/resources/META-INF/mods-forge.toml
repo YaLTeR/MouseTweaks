@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/YaLTeR/MouseTweaks/issues"
 
 [[mods]]
 modId="mousetweaks"
-version="${file.jarVersion}"
+version="${version}"
 displayName="Mouse Tweaks"
 displayURL="https://minecraft.curseforge.com/projects/mouse-tweaks"
 logoFile="mousetweaks_logo.png"
