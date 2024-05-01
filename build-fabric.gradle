@@ -25,6 +25,7 @@ sourceSets {
 
         resources {
             exclude 'META-INF/mods.toml'
+            exclude 'META-INF/neoforge.mods.toml'
         }
     }
 }
