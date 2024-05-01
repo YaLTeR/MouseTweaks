@@ -3,10 +3,10 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.80'
+    id 'net.neoforged.gradle.userdev' version '7.0.109'
 }
 
-def minecraftVersion = "1.20.4" // Used for output JAR filenames.
+def minecraftVersion = "1.20.6" // Used for output JAR filenames.
 
 version = project.mod_version
 group = "yalter.mousetweaks"
@@ -15,7 +15,7 @@ base {
     archivesName = "MouseTweaks-neoforge-mc${minecraftVersion}"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 sourceSets {
     main {
@@ -27,25 +27,14 @@ sourceSets {
 
         resources {
             exclude 'fabric.mod.json'
-            exclude 'META-INF/mods-neo.toml'
+            exclude 'META-INF/mods.toml'
         }
     }
 }
 
-tasks.register("fixModsToml", Copy) {
-    // Copy the mods-neo.toml file to mods.toml
-    from "src/main/resources/META-INF"
-    include "mods-neo.toml"
-    rename "mods-neo.toml", "mods.toml"
-    into "src/main/resources/META-INF"
-}
-
-// Make the fixModsToml task run before the processResources task
-processResources.dependsOn(fixModsToml)
-
 processResources {
     inputs.property "version", project.mod_version
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand "version": project.mod_version
     }
 }
@@ -69,7 +58,7 @@ runs {
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:20.4.190"
+    implementation "net.neoforged:neoforge:20.6.11-beta"
 }
 
 task srcJar(type: Jar) {
