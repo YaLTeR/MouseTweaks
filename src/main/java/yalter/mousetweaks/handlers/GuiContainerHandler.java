@@ -39,15 +39,15 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
     @Override
     public Slot getSlotUnderMouse(double mouseX, double mouseY) {
-        return screenAccessor.invokeFindSlot(mouseX, mouseY);
+        return screenAccessor.mousetweaks$invokeFindSlot(mouseX, mouseY);
     }
 
     @Override
     public boolean disableRMBDraggingFunctionality() {
-        screenAccessor.setSkipNextRelease(true);
+        screenAccessor.mousetweaks$setSkipNextRelease(true);
 
-        if (screenAccessor.getIsQuickCrafting() && screenAccessor.getQuickCraftingButton() == 1) {
-            screenAccessor.setIsQuickCrafting(false);
+        if (screenAccessor.mousetweaks$getIsQuickCrafting() && screenAccessor.mousetweaks$getQuickCraftingButton() == 1) {
+            screenAccessor.mousetweaks$setIsQuickCrafting(false);
             return true;
         }
 
@@ -56,7 +56,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
     @Override
     public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-        screenAccessor.invokeSlotClicked(
+        screenAccessor.mousetweaks$invokeSlotClicked(
                 slot,
                 slot.index,
                 mouseButton.getValue(),
