@@ -2,6 +2,7 @@ modLoader="javafml"
 loaderVersion="[50,)"
 license="BSD-3-Clause"
 issueTrackerURL="https://github.com/YaLTeR/MouseTweaks/issues"
+clientSideOnly=true
 
 [[mods]]
 modId="mousetweaks"
