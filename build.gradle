@@ -35,12 +35,13 @@ sourceSets {
 }
 
 mixin {
-    add sourceSets.main, 'mousetweaks.mixins.refmap.json'
     config 'mousetweaks.mixins.json'
 }
 
 minecraft {
     mappings channel: 'official', version: '1.20.6'
+
+    reobf = false
 
     runs {
         client {
@@ -91,10 +92,11 @@ jar {
             "Implementation-Title"    : project.name,
             "Implementation-Version"  : "${project.version}",
             "Implementation-Vendor"   : "YaLTeR",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "TweakClass"              : 'org.spongepowered.asm.launch.MixinTweaker',
+            "TweakOrder"              : 0,
+            "MixinConfigs"            : "mousetweaks.mixins.json"
     ])
-
-    finalizedBy 'reobfJar'
 }
 
 task srcJar(type: Jar) {
