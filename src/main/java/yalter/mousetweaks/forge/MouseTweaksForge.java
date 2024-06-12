@@ -12,10 +12,7 @@ import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import yalter.mousetweaks.Constants;
-import yalter.mousetweaks.Logger;
-import yalter.mousetweaks.Main;
-import yalter.mousetweaks.MouseButton;
+import yalter.mousetweaks.*;
 
 @Mod(Constants.MOD_ID)
 public class MouseTweaksForge {
@@ -23,7 +20,7 @@ public class MouseTweaksForge {
         Main.initialize();
         MinecraftForge.EVENT_BUS.register(this);
 
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenFactory.class, ClientHelper::createConfigScreenFactory);
+        MinecraftForge.registerConfigScreen(ConfigScreen::new);
     }
 
     @SubscribeEvent
