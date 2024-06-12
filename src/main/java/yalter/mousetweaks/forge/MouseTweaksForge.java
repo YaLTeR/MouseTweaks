@@ -20,12 +20,6 @@ import yalter.mousetweaks.MouseButton;
 @Mod(Constants.MOD_ID)
 public class MouseTweaksForge {
     public MouseTweaksForge() {
-        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "ANY", (remote, isServer) -> true));
-        if (FMLEnvironment.dist != Dist.CLIENT) {
-            Logger.Log("Disabled because not running on the client.");
-            return;
-        }
-
         Main.initialize();
         MinecraftForge.EVENT_BUS.register(this);
 
