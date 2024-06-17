@@ -6,16 +6,14 @@ plugins {
     id 'net.neoforged.gradle.userdev' version '7.0.109'
 }
 
-def minecraftVersion = "1.20.6" // Used for output JAR filenames.
-
-version = project.mod_version
+version = project.modVersion
 group = "yalter.mousetweaks"
 
 base {
-    archivesName = "MouseTweaks-neoforge-mc${minecraftVersion}"
+    archivesName = "MouseTweaks-neoforge-mc${project.neoMcVersion}"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(project.modJavaVersion)
 
 sourceSets {
     main {
@@ -33,9 +31,14 @@ sourceSets {
 }
 
 processResources {
-    inputs.property "version", project.mod_version
+    inputs.property "version", project.modVersion
     filesMatching("META-INF/neoforge.mods.toml") {
-        expand "version": project.mod_version
+        expand([
+                "version": project.modVersion,
+                "neoLoaderVersion": project.neoLoaderVersion,
+                "modCredits": project.modCredits,
+                "modDescription": project.modDescription,
+        ])
     }
 }
 
@@ -58,7 +61,7 @@ runs {
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:20.6.11-beta"
+    implementation "net.neoforged:neoforge:${project.neoVersion}"
 }
 
 task srcJar(type: Jar) {

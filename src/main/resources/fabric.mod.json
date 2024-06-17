@@ -3,7 +3,7 @@
   "id": "mousetweaks",
   "version": "${version}",
   "name": "Mouse Tweaks",
-  "description": "A mod that enhances the inventory management by adding various additional functions to the usual mouse buttons.",
+  "description": "${modDescription}",
   "authors": [
     "Ivan Molodetskikh (YaLTeR)"
   ],
@@ -35,10 +35,10 @@
     "mousetweaks-fabric.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.15.10",
+    "fabricloader": ">=${fabricLoaderVersion}",
     "fabric-api": "*",
-    "minecraft": "~1.20.6",
-    "java": ">=21"
+    "minecraft": "~${fabricMcVersion}",
+    "java": ">=${modJavaVersion}"
   },
   "suggests": {}
 }

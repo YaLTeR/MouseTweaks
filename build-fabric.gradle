@@ -2,13 +2,11 @@ plugins {
     id 'fabric-loom' version '1.6-SNAPSHOT'
 }
 
-def minecraftVersion = "1.20.6" // Used for output JAR filenames.
-
-version = project.mod_version
+version = project.modVersion
 group = "yalter.mousetweaks"
-archivesBaseName = "MouseTweaks-fabric-mc${minecraftVersion}"
+archivesBaseName = "MouseTweaks-fabric-mc${project.fabricMcVersion}"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(project.modJavaVersion)
 
 repositories {
     maven {
@@ -35,19 +33,26 @@ loom {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${minecraftVersion}"
+    minecraft "com.mojang:minecraft:${project.fabricMcVersion}"
     mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:0.15.10"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.97.8+1.20.6"
+    modImplementation "net.fabricmc:fabric-loader:${project.fabricLoaderVersion}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabricApiVersion}"
 
-    modImplementation 'com.terraformersmc:modmenu:10.0.0-beta.1'
+    modImplementation "com.terraformersmc:modmenu:${project.fabricModMenuVersion}"
 }
 
 processResources {
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand([
+                "version": project.modVersion,
+                "modJavaVersion": project.modJavaVersion,
+                "fabricMcVersion": project.fabricMcVersion,
+                "fabricLoaderVersion": project.fabricLoaderVersion,
+                "modCredits": project.modCredits,
+                "modDescription": project.modDescription,
+        ])
     }
 }
 

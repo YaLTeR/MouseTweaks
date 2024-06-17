@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[50,)"
+loaderVersion="${forgeLoaderVersion}"
 license="BSD-3-Clause"
 issueTrackerURL="https://github.com/YaLTeR/MouseTweaks/issues"
 clientSideOnly=true
@@ -10,8 +10,6 @@ version="${version}"
 displayName="Mouse Tweaks"
 displayURL="https://minecraft.curseforge.com/projects/mouse-tweaks"
 logoFile="mousetweaks_logo.png"
-credits="Contributors: mezz, juliand665, panoskj, FabiClawZ, ErrorMikey."
+credits="${modCredits}"
 authors="Ivan Molodetskikh (YaLTeR)"
-description='''
-A mod that enhances the inventory management by adding various additional functions to the usual mouse buttons.
-'''
+description="${modDescription}"
