@@ -39,7 +39,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
     @Override
     public Slot getSlotUnderMouse(double mouseX, double mouseY) {
-        return screenAccessor.mousetweaks$invokeFindSlot(mouseX, mouseY);
+        return screenAccessor.mousetweaks$invokeGetHoveredSlot(mouseX, mouseY);
     }
 
     @Override
