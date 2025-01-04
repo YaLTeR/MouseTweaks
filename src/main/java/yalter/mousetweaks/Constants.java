@@ -11,4 +11,5 @@ public class Constants {
     static final String CONFIG_WHEEL_SCROLL_DIRECTION = "WheelScrollDirection";
     static final String CONFIG_DEBUG = "Debug";
     static final String CONFIG_SCROLL_ITEM_SCALING = "ScrollItemScaling";
+    static final String CONFIG_INVERSE_PUSH_ORDER = "InversePushOrder";
 }

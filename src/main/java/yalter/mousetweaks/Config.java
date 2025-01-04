@@ -15,6 +15,7 @@ public class Config {
     public WheelScrollDirection wheelScrollDirection = WheelScrollDirection.NORMAL;
     public ScrollItemScaling scrollItemScaling = ScrollItemScaling.PROPORTIONAL;
     public static boolean debug = false;
+    public boolean inversePushOrder = false;
 
     Config(String fileName) {
         this.fileName = fileName;
@@ -51,6 +52,7 @@ public class Config {
                         0));
         scrollItemScaling = ScrollItemScaling.fromId(parseIntOrDefault(properties.getProperty(Constants.CONFIG_SCROLL_ITEM_SCALING), 0));
         debug = parseIntOrDefault(properties.getProperty(Constants.CONFIG_DEBUG), 0) != 0;
+        inversePushOrder = parseIntOrDefault(properties.getProperty(Constants.CONFIG_INVERSE_PUSH_ORDER), 0) != 0;
     }
 
     private static int parseIntOrDefault(String s, int defaultValue) {
@@ -81,6 +83,7 @@ public class Config {
                     String.valueOf(wheelScrollDirection.ordinal()));
             writeString(configWriter, Constants.CONFIG_SCROLL_ITEM_SCALING, String.valueOf(scrollItemScaling.ordinal()));
             writeBoolean(configWriter, Constants.CONFIG_DEBUG, debug);
+            writeBoolean(configWriter, Constants.CONFIG_INVERSE_PUSH_ORDER, inversePushOrder);
 
             configWriter.close();
 
