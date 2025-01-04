@@ -634,8 +634,7 @@ public class Main {
              config.inversePushOrder ? i >= 0 : i < slots.size() && itemCount > 0;
              i += config.inversePushOrder ? -1 : 1) {
             Slot slot = slots.get(i);
-            System.out.println(config.inversePushOrder);
-
+            
             // Skip ignored slots.
             if (handler.isIgnored(slot))
                 continue;
