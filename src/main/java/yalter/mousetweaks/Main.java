@@ -630,9 +630,11 @@ public class Main {
         // Applicable empty slots, they can be used once applicable non-empty slots run out.
         List<Slot> goodEmptySlots = new ArrayList<>();
 
-        for (int i = 0; i != slots.size() && itemCount > 0; i++) {
+        for (int i = config.inversePushOrder ? slots.size() - 1 : 0;
+             config.inversePushOrder ? i >= 0 : i < slots.size() && itemCount > 0;
+             i += config.inversePushOrder ? -1 : 1) {
             Slot slot = slots.get(i);
-
+            
             // Skip ignored slots.
             if (handler.isIgnored(slot))
                 continue;
