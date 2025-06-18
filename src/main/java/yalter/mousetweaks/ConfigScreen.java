@@ -1,8 +1,8 @@
 package yalter.mousetweaks;
 
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -18,6 +18,8 @@ public class ConfigScreen extends Screen {
     @Override
     protected void init() {
         Main.config.read();
+
+        this.addRenderableWidget(new StringWidget(0, 15, this.width, 9, this.title, this.font));
 
         this.addRenderableWidget(CycleButton.onOffBuilder(Main.config.rmbTweak)
                 .create(this.width / 2 - 155, this.height / 6, 150, 20,
@@ -78,13 +80,6 @@ public class ConfigScreen extends Screen {
     @Override
     public void onClose() {
         this.minecraft.setScreen(previous);
-    }
-
-    @Override
-    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
-        this.renderBackground(guiGraphics, i, j, f);
-        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 15, 0xFFFFFF);
-        super.render(guiGraphics, i, j, f);
     }
 
     @Override
