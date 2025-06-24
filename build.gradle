@@ -47,6 +47,7 @@ minecraft {
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            property 'eventbus.api.strictRuntimeChecks', 'true'
 
             mods {
                 mousetweaks {
@@ -60,6 +61,7 @@ minecraft {
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            property 'eventbus.api.strictRuntimeChecks', 'true'
 
             mods {
                 mousetweaks {
@@ -84,6 +86,7 @@ processResources {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${project.forgeMcVersion}-${project.forgeVersion}"
+    annotationProcessor "net.minecraftforge:eventbus-validator:${project.forgeEventBusValidatorVersion}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
