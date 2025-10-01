@@ -20,7 +20,7 @@ import yalter.mousetweaks.MouseButton;
 @Mod(Constants.MOD_ID)
 public class MouseTweaksNeo {
     public MouseTweaksNeo(IEventBus modBus) {
-        if (FMLEnvironment.dist != net.neoforged.api.distmarker.Dist.CLIENT) {
+        if (FMLEnvironment.getDist() != net.neoforged.api.distmarker.Dist.CLIENT) {
             Logger.Log("Disabled because not running on the client.");
             return;
         }
