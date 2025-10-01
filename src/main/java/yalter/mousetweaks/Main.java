@@ -244,8 +244,8 @@ public class Main {
             if (selectedSlotStack.isEmpty())
                 return false;
 
-            boolean shiftIsDown = InputConstants.isKeyDown(mc.getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)
-                    || InputConstants.isKeyDown(mc.getWindow().getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT);
+            boolean shiftIsDown = InputConstants.isKeyDown(mc.getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)
+                    || InputConstants.isKeyDown(mc.getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT);
 
             if (stackOnMouse.isEmpty()) {
                 // Shift-LMB drag without item.
