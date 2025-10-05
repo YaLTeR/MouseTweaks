@@ -12,21 +12,21 @@ public class MouseTweaksFabric implements ClientModInitializer {
         Main.initialize();
 
         ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            ScreenMouseEvents.allowMouseClick(screen).register((_screen, x, y, eventButton) -> {
-                MouseButton button = MouseButton.fromEventButton(eventButton);
+            ScreenMouseEvents.allowMouseClick(screen).register((_screen, context) -> {
+                MouseButton button = MouseButton.fromEventButton(context.button());
                 if (button != null)
-                    return !Main.onMouseClicked(screen, x, y, button);
+                    return !Main.onMouseClicked(screen, context.x(), context.y(), button);
                 return true;
             });
 
-            ScreenMouseEvents.allowMouseRelease(screen).register((_screen, x, y, eventButton) -> {
-                MouseButton button = MouseButton.fromEventButton(eventButton);
+            ScreenMouseEvents.allowMouseRelease(screen).register((_screen, context) -> {
+                MouseButton button = MouseButton.fromEventButton(context.button());
                 if (button != null)
-                    return !Main.onMouseReleased(screen, x, y, button);
+                    return !Main.onMouseReleased(screen, context.x(), context.y(), button);
                 return true;
             });
 
-            ScreenMouseEvents.afterMouseScroll(screen).register((_screen, x, y, horiz, vert) ->
+            ScreenMouseEvents.afterMouseScroll(screen).register((_screen, x, y, horiz, vert, consumed) ->
                     Main.onMouseScrolled(screen, x, y, vert));
         });
     }
