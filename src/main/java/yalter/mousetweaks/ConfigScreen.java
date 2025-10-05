@@ -19,7 +19,7 @@ public class ConfigScreen extends Screen {
     protected void init() {
         Main.config.read();
 
-        this.addRenderableWidget(new StringWidget(0, 15, this.width, 9, this.title, this.font));
+        this.addRenderableWidget(new StringWidget(this.width / 2 - this.font.width(this.title) / 2, 15, this.width, 9, this.title, this.font));
 
         this.addRenderableWidget(CycleButton.onOffBuilder(Main.config.rmbTweak)
                 .create(this.width / 2 - 155, this.height / 6, 150, 20,
