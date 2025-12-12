@@ -37,7 +37,6 @@ public class ConfigScreen extends Screen {
                 .create(this.width / 2 + 5, this.height / 6 + 24, 150, 20,
                         Component.literal("LMB Tweak Without Item"), (button, value) -> Main.config.lmbTweakWithoutItem = value));
 
-
         this.addRenderableWidget(
                 CycleButton.builder((WheelSearchOrder value) -> Component.literal(switch (value) {
                             case FIRST_TO_LAST -> "First to Last";
@@ -46,7 +45,6 @@ public class ConfigScreen extends Screen {
                         .withValues(WheelSearchOrder.FIRST_TO_LAST, WheelSearchOrder.LAST_TO_FIRST)
                         .create(this.width / 2 - 155, this.height / 6 + 24 * 2, 310, 20,
                                 Component.literal("Wheel Tweak Search Order"), (button, value) -> Main.config.wheelSearchOrder = value));
-
 
         this.addRenderableWidget(
                 CycleButton.builder((WheelScrollDirection value) -> Component.literal(switch (value) {
