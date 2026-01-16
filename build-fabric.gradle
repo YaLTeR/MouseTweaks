@@ -26,10 +26,25 @@ sourceSets {
             exclude 'META-INF/neoforge.mods.toml'
         }
     }
+
+    testmodClient {
+        compileClasspath += main.compileClasspath + main.output
+        runtimeClasspath += main.runtimeClasspath + main.output
+    }
 }
 
 loom {
     mixin.defaultRefmapName = 'mousetweaks.mixins.refmap.json'
+
+    runs {
+        clientGametest {
+            client()
+            ideConfigGenerated true
+            name "Client Game Test"
+            source sourceSets.testmodClient
+            vmArg "-Dfabric.client.gametest"
+        }
+    }
 }
 
 dependencies {
@@ -39,6 +54,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabricApiVersion}"
 
     modImplementation "com.terraformersmc:modmenu:${project.fabricModMenuVersion}"
+
+    testmodClientImplementation sourceSets.main.output
 }
 
 processResources {

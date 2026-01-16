@@ -26,4 +26,10 @@ public interface AbstractContainerScreenAccessor {
 
     @Accessor("skipNextRelease")
     void mousetweaks$setSkipNextRelease(boolean value);
+
+    @Accessor("leftPos")
+    int mousetweaks$getLeftPos();
+
+    @Accessor("topPos")
+    int mousetweaks$getTopPos();
 }
