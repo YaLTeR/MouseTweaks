@@ -2,6 +2,7 @@ package yalter.mousetweaks.handlers;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CrafterScreen;
 import net.minecraft.world.inventory.*;
 import yalter.mousetweaks.IGuiScreenHandler;
 import yalter.mousetweaks.MouseButton;
@@ -74,5 +75,13 @@ public class GuiContainerHandler implements IGuiScreenHandler {
     @Override
     public boolean isIgnored(Slot slot) {
         return false;
+    }
+    
+    @Override
+    public boolean isCrafterToggleableSlot(Slot slot) {
+        // Check if this is a Crafter screen and the slot can be toggled
+        return screen instanceof CrafterScreen && 
+               !isCraftingOutput(slot) && 
+               !isIgnored(slot);
     }
 }

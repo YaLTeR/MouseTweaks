@@ -2,6 +2,7 @@ package yalter.mousetweaks.handlers;
 
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.client.gui.screens.inventory.CrafterScreen;
 import yalter.mousetweaks.IGuiScreenHandler;
 import yalter.mousetweaks.MouseButton;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
@@ -55,5 +56,14 @@ public class IMTModGuiContainer3ExHandler implements IGuiScreenHandler {
     @Override
     public boolean isIgnored(Slot slot) {
         return modGuiContainer.MT_isIgnored(slot);
+    }
+    
+    @Override
+    public boolean isCrafterToggleableSlot(Slot slot) {
+        // Delegate to the API implementation if available, otherwise use standard detection
+        if (modGuiContainer instanceof CrafterScreen) {
+            return !isCraftingOutput(slot) && !isIgnored(slot);
+        }
+        return false;
     }
 }
