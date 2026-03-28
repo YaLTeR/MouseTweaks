@@ -26,12 +26,12 @@ jobs:
           java-version: 21
 
       - name: Build (Forge)
-        run: ./gradlew build
+        run: ./gradlew -p forge build
 
       - uses: actions/upload-artifact@v6
         with:
           name: MouseTweaks-Forge
-          path: build/libs/
+          path: forge/build/libs/
           if-no-files-found: error
 
   build-neoforge:
@@ -48,12 +48,12 @@ jobs:
           java-version: 21
 
       - name: Build (NeoForge)
-        run: ./gradlew --build-file build-neoforge.gradle build
+        run: ./gradlew -p neoforge build
 
       - uses: actions/upload-artifact@v6
         with:
           name: MouseTweaks-NeoForge
-          path: build/libs/
+          path: neoforge/build/libs/
           if-no-files-found: error
 
   build-fabric:
@@ -70,12 +70,12 @@ jobs:
           java-version: 21
 
       - name: Build (Fabric)
-        run: ./gradlew --build-file build-fabric.gradle build
+        run: ./gradlew -p fabric build
 
       - uses: actions/upload-artifact@v6
         with:
           name: MouseTweaks-Fabric
-          path: build/libs/
+          path: fabric/build/libs/
           if-no-files-found: error
 
   test:
@@ -92,16 +92,16 @@ jobs:
           java-version: 21
 
       - name: Build testmod
-        run: ./gradlew --build-file build-fabric.gradle testmodClientClasses
+        run: ./gradlew -p fabric testmodClientClasses
 
       - name: Run gametest
         uses: GabrielBB/xvfb-action@v1
         with:
-          run: ./gradlew --build-file build-fabric.gradle runClientGametest
+          run: ./gradlew -p fabric runClientGametest
 
       - name: Upload screenshot
         uses: actions/upload-artifact@v6
         with:
           name: screenshot
-          path: run/screenshots/
+          path: fabric/run/screenshots/
           if-no-files-found: error

@@ -18,12 +18,14 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(project.modJavaVersion)
 sourceSets {
     main {
         java {
+            srcDirs = ['../src/main/java']
             exclude 'yalter/mousetweaks/fabric'
             exclude 'yalter/mousetweaks/ModMenuApiImpl.java'
             exclude 'yalter/mousetweaks/forge'
         }
 
         resources {
+            srcDirs = ['../src/main/resources']
             exclude 'fabric.mod.json'
             exclude 'META-INF/mods.toml'
         }

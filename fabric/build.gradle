@@ -17,17 +17,25 @@ repositories {
 sourceSets {
     main {
         java {
+            srcDirs = ['../src/main/java']
             exclude 'yalter/mousetweaks/forge'
             exclude 'yalter/mousetweaks/neoforge'
         }
 
         resources {
+            srcDirs = ['../src/main/resources']
             exclude 'META-INF/mods.toml'
             exclude 'META-INF/neoforge.mods.toml'
         }
     }
 
     testmodClient {
+        java {
+            srcDirs = ['../src/testmodClient/java']
+        }
+        resources {
+            srcDirs = ['../src/testmodClient/resources']
+        }
         compileClasspath += main.compileClasspath + main.output
         runtimeClasspath += main.runtimeClasspath + main.output
     }
