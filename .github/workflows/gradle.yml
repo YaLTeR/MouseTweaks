@@ -95,9 +95,7 @@ jobs:
         run: ./gradlew -p fabric testmodClientClasses
 
       - name: Run gametest
-        uses: GabrielBB/xvfb-action@v1
-        with:
-          run: ./gradlew -p fabric runClientGametest
+        run: xvfb-run ./gradlew -p fabric runClientGametest
 
       - name: Upload screenshot
         uses: actions/upload-artifact@v6
