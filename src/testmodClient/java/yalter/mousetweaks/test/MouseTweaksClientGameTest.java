@@ -14,6 +14,7 @@ import yalter.mousetweaks.ConfigScreen;
 
 import static yalter.mousetweaks.test.InventoryTestHelper.*;
 
+@SuppressWarnings("UnstableApiUsage")
 public class MouseTweaksClientGameTest implements FabricClientGameTest {
 
     @Override
