@@ -316,12 +316,6 @@ public class Main {
 
         ItemStack selectedSlotStack = selectedSlot.getItem();
 
-        // Bundles have their own scrolling, let's not interfere with it. Unfortunately, default Fabric hooks don't
-        // give us the return value of the screen's own scroll handler, which we could check to see if a bundle or some
-        // other item handled the scroll. So we hardcode the bundle here.
-        if (selectedSlotStack.getItem() instanceof BundleItem)
-            return false;
-
         // If we're above a valid slot, always handle the scroll, even if no items are moved. This is to prevent
         // surprising behavior when e.g. the player scrolls items out of a slot, the items run out and suddenly
         // scrolling starts doing something else (being handled by another mod).
