@@ -107,19 +107,19 @@ jar {
     ])
 }
 
-task srcJar(type: Jar) {
+tasks.register('srcJar', Jar) {
     archiveClassifier.set("src")
     from sourceSets.main.allJava
 }
 
-task apiJar(type: Jar) {
+tasks.register('apiJar', Jar) {
     archiveClassifier.set("api")
     from(sourceSets.main.output) {
         include 'yalter/mousetweaks/api/**'
     }
 }
 
-artifacts {
-    archives srcJar
-    archives apiJar
+tasks.named("assemble") {
+    dependsOn(srcJar)
+    dependsOn(apiJar)
 }

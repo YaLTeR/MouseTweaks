@@ -4,13 +4,13 @@ plugins {
 
 version = project.modVersion
 group = "yalter.mousetweaks"
-archivesBaseName = "MouseTweaks-fabric-mc${project.fabricMcVersion}"
+base.archivesName = "MouseTweaks-fabric-mc${project.fabricMcVersion}"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(project.modJavaVersion)
 
 repositories {
     maven {
-        url "https://maven.terraformersmc.com/releases"
+        url = "https://maven.terraformersmc.com/releases"
     }
 }
 

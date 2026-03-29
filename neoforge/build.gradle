@@ -1,8 +1,5 @@
 plugins {
     id 'java-library'
-    id 'eclipse'
-    id 'idea'
-    id 'maven-publish'
     id 'net.neoforged.gradle.userdev' version '7.0.173'
 }
 
@@ -66,19 +63,19 @@ dependencies {
     implementation "net.neoforged:neoforge:${project.neoVersion}"
 }
 
-task srcJar(type: Jar) {
+tasks.register('srcJar', Jar) {
     archiveClassifier.set("src")
     from sourceSets.main.allJava
 }
 
-task apiJar(type: Jar) {
+tasks.register('apiJar', Jar) {
     archiveClassifier.set("api")
     from(sourceSets.main.output) {
         include 'yalter/mousetweaks/api/**'
     }
 }
 
-artifacts {
-    archives srcJar
-    archives apiJar
+tasks.named("assemble") {
+    dependsOn(srcJar)
+    dependsOn(apiJar)
 }
