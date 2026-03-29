@@ -416,6 +416,10 @@ public class Main {
             // Clip the number of items to move by the available item count.
             numItemsToMove = Math.min(numItemsToMove, selectedSlotStack.getCount());
 
+            // FIXME: when several scroll ticks arrive, right clicking will halve the number of
+            // items we can move (since the stack is split in half). We may need to loop like in
+            // the pull logic below to fix this. Thankfully, it should be a very rare case.
+
             // Distribute them.
             List<Slot> targetSlots = findPushSlots(slots, selectedSlot, numItemsToMove, false);
             // Always non-null because mustDistributeAll is false.
@@ -425,8 +429,40 @@ public class Main {
             if (targetSlots.isEmpty())
                 return true;
 
-            // Click the selected slot to pick the items up.
-            handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
+            // Remember if we had an item on mouse to pick it back up.
+            boolean hadItemOnMouse = !stackOnMouse.isEmpty();
+
+            // We will use right click to pick up the item in most cases. Right click behaves
+            // similarly to left click: it'll pick up single items, and it will swap the stack on
+            // mouse with the selected slot, if the stack on mouse isn't empty.
+            //
+            // Right click has these benefits over left click:
+            //
+            // 1. If the selected slot is a furnace input slot, left-clicking would pick up the
+            //    entire stack and reset the smelting progress. Right-clicking picks up half of the
+            //    stack and preserves the smelting progress.
+            //
+            // 2. If the stack on mouse isn't empty and the selected slot has a bundle,
+            //    left-clicking would place the item into the bundle, while right-clicking swaps the
+            //    bundle with the stack on mouse, as we want.
+            //
+            // 3. If the stack on mouse is a bundle and the selected slot isn't empty,
+            //    left-clicking would place the item into the bundle, while right-clicking swaps the
+            //    bundle with the selected slot, as we want.
+            //
+            // There's one case where we do want to keep left click: if the stack on mouse is empty
+            // and the selected slot contains a single item. In this case, for items like bundles,
+            // left-clicking picks up the bundle as expected, but right click will pick up some item
+            // from the bundle.
+            MouseButton pickUpButton = MouseButton.RIGHT;
+            if (stackOnMouse.isEmpty() && selectedSlotStack.getCount() == 1)
+                pickUpButton = MouseButton.LEFT;
+            handler.clickSlot(selectedSlot, pickUpButton, false);
+
+            // Fetch how many items we picked up rather than trying to compute it ourselves just in case,
+            // especially when mods are involved.
+            int numPickedUp = mc.player.containerMenu.getCarried().getCount();
+            numItemsToMove = Math.min(numItemsToMove, numPickedUp);
 
             // Click the target slots.
             for (Slot slot : targetSlots) {
@@ -442,10 +478,18 @@ public class Main {
                     handler.clickSlot(slot, MouseButton.RIGHT, false);
             }
 
-            // Click the selected slot again to
-            // 1) put down potentially left over items;
-            // 2) pick up whatever we had on mouse originally.
-            handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
+            // Click the selected slot again to put down left-over items and pick up whatever was on mouse originally.
+            boolean hasLeftoverItems = !mc.player.containerMenu.getCarried().isEmpty();
+            if (hadItemOnMouse || hasLeftoverItems) {
+                MouseButton putDownButton = MouseButton.LEFT;
+                // If we had an item on mouse, then we're swapping with a different item (as opposed to
+                // putting back an undistributed part of the stack). In this case, we want to right
+                // click to swap even with bundles. But only if still carrying something, otherwise
+                // we'll just pick up half.
+                if (hadItemOnMouse && hasLeftoverItems)
+                    putDownButton = MouseButton.RIGHT;
+                handler.clickSlot(selectedSlot, putDownButton, false);
+            }
 
             return true;
         }
@@ -461,7 +505,8 @@ public class Main {
             if (targetSlot == null)
                 break;
 
-            int numItemsInTargetSlot = targetSlot.getItem().getCount();
+            ItemStack targetSlotStack = targetSlot.getItem();
+            int numItemsInTargetSlot = targetSlotStack.getCount();
 
             if (handler.isCraftingOutput(targetSlot)) {
                 // When pulling from the crafting output slot, one mouse wheel tick equals one batch of crafted items.
@@ -494,30 +539,47 @@ public class Main {
                 continue;
             }
 
-            // Compute the number of items we want to move from that slot.
-            int numItemsToMoveFromTargetSlot = Math.min(numItemsToMove, numItemsInTargetSlot);
-            maxItemsToMove -= numItemsToMoveFromTargetSlot;
-            numItemsToMove -= numItemsToMoveFromTargetSlot;
+            // Remember if we had an item on mouse to pick it back up.
+            boolean hadItemOnMouse = !stackOnMouse.isEmpty();
 
             // If the stack on mouse isn't empty, it should be possible to put it into the target slot.
-            if (!stackOnMouse.isEmpty() && !targetSlot.mayPlace(stackOnMouse))
+            if (hadItemOnMouse && !targetSlot.mayPlace(stackOnMouse))
                 break;
 
-            // Click the target slot to pick up the items and put the items on mouse there.
-            handler.clickSlot(targetSlot, MouseButton.LEFT, false);
+            // Click the target slot to pick up items. See the comment in the push logic for why we
+            // prefer to right-click in most cases.
+            MouseButton pickUpButton = MouseButton.RIGHT;
+            if (stackOnMouse.isEmpty() && targetSlotStack.getCount() == 1)
+                pickUpButton = MouseButton.LEFT;
+            handler.clickSlot(targetSlot, pickUpButton, false);
 
-            if (numItemsToMoveFromTargetSlot == numItemsInTargetSlot) {
-                // If we want to move all items from the target slot, just left click the selected slot.
+            // Fetch how many items we picked up rather than trying to compute it ourselves just in case,
+            // especially when mods are involved.
+            int numPickedUp = mc.player.containerMenu.getCarried().getCount();
+            int numItemsToMoveFromTargetSlot = Math.min(numPickedUp, numItemsToMove);
+            if (numItemsToMoveFromTargetSlot == numPickedUp) {
+                // If we want to move all picked-up items, just left click the selected slot.
                 handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
             } else {
                 // Otherwise right click the required number of times.
                 for (int i = 0; i < numItemsToMoveFromTargetSlot; i++)
                     handler.clickSlot(selectedSlot, MouseButton.RIGHT, false);
             }
+            maxItemsToMove -= numItemsToMoveFromTargetSlot;
+            numItemsToMove -= numItemsToMoveFromTargetSlot;
 
-            // Click the target slot again to put the left-over items back and pick up the stack that was on mouse
-            // originally.
-            handler.clickSlot(targetSlot, MouseButton.LEFT, false);
+            // Click the target slot again to put down left-over items and pick up whatever was on mouse originally.
+            boolean hasLeftoverItems = !mc.player.containerMenu.getCarried().isEmpty();
+            if (hadItemOnMouse || hasLeftoverItems) {
+                MouseButton putDownButton = MouseButton.LEFT;
+                // If we had an item on mouse, then we're swapping with a different item (as opposed to
+                // putting back an undistributed part of the stack). In this case, we want to right
+                // click to swap even with bundles. But only if still carrying something, otherwise
+                // we'll just pick up half.
+                if (hadItemOnMouse && hasLeftoverItems)
+                    putDownButton = MouseButton.RIGHT;
+                handler.clickSlot(targetSlot, putDownButton, false);
+            }
         }
 
         return true;

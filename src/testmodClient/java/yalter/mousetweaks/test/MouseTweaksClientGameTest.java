@@ -40,7 +40,11 @@ public class MouseTweaksClientGameTest implements FabricClientGameTest {
             testLmbTweakWithItem(context, world);
             testLmbTweakWithoutItem(context, world);
             testWheelTweak(context, world);
+            testWheelTweakPushEdgeCases(context, world);
+            testWheelTweakPullEdgeCases(context, world);
+            testWheelTweakWithBundle(context, world);
             testCraftingOutputSlot(context, world);
+            testFurnaceSmeltingPreserved(context, world);
         }
     }
 
@@ -340,6 +344,335 @@ public class MouseTweaksClientGameTest implements FabricClientGameTest {
     }
 
     /**
+     * Tests edge cases of the wheel tweak when pushing items.
+     */
+    private void testWheelTweakPushEdgeCases(ClientGameTestContext context, TestSingleplayerContext world) {
+        // Clear inventory
+        world.getServer().runCommand("clear @p");
+
+        // Place a fresh chest (remove old one first to clear its contents)
+        world.getServer().runCommand("setblock 0 ~ 1 air");
+        world.getServer().runCommand("setblock 0 ~ 1 minecraft:chest");
+        context.waitTick();
+
+        // Make player look at the chest
+        context.runOnClient(mc -> mc.player.setXRot(45));
+        context.waitTick();
+
+        // Open the chest
+        context.getInput().pressKey(options -> options.keyUse);
+        context.waitForScreen(AbstractContainerScreen.class);
+
+        AbstractContainerScreen<?> screen = context.computeOnClient(mc -> (AbstractContainerScreen<?>) mc.screen);
+        TestInput input = context.getInput();
+
+        // In a chest GUI: slots 0-26 are chest, 27-53 are player inventory, 54-62 are hotbar
+        Slot chestSlot0 = screen.getMenu().slots.get(0);
+        Slot chestSlot1 = screen.getMenu().slots.get(1);
+        Slot chestSlot2 = screen.getMenu().slots.get(2);
+        Slot invSlot1 = screen.getMenu().slots.get(27);
+        Slot invSlot2 = screen.getMenu().slots.get(28);
+        Slot hotbarSlot = screen.getMenu().slots.get(54);
+
+        // === Test 1: Stack of 2, right-click picks 1, deposit 1, no final click needed ===
+        world.getServer().runCommand("item replace block 0 ~ 1 container.0 with minecraft:gold_ingot 2");
+        context.waitTick();
+
+        assertSlotContains(chestSlot0, Items.GOLD_INGOT, 2);
+
+        setCursorToSlot(context, screen, chestSlot0);
+        input.scroll(-1);
+        context.waitTick();
+
+        // Right-click picked up ceil(2/2)=1, deposited 1, no final click. Chest keeps 1.
+        assertSlotContains(chestSlot0, Items.GOLD_INGOT, 1);
+        assertSlotContains(invSlot1, Items.GOLD_INGOT, 1);
+        context.runOnClient(mc -> assertCarriedEmpty(mc));
+
+        // === Test 2: Stack of 3, right-click picks 2, deposit 1, final click puts back 1 ===
+        world.getServer().runCommand("item replace block 0 ~ 1 container.1 with minecraft:iron_ingot 3");
+        context.waitTick();
+
+        assertSlotContains(chestSlot1, Items.IRON_INGOT, 3);
+
+        setCursorToSlot(context, screen, chestSlot1);
+        input.scroll(-1);
+        context.waitTick();
+
+        // Right-click picked up ceil(3/2)=2, deposited 1, final click put back 1. Chest keeps 2.
+        assertSlotContains(chestSlot1, Items.IRON_INGOT, 2);
+        assertSlotContains(invSlot2, Items.IRON_INGOT, 1);
+        context.runOnClient(mc -> assertCarriedEmpty(mc));
+
+        // === Test 3: Holding a different item on mouse, scroll, verify it's restored ===
+        world.getServer().runCommand("item replace block 0 ~ 1 container.2 with minecraft:gold_ingot 8");
+        world.getServer().runCommand("item replace entity @p hotbar.0 with minecraft:diamond 5");
+        context.waitTick();
+
+        // Pick up diamonds from hotbar to put them on the cursor.
+        setCursorToSlot(context, screen, hotbarSlot);
+        input.pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        context.waitTick();
+        context.runOnClient(mc -> assertCarried(mc, Items.DIAMOND, 5));
+
+        // Scroll to push 1 gold from chest while holding diamonds.
+        setCursorToSlot(context, screen, chestSlot2);
+        input.scroll(-1);
+        context.waitTick();
+
+        // Gold should have moved, and diamonds should still be on the cursor.
+        assertSlotContains(chestSlot2, Items.GOLD_INGOT, 7);
+        context.runOnClient(mc -> assertCarried(mc, Items.DIAMOND, 5));
+
+        // === Test 4: Holding item on cursor, scroll over stack of 1 (final click should be left, not right) ===
+        world.getServer().runCommand("item replace block 0 ~ 1 container.3 with minecraft:emerald 1");
+        context.waitTick();
+
+        Slot chestSlot3 = screen.getMenu().slots.get(3);
+        Slot invSlot3 = screen.getMenu().slots.get(29);
+        assertSlotContains(chestSlot3, Items.EMERALD, 1);
+
+        // Scroll to push 1 emerald from chest while holding diamonds.
+        setCursorToSlot(context, screen, chestSlot3);
+        input.scroll(-1);
+        context.waitTick();
+
+        // Left-click picked up 1, deposited 1, no final click needed. Diamonds restored on cursor.
+        assertSlotEmpty(chestSlot3);
+        assertSlotContains(invSlot3, Items.EMERALD, 1);
+        context.runOnClient(mc -> assertCarried(mc, Items.DIAMOND, 5));
+
+        // Put diamonds back.
+        setCursorToSlot(context, screen, hotbarSlot);
+        input.pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        context.waitTick();
+
+        // Close the chest
+        context.setScreen(() -> null);
+        context.waitTick();
+    }
+
+    /**
+     * Tests edge cases of the wheel tweak when pulling items.
+     */
+    private void testWheelTweakPullEdgeCases(ClientGameTestContext context, TestSingleplayerContext world) {
+        // Clear inventory
+        world.getServer().runCommand("clear @p");
+
+        // Place a fresh chest (remove old one first to clear its contents)
+        world.getServer().runCommand("setblock 0 ~ 1 air");
+        world.getServer().runCommand("setblock 0 ~ 1 minecraft:chest");
+        context.waitTick();
+
+        // Make player look at the chest
+        context.runOnClient(mc -> mc.player.setXRot(45));
+        context.waitTick();
+
+        // Open the chest
+        context.getInput().pressKey(options -> options.keyUse);
+        context.waitForScreen(AbstractContainerScreen.class);
+
+        AbstractContainerScreen<?> screen = context.computeOnClient(mc -> (AbstractContainerScreen<?>) mc.screen);
+        TestInput input = context.getInput();
+
+        // In a chest GUI: slots 0-26 are chest, 27-53 are player inventory, 54-62 are hotbar
+        Slot chestSlot0 = screen.getMenu().slots.get(0);
+        Slot chestSlot1 = screen.getMenu().slots.get(1);
+        Slot invSlot1 = screen.getMenu().slots.get(27);
+        Slot invSlot2 = screen.getMenu().slots.get(28);
+        Slot hotbarSlot = screen.getMenu().slots.get(54);
+
+        // === Test 1: Pull from stack of 2, right-click picks 1, deposit 1, no final click needed ===
+        world.getServer().runCommand("item replace entity @p inventory.0 with minecraft:gold_ingot 1");
+        world.getServer().runCommand("item replace block 0 ~ 1 container.0 with minecraft:gold_ingot 2");
+        context.waitTick();
+
+        assertSlotContains(invSlot1, Items.GOLD_INGOT, 1);
+        assertSlotContains(chestSlot0, Items.GOLD_INGOT, 2);
+
+        // Scroll to pull 1 gold from chest into player inventory slot
+        setCursorToSlot(context, screen, invSlot1);
+        input.scroll(1);
+        context.waitTick();
+
+        // Right-click picked up ceil(2/2)=1 from chest, deposited 1 into invSlot1, no final click.
+        assertSlotContains(chestSlot0, Items.GOLD_INGOT, 1);
+        assertSlotContains(invSlot1, Items.GOLD_INGOT, 2);
+        context.runOnClient(mc -> assertCarriedEmpty(mc));
+
+        // === Test 2: Pull from stack of 3, right-click picks 2, deposit 1, final click puts back 1 ===
+        world.getServer().runCommand("item replace entity @p inventory.1 with minecraft:iron_ingot 1");
+        world.getServer().runCommand("item replace block 0 ~ 1 container.1 with minecraft:iron_ingot 3");
+        context.waitTick();
+
+        assertSlotContains(invSlot2, Items.IRON_INGOT, 1);
+        assertSlotContains(chestSlot1, Items.IRON_INGOT, 3);
+
+        // Scroll to pull 1 iron from chest into player inventory slot
+        setCursorToSlot(context, screen, invSlot2);
+        input.scroll(1);
+        context.waitTick();
+
+        // Right-click picked up ceil(3/2)=2, deposited 1, final click put back 1.
+        assertSlotContains(chestSlot1, Items.IRON_INGOT, 2);
+        assertSlotContains(invSlot2, Items.IRON_INGOT, 2);
+        context.runOnClient(mc -> assertCarriedEmpty(mc));
+
+        // === Test 3: Pull while holding a different item on mouse, source stack of 8 ===
+        world.getServer().runCommand("item replace block 0 ~ 1 container.2 with minecraft:copper_ingot 8");
+        world.getServer().runCommand("item replace entity @p hotbar.0 with minecraft:diamond 5");
+        context.waitTick();
+
+        Slot chestSlot2 = screen.getMenu().slots.get(2);
+        Slot invSlot3 = screen.getMenu().slots.get(29);
+
+        // Pick up diamonds from hotbar to put them on the cursor.
+        setCursorToSlot(context, screen, hotbarSlot);
+        input.pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        context.waitTick();
+        context.runOnClient(mc -> assertCarried(mc, Items.DIAMOND, 5));
+
+        // Put 1 copper in the target slot so pull finds a compatible source.
+        world.getServer().runCommand("item replace entity @p inventory.2 with minecraft:copper_ingot 1");
+        context.waitTick();
+
+        // Scroll to pull 1 copper from chest while holding diamonds.
+        setCursorToSlot(context, screen, invSlot3);
+        input.scroll(1);
+        context.waitTick();
+
+        // Copper should have moved, and diamonds should still be on the cursor.
+        assertSlotContains(chestSlot2, Items.COPPER_INGOT, 7);
+        assertSlotContains(invSlot3, Items.COPPER_INGOT, 2);
+        context.runOnClient(mc -> assertCarried(mc, Items.DIAMOND, 5));
+
+        // === Test 4: Pull while holding item on cursor, source stack of 1 (left-click pickup) ===
+        world.getServer().runCommand("item replace block 0 ~ 1 container.3 with minecraft:emerald 1");
+        context.waitTick();
+
+        Slot chestSlot3 = screen.getMenu().slots.get(3);
+        Slot invSlot4 = screen.getMenu().slots.get(30);
+
+        // Put 1 emerald in the target slot so pull finds a compatible source.
+        world.getServer().runCommand("item replace entity @p inventory.3 with minecraft:emerald 1");
+        context.waitTick();
+
+        // Scroll to pull 1 emerald from chest while holding diamonds.
+        setCursorToSlot(context, screen, invSlot4);
+        input.scroll(1);
+        context.waitTick();
+
+        // Left-click picked up 1, deposited 1, no final click needed. Diamonds restored on cursor.
+        assertSlotEmpty(chestSlot3);
+        assertSlotContains(invSlot4, Items.EMERALD, 2);
+        context.runOnClient(mc -> assertCarried(mc, Items.DIAMOND, 5));
+
+        // Put diamonds back.
+        setCursorToSlot(context, screen, hotbarSlot);
+        input.pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        context.waitTick();
+
+        // Close the chest
+        context.setScreen(() -> null);
+        context.waitTick();
+    }
+
+    /**
+     * Tests the wheel tweak while holding a bundle on the cursor.
+     * Scrolling over a non-bundle item should move it normally, and the bundle should remain on the cursor.
+     */
+    private void testWheelTweakWithBundle(ClientGameTestContext context, TestSingleplayerContext world) {
+        // Clear inventory
+        world.getServer().runCommand("clear @p");
+
+        // Place a fresh chest (remove old one first to clear its contents)
+        world.getServer().runCommand("setblock 0 ~ 1 air");
+        world.getServer().runCommand("setblock 0 ~ 1 minecraft:chest");
+        context.waitTick();
+
+        // Put items in the chest and a bundle in the hotbar
+        world.getServer().runCommand("item replace block 0 ~ 1 container.0 with minecraft:gold_ingot 8");
+        world.getServer().runCommand("item replace entity @p hotbar.0 with minecraft:bundle[minecraft:bundle_contents=[{id:\"minecraft:stick\",count:2}]]");
+
+        // Open the chest
+        context.runOnClient(mc -> mc.player.setXRot(45));
+        context.waitTick();
+        context.getInput().pressKey(options -> options.keyUse);
+        context.waitForScreen(AbstractContainerScreen.class);
+
+        AbstractContainerScreen<?> screen = context.computeOnClient(mc -> (AbstractContainerScreen<?>) mc.screen);
+        TestInput input = context.getInput();
+
+        Slot chestSlot = screen.getMenu().slots.get(0);
+        Slot hotbarSlot = screen.getMenu().slots.get(54);
+        Slot invSlot = screen.getMenu().slots.get(27);
+
+        // Pick up the bundle (contains 2 sticks)
+        setCursorToSlot(context, screen, hotbarSlot);
+        input.pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        context.waitTick();
+        context.runOnClient(mc -> assertCarried(mc, Items.BUNDLE, 1));
+
+        // Scroll to push 1 gold from chest while holding the bundle
+        setCursorToSlot(context, screen, chestSlot);
+        input.scroll(-1);
+        context.waitTick();
+
+        // Gold should have moved, and the bundle should still be on the cursor
+        assertSlotContains(chestSlot, Items.GOLD_INGOT, 7);
+        assertSlotContains(invSlot, Items.GOLD_INGOT, 1);
+        context.runOnClient(mc -> assertCarried(mc, Items.BUNDLE, 1));
+
+        // === Pull: scroll to pull 1 gold from chest into player inventory slot while holding bundle ===
+        setCursorToSlot(context, screen, invSlot);
+        input.scroll(1);
+        context.waitTick();
+
+        // Another gold should have moved, and the bundle should still be on the cursor
+        assertSlotContains(chestSlot, Items.GOLD_INGOT, 6);
+        assertSlotContains(invSlot, Items.GOLD_INGOT, 2);
+        context.runOnClient(mc -> assertCarried(mc, Items.BUNDLE, 1));
+
+        // === Push with bundle on cursor, target slot has only 1 item (final click must be left, not right) ===
+        Slot chestSlot2 = screen.getMenu().slots.get(1);
+        Slot invSlot2 = screen.getMenu().slots.get(28);
+        world.getServer().runCommand("item replace block 0 ~ 1 container.1 with minecraft:emerald 1");
+        context.waitTick();
+
+        setCursorToSlot(context, screen, chestSlot2);
+        input.scroll(-1);
+        context.waitTick();
+
+        assertSlotEmpty(chestSlot2);
+        assertSlotContains(invSlot2, Items.EMERALD, 1);
+        context.runOnClient(mc -> assertCarried(mc, Items.BUNDLE, 1));
+
+        // === Pull with bundle on cursor, source slot has only 1 item (final click must be left, not right) ===
+        Slot chestSlot3 = screen.getMenu().slots.get(2);
+        Slot invSlot3 = screen.getMenu().slots.get(29);
+        world.getServer().runCommand("item replace block 0 ~ 1 container.2 with minecraft:iron_ingot 1");
+        world.getServer().runCommand("item replace entity @p inventory.2 with minecraft:iron_ingot 1");
+        context.waitTick();
+
+        setCursorToSlot(context, screen, invSlot3);
+        input.scroll(1);
+        context.waitTick();
+
+        assertSlotEmpty(chestSlot3);
+        assertSlotContains(invSlot3, Items.IRON_INGOT, 2);
+        context.runOnClient(mc -> assertCarried(mc, Items.BUNDLE, 1));
+
+        // Put the bundle back
+        setCursorToSlot(context, screen, hotbarSlot);
+        input.pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        context.waitTick();
+
+        // Close the chest
+        context.setScreen(() -> null);
+        context.waitTick();
+    }
+
+    /**
      * Tests crafting output slot behaviors with the wheel tweak and LMB tweak.
      * Uses a crafting table with oak logs -> oak planks (1 log = 4 planks).
      */
@@ -442,6 +775,84 @@ public class MouseTweaksClientGameTest implements FabricClientGameTest {
         context.waitTick();
 
         // Close the crafting table
+        context.setScreen(() -> null);
+        context.waitTick();
+    }
+
+    /**
+     * Tests that scrolling to pull items from a furnace input slot does not reset the smelting progress.
+     */
+    private void testFurnaceSmeltingPreserved(ClientGameTestContext context, TestSingleplayerContext world) {
+        world.getServer().runCommand("clear @p");
+
+        // Place a furnace and set up smelting: raw iron in input, coal as fuel.
+        world.getServer().runCommand("setblock 0 ~ 1 minecraft:furnace");
+        context.waitTick();
+        world.getServer().runCommand("item replace block 0 ~ 1 container.0 with minecraft:raw_iron 8");
+        world.getServer().runCommand("item replace block 0 ~ 1 container.1 with minecraft:coal 8");
+
+        // Open the furnace.
+        context.runOnClient(mc -> mc.player.setXRot(45));
+        context.waitTick();
+        context.getInput().pressKey(options -> options.keyUse);
+        context.waitForScreen(AbstractContainerScreen.class);
+
+        // Fast-forward cooking progress to near completion (190 of 200 ticks).
+        world.getServer().runCommand("data merge block 0 ~ 1 {cooking_time_spent:190,cooking_total_time:200}");
+        context.waitTick();
+
+        AbstractContainerScreen<?> screen = context.computeOnClient(mc -> (AbstractContainerScreen<?>) mc.screen);
+        TestInput input = context.getInput();
+
+        // Furnace slots: 0=input, 1=fuel, 2=output.
+        // Player inventory: 3-29=main, 30-38=hotbar.
+        Slot inputSlot = screen.getMenu().slots.get(0);
+        Slot outputSlot = screen.getMenu().slots.get(2);
+        Slot playerSlot = screen.getMenu().slots.get(3);
+
+        // Verify no output has been produced yet.
+        assertSlotEmpty(outputSlot);
+
+        // Scroll to push 1 item from furnace input to player inventory.
+        setCursorToSlot(context, screen, inputSlot);
+        input.scroll(-1);
+        context.waitTick();
+
+        // Verify items moved correctly: 7 remain in furnace, 1 in player inventory.
+        assertSlotContains(inputSlot, Items.RAW_IRON, 7);
+        assertSlotContains(playerSlot, Items.RAW_IRON, 1);
+        context.runOnClient(mc -> assertCarriedEmpty(mc));
+
+        // Wait for smelting to complete. If cooking continued from 190/200, it needs ~10 more ticks.
+        // If cooking was reset to 0, it would only be at ~10/200 after this wait.
+        context.waitTicks(10);
+
+        // If smelting was preserved, an iron ingot should be in the output.
+        assertSlotContains(outputSlot, Items.IRON_INGOT, 1);
+
+        // === Test 2: Pull direction (scroll to pull from furnace input into player slot) ===
+
+        // Fast-forward cooking progress again.
+        world.getServer().runCommand("data merge block 0 ~ 1 {cooking_time_spent:190,cooking_total_time:200}");
+        context.waitTick();
+
+        // playerSlot now has 1 raw_iron (from the push test). Scroll to pull 1 more.
+        setCursorToSlot(context, screen, playerSlot);
+        input.scroll(1);
+        context.waitTick();
+
+        // Verify: input has 5 (was 6 after first smelt consumed 1, now -1 more), player has 2.
+        assertSlotContains(inputSlot, Items.RAW_IRON, 5);
+        assertSlotContains(playerSlot, Items.RAW_IRON, 2);
+        context.runOnClient(mc -> assertCarriedEmpty(mc));
+
+        // Wait for smelting to complete.
+        context.waitTicks(10);
+
+        // If smelting was preserved, another iron ingot should be in the output.
+        assertSlotContains(outputSlot, Items.IRON_INGOT, 2);
+
+        // Close the furnace.
         context.setScreen(() -> null);
         context.waitTick();
     }
