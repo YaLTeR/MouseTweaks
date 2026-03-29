@@ -447,6 +447,23 @@ public class MouseTweaksClientGameTest implements FabricClientGameTest {
         input.pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
         context.waitTick();
 
+        // === Test 5: Push 2 items into an empty inventory slot ===
+        world.getServer().runCommand("item replace block 0 ~ 1 container.4 with minecraft:copper_ingot 4");
+        context.waitTick();
+
+        Slot chestSlot4 = screen.getMenu().slots.get(4);
+        Slot invSlot4 = screen.getMenu().slots.get(30);
+        assertSlotContains(chestSlot4, Items.COPPER_INGOT, 4);
+
+        // Scroll -2 to push 2 copper. Right-click picks up ceil(4/2)=2, both should be deposited.
+        setCursorToSlot(context, screen, chestSlot4);
+        input.scroll(-2);
+        context.waitTick();
+
+        assertSlotContains(chestSlot4, Items.COPPER_INGOT, 2);
+        assertSlotContains(invSlot4, Items.COPPER_INGOT, 2);
+        context.runOnClient(mc -> assertCarriedEmpty(mc));
+
         // Close the chest
         context.setScreen(() -> null);
         context.waitTick();

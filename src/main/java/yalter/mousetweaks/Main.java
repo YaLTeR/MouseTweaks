@@ -455,8 +455,8 @@ public class Main {
 
             // Fetch how many items we picked up rather than trying to compute it ourselves just in case,
             // especially when mods are involved.
-            int numPickedUp = mc.player.containerMenu.getCarried().getCount();
-            numItemsToMove = Math.min(numItemsToMove, numPickedUp);
+            ItemStack pickedUpStack = mc.player.containerMenu.getCarried();
+            numItemsToMove = Math.min(numItemsToMove, pickedUpStack.getCount());
 
             // Click the target slots.
             for (Slot slot : targetSlots) {
@@ -464,7 +464,7 @@ public class Main {
                 //
                 // Can't do the last slot left click optimization, because we usually want to move less items (1) than
                 // the whole available stack.
-                int clickTimes = slot.getMaxStackSize(slot.getItem()) - slot.getItem().getCount();
+                int clickTimes = slot.getMaxStackSize(pickedUpStack) - slot.getItem().getCount();
                 clickTimes = Math.min(clickTimes, numItemsToMove);
                 numItemsToMove -= clickTimes;
 
@@ -721,7 +721,7 @@ public class Main {
         for (int i = 0; i != goodEmptySlots.size() && itemCount > 0; i++) {
             Slot slot = goodEmptySlots.get(i);
             rv.add(slot);
-            itemCount -= Math.min(itemCount, slot.getMaxStackSize());
+            itemCount -= Math.min(itemCount, slot.getMaxStackSize(selectedSlotStack));
         }
 
         // If we were unable to distribute all items as requested, return null.
