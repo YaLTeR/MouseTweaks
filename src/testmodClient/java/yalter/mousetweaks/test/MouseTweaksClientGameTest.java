@@ -464,6 +464,23 @@ public class MouseTweaksClientGameTest implements FabricClientGameTest {
         assertSlotContains(invSlot4, Items.COPPER_INGOT, 2);
         context.runOnClient(mc -> assertCarriedEmpty(mc));
 
+        // === Test 6: Stack of 2, two scroll ticks, left-click should pick up all 2 ===
+        world.getServer().runCommand("item replace block 0 ~ 1 container.5 with minecraft:lapis_lazuli 2");
+        context.waitTick();
+
+        Slot chestSlot5 = screen.getMenu().slots.get(5);
+        Slot invSlot5 = screen.getMenu().slots.get(31);
+        assertSlotContains(chestSlot5, Items.LAPIS_LAZULI, 2);
+
+        // Scroll -2 to push 2 lapis. With left-click, all 2 are picked up and deposited.
+        setCursorToSlot(context, screen, chestSlot5);
+        input.scroll(-2);
+        context.waitTick();
+
+        assertSlotEmpty(chestSlot5);
+        assertSlotContains(invSlot5, Items.LAPIS_LAZULI, 2);
+        context.runOnClient(mc -> assertCarriedEmpty(mc));
+
         // Close the chest
         context.setScreen(() -> null);
         context.waitTick();

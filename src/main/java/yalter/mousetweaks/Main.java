@@ -445,11 +445,13 @@ public class Main {
             //    bundle with the selected slot, as we want.
             //
             // There's one case where we do want to keep left click: if the stack on mouse is empty
-            // and the selected slot contains a single item. In this case, for items like bundles,
+            // and the selected slot contains no more items than we need to pick up. In this case,
+            // for items like bundles (which are always single in the slot and so hit this condition),
             // left-clicking picks up the bundle as expected, but right click will pick up some item
-            // from the bundle.
+            // from the bundle. Additionally, left-clicking avoids the issue of right-clicking
+            // halving the stack when we actually need all of the items.
             MouseButton pickUpButton = MouseButton.RIGHT;
-            if (stackOnMouse.isEmpty() && selectedSlotStack.getCount() == 1)
+            if (stackOnMouse.isEmpty() && selectedSlotStack.getCount() <= numItemsToMove)
                 pickUpButton = MouseButton.LEFT;
             handler.clickSlot(selectedSlot, pickUpButton, false);
 
