@@ -1,6 +1,6 @@
 package yalter.mousetweaks.handlers;
 
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import yalter.mousetweaks.IGuiScreenHandler;
 import yalter.mousetweaks.MouseButton;
@@ -44,7 +44,7 @@ public class IMTModGuiContainer3ExHandler implements IGuiScreenHandler {
     public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
         modGuiContainer.MT_clickSlot(slot,
                 mouseButton.getValue(),
-                shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP);
+                shiftPressed ? ContainerInput.QUICK_MOVE : ContainerInput.PICKUP);
     }
 
     @Override

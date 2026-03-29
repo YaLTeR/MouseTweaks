@@ -33,7 +33,7 @@ public class MouseTweaksClientGameTest implements FabricClientGameTest {
                 .create()) {
 
             world.getServer().runCommand("tp @p 0 ~ 0");
-            world.getClientWorld().waitForChunksDownload();
+            world.getClientLevel().waitForChunksDownload();
 
             testRmbTweak(context, world);
             testLmbTweakWithItem(context, world);

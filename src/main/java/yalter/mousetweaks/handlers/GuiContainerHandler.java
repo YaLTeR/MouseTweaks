@@ -60,7 +60,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
                 slot,
                 slot.index,
                 mouseButton.getValue(),
-                shiftPressed ? ClickType.QUICK_MOVE : ClickType.PICKUP
+                shiftPressed ? ContainerInput.QUICK_MOVE : ContainerInput.PICKUP
         );
     }
 

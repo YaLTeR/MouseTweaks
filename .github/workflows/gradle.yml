@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: adopt
-          java-version: 21
+          java-version: 25
 
       - name: Build (Forge)
         run: ./gradlew -p forge build
@@ -45,7 +45,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: adopt
-          java-version: 21
+          java-version: 25
 
       - name: Build (NeoForge)
         run: ./gradlew -p neoforge build
@@ -67,7 +67,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: adopt
-          java-version: 21
+          java-version: 25
 
       - name: Build (Fabric)
         run: ./gradlew -p fabric build
@@ -89,13 +89,14 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: adopt
-          java-version: 21
+          java-version: 25
 
       - name: Build testmod
         run: ./gradlew -p fabric testmodClientClasses
 
+      # Fabric Loom 1.15 runs xvfb-run for us on a Linux CI.
       - name: Run gametest
-        run: xvfb-run ./gradlew -p fabric runClientGametest
+        run: ./gradlew -p fabric runClientGametest
 
       - name: Upload screenshot
         uses: actions/upload-artifact@v6

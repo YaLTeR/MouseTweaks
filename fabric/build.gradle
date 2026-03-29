@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.13-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
 }
 
 version = project.modVersion
@@ -42,8 +42,6 @@ sourceSets {
 }
 
 loom {
-    mixin.defaultRefmapName = 'mousetweaks.mixins.refmap.json'
-
     runs {
         clientGametest {
             client()
@@ -51,17 +49,22 @@ loom {
             name "Client Game Test"
             source sourceSets.testmodClient
             vmArg "-Dfabric.client.gametest"
+
+            // Without this, world loading gets stuck on GitHub Actions currently.
+            // https://docs.fabricmc.net/develop/automatic-testing#run-game-tests-on-github-actions
+            //
+            // And world disconnect also gets stuck, even locally.
+            vmArg "-Dfabric.client.gametest.disableNetworkSynchronizer=true"
         }
     }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.fabricMcVersion}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${project.fabricLoaderVersion}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabricApiVersion}"
+    implementation "net.fabricmc:fabric-loader:${project.fabricLoaderVersion}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabricApiVersion}"
 
-    modImplementation "com.terraformersmc:modmenu:${project.fabricModMenuVersion}"
+    implementation "com.terraformersmc:modmenu:${project.fabricModMenuVersion}"
 
     testmodClientImplementation sourceSets.main.output
 }

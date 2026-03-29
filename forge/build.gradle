@@ -1,15 +1,7 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '[6.0,6.2)', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7.+'
-    }
+plugins {
+    id 'java'
+    id 'net.minecraftforge.gradle' version '[7.0.17,8)'
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
 
 version = project.modVersion
 group = "yalter.mousetweaks"
@@ -34,44 +26,28 @@ sourceSets {
     }
 }
 
-mixin {
-    config 'mousetweaks.mixins.json'
+minecraft {
+    runs {
+        configureEach {
+            workingDir = layout.projectDirectory.dir('run')
+
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'forge.logging.console.level', 'debug'
+            systemProperty 'eventbus.api.strictRuntimeChecks', 'true'
+
+            args "--mixin.config=mousetweaks.mixins.json"
+        }
+
+        register('client')
+        register('server')
+    }
 }
 
-minecraft {
-    mappings channel: 'official', version: project.forgeMcVersion
-
-    reobf = false
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'eventbus.api.strictRuntimeChecks', 'true'
-
-            mods {
-                mousetweaks {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'eventbus.api.strictRuntimeChecks', 'true'
-
-            mods {
-                mousetweaks {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
+repositories {
+    minecraft.mavenizer(it)
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
 }
 
 processResources {
@@ -87,23 +63,13 @@ processResources {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${project.forgeMcVersion}-${project.forgeVersion}"
+    implementation minecraft.dependency("net.minecraftforge:forge:${project.forgeMcVersion}-${project.forgeVersion}")
     annotationProcessor "net.minecraftforge:eventbus-validator:${project.forgeEventBusValidatorVersion}"
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 jar {
     manifest.attributes([
-            "Specification-Title"     : "Mouse Tweaks",
-            "Specification-Vendor"    : "YaLTeR",
-            "Specification-Version"   : "${project.version}",
-            "Implementation-Title"    : project.name,
-            "Implementation-Version"  : "${project.version}",
-            "Implementation-Vendor"   : "YaLTeR",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "TweakClass"              : 'org.spongepowered.asm.launch.MixinTweaker',
-            "TweakOrder"              : 0,
-            "MixinConfigs"            : "mousetweaks.mixins.json"
+            "MixinConfigs": "mousetweaks.mixins.json"
     ])
 }
 
