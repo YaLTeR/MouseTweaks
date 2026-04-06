@@ -1,29 +1,13 @@
 package yalter.mousetweaks.test;
 
-import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import yalter.mousetweaks.mixin.AbstractContainerScreenAccessor;
 
 public class InventoryTestHelper {
 
     public static final int GUI_SCALE = 2;
-
-    /**
-     * Moves the cursor to the center of a slot.
-     */
-    public static void setCursorToSlot(ClientGameTestContext context, AbstractContainerScreen<?> screen, Slot slot) {
-        AbstractContainerScreenAccessor accessor = (AbstractContainerScreenAccessor) screen;
-        int leftPos = accessor.mousetweaks$getLeftPos();
-        int topPos = accessor.mousetweaks$getTopPos();
-        double x = (leftPos + slot.x + 8) * GUI_SCALE;
-        double y = (topPos + slot.y + 8) * GUI_SCALE;
-        context.getInput().setCursorPos(x, y);
-        context.waitTick();
-    }
 
     /**
      * Asserts that a slot contains the expected item and count.
@@ -52,15 +36,6 @@ public class InventoryTestHelper {
     public static void assertSlotEmpty(Slot slot) {
         if (!slot.getItem().isEmpty()) {
             throw new AssertionError("Expected slot " + slot.index + " to be empty but it contained " + slot.getItem());
-        }
-    }
-
-    /**
-     * Asserts that a slot is not empty.
-     */
-    public static void assertSlotNotEmpty(Slot slot) {
-        if (slot.getItem().isEmpty()) {
-            throw new AssertionError("Expected slot " + slot.index + " to be non-empty but it was empty");
         }
     }
 
