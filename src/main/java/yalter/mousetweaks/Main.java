@@ -31,6 +31,10 @@ public class Main {
     private static boolean canDoLMBDrag = false;
     private static boolean canDoRMBDrag = false;
     private static boolean rmbTweakLeftOriginalSlot = false;
+    
+    // Variables for Crafter block right-click dragging support
+    private static boolean isRMBDraggingInCrafter = false;
+    private static java.util.Set<Integer> toggledCrafterSlotIndices = new java.util.HashSet<>();
 
     private static boolean initialized = false;
 
@@ -62,6 +66,8 @@ public class Main {
         canDoLMBDrag = false;
         canDoRMBDrag = false;
         rmbTweakLeftOriginalSlot = false;
+        isRMBDraggingInCrafter = false;
+        toggledCrafterSlotIndices.clear();
 
         if (openScreen != null) {
             Logger.DebugLog("You have just opened a " + openScreen.getClass().getName() + ".");
@@ -115,6 +121,21 @@ public class Main {
             if (stackOnMouse.isEmpty())
                 canDoLMBDrag = true;
         } else if (button == MouseButton.RIGHT) {
+            // Special handling for Crafter blocks - allow right click dragging with empty hand
+            if (oldSelectedSlot != null && handler.isCrafterToggleableSlot(oldSelectedSlot)) {
+                // For Crafter containers, we want to enable right-click dragging to toggle slot states
+                isRMBDraggingInCrafter = true;
+                canDoRMBDrag = true;
+                // Clear the set of toggled slot indices for a new drag operation
+                toggledCrafterSlotIndices.clear();
+                // Add the initial slot to our tracked slots and toggle it
+                toggledCrafterSlotIndices.add(oldSelectedSlot.index);
+                // Click the slot to toggle its state
+                handler.clickSlot(oldSelectedSlot, MouseButton.RIGHT, false);
+                return true;  // Handle the event to prevent vanilla behavior
+            }
+            
+            // Standard behavior for non-Crafter containers
             // We're only interested in the RMB tweak when there's something on the mouse.
             if (stackOnMouse.isEmpty())
                 return false;
@@ -187,8 +208,16 @@ public class Main {
         // Reset the flags.
         if (button == MouseButton.LEFT)
             canDoLMBDrag = false;
-        else if (button == MouseButton.RIGHT)
+        else if (button == MouseButton.RIGHT) {
             canDoRMBDrag = false;
+            
+            // Also reset Crafter-specific state
+            if (isRMBDraggingInCrafter) {
+                isRMBDraggingInCrafter = false;
+                toggledCrafterSlotIndices.clear();
+                return true; // Handle the event
+            }
+        }
 
         return false;
     }
@@ -287,7 +316,21 @@ public class Main {
         } else if (button == MouseButton.RIGHT) {
             if (!canDoRMBDrag)
                 return false;
+                
+            // Special handling for Crafter blocks
+            if (handler instanceof GuiContainerHandler && isRMBDraggingInCrafter && selectedSlot != null && handler.isCrafterToggleableSlot(selectedSlot)) {
+                // If we haven't already toggled this slot in the current drag operation
+                if (!toggledCrafterSlotIndices.contains(selectedSlot.index)) {
+                    // Add to our toggled slots set to prevent toggling the same slot multiple times
+                    toggledCrafterSlotIndices.add(selectedSlot.index);
+                    // Click the slot to toggle its state
+                    handler.clickSlot(selectedSlot, MouseButton.RIGHT, false);
+                    return true;  // We handled the event
+                }
+                return false;
+            }
 
+            // Standard behavior for non-Crafter containers
             rmbTweakMaybeClickSlot(selectedSlot, stackOnMouse);
         }
 
