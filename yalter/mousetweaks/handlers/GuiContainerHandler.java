@@ -64,7 +64,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 		try {
 			return (Slot)Reflection.guiContainerClass.invokeMethod(guiContainer, Constants.GETSLOTATPOSITION_NAME.forgeName, getRequiredMouseX(), getRequiredMouseY());
 		} catch (InvocationTargetException e) {
-			ModLoader.throwException("GuiContainer.getSlotAtPosition() threw an exception when called from MouseTweaks.", e);
+			ModLoader.ThrowException("GuiContainer.getSlotAtPosition() threw an exception when called from MouseTweaks.", e);
 			return null;
 		}
 	}
@@ -83,9 +83,9 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 			                        mouseButton.getValue(),
 			                        shiftPressed);
 		} catch (InvocationTargetException e) {
-			ModLoader.throwException("handleMouseClick() threw an exception when called from MouseTweaks.", e);
+			ModLoader.ThrowException("handleMouseClick() threw an exception when called from MouseTweaks.", e);
 		} catch (IllegalAccessException e) {
-			ModLoader.throwException("Calling handleMouseClick() from MouseTweaks.", e);
+			ModLoader.ThrowException("Calling handleMouseClick() from MouseTweaks.", e);
 		}
 	}
 

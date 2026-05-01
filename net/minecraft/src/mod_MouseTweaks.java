@@ -18,11 +18,11 @@ public class mod_MouseTweaks extends BaseMod {
 	@Override
 	public void load() {
 		Main.initialize(Constants.EntryPoint.FORGE);
-		ModLoader.setInGameHook(this, true, false);
+		ModLoader.SetInGameHook(this, true, false);
 	}
 
 	@Override
-	public boolean onTickInGame(float time, Minecraft minecraft) {
+	public boolean OnTickInGame(float time, Minecraft minecraft) {
 		Main.onUpdateInGame();
 		return true;
 	}

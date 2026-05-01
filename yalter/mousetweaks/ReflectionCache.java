@@ -22,7 +22,7 @@ public class ReflectionCache {
 		try {
 			return method.invoke(obj, args);
 		} catch (IllegalAccessException e) {
-			ModLoader.throwException("Invoking method in MouseTweaks' reflection", e);
+			ModLoader.ThrowException("Invoking method in MouseTweaks' reflection", e);
 			return null;
 		}
 	}
@@ -33,7 +33,7 @@ public class ReflectionCache {
 		try {
 			return field.get(obj);
 		} catch (IllegalAccessException e) {
-			ModLoader.throwException("Getting field value in MouseTweaks' reflection", e);
+			ModLoader.ThrowException("Getting field value in MouseTweaks' reflection", e);
 			return null;
 		}
 	}
@@ -44,7 +44,7 @@ public class ReflectionCache {
 		try {
 			field.set(obj, value);
 		} catch (IllegalAccessException e) {
-			ModLoader.throwException("Setting field value in MouseTweaks' reflection", e);
+			ModLoader.ThrowException("Setting field value in MouseTweaks' reflection", e);
 		}
 	}
 
