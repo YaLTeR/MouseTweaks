@@ -46,7 +46,7 @@ public class Reflection {
 			HMCCache.put(object.getClass(), method);
 			return method;
 		} catch (NoSuchMethodException e) {
-			ModLoader.throwException("MouseTweaks could not find handleMouseClick() in a GuiContainer.", e);
+			ModLoader.ThrowException("MouseTweaks could not find handleMouseClick() in a GuiContainer.", e);
 			return null;
 		}
 	}
