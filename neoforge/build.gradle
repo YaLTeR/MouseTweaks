@@ -57,6 +57,14 @@ runs {
         systemProperty 'forge.enabledGameTestNamespaces', "mousetweaks"
         argument '--nogui'
     }
+
+    // For testing datagen.
+    clientData {
+        arguments.addAll '--mod', 'mousetweaks',
+                '--all',
+                '--output', layout.buildDirectory.dir('generated/resources').get().asFile.absolutePath,
+                '--existing', file('../src/main/resources').absolutePath
+    }
 }
 
 dependencies {

@@ -40,6 +40,14 @@ minecraft {
 
         register('client')
         register('server')
+
+        // For testing datagen.
+        register('data') {
+            args '--mod', 'mousetweaks',
+                    '--all',
+                    '--output', layout.buildDirectory.dir('generated/resources').get().asFile.absolutePath,
+                    '--existing', file('../src/main/resources').absolutePath
+        }
     }
 }
 

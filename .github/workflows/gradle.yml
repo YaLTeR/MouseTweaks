@@ -34,6 +34,9 @@ jobs:
           path: forge/build/libs/
           if-no-files-found: error
 
+      - name: Test datagen
+        run: ./gradlew -p forge runData
+
   build-neoforge:
     runs-on: ubuntu-latest
     steps:
@@ -55,6 +58,9 @@ jobs:
           name: MouseTweaks-NeoForge
           path: neoforge/build/libs/
           if-no-files-found: error
+
+      - name: Test datagen
+        run: ./gradlew -p neoforge runClientData
 
   build-fabric:
     runs-on: ubuntu-latest

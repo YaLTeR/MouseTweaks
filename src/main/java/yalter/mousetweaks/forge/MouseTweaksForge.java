@@ -1,13 +1,18 @@
 package yalter.mousetweaks.forge;
 
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ScreenEvent.MouseButtonPressed;
 import net.minecraftforge.client.event.ScreenEvent.MouseButtonReleased;
 import net.minecraftforge.client.event.ScreenEvent.MouseDragged;
 import net.minecraftforge.client.event.ScreenEvent.MouseScrolled;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
+import net.minecraftforge.eventbus.api.bus.EventBus;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import yalter.mousetweaks.*;
 
 import java.lang.invoke.MethodHandles;
@@ -15,10 +20,23 @@ import java.lang.invoke.MethodHandles;
 @Mod(Constants.MOD_ID)
 public class MouseTweaksForge {
     public MouseTweaksForge() {
-        Main.initialize();
+        if (FMLEnvironment.dist != Dist.CLIENT) {
+            Logger.Log("Disabled because not running on the client.");
+            return;
+        }
+
         BusGroup.DEFAULT.register(MethodHandles.lookup(), this);
 
         MinecraftForge.registerConfigScreen(ConfigScreen::new);
+    }
+
+    @Mod.EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
+    public static class ClientModEvents {
+        @SubscribeEvent
+        public static void onClientSetup(FMLClientSetupEvent event) {
+            // Minecraft.getInstance() is now non-null in this event handler.
+            Main.initialize();
+        }
     }
 
     @SubscribeEvent
