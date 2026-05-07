@@ -1,0 +1,36 @@
+import net.fabricmc.loom.task.prod.ClientProductionRunTask
+
+plugins {
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(project.modJavaVersion)
+
+def mouseTweaksJar = layout.projectDirectory.file('MouseTweaks.jar')
+
+sourceSets.main {
+    java.srcDirs = ['../src/testmodClient/java']
+    resources.srcDirs = ['../src/testmodClient/resources']
+    compileClasspath += files(mouseTweaksJar)
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.fabricMcVersion}"
+    implementation "net.fabricmc:fabric-loader:${project.fabricLoaderVersion}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabricApiVersion}"
+
+    productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${project.fabricApiVersion}"
+}
+
+tasks.register('prodClient', ClientProductionRunTask) {
+    // Run even when nothing changed.
+    outputs.upToDateWhen { false }
+
+    mods.from(mouseTweaksJar)
+
+    jvmArgs.addAll([
+            '-Dfabric.client.gametest',
+            // Disable Fabric GUI popup on mod loading error.
+            '-Dfabric.noGui=true',
+    ])
+}

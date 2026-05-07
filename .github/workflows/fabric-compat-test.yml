@@ -1,0 +1,68 @@
+name: New version compat test (Fabric)
+
+on:
+  workflow_dispatch:
+    inputs:
+      fabricMcVersion:
+        description: New Minecraft version to test against, e.g. 26.1.2
+        required: true
+        type: string
+      fabricLoaderVersion:
+        description: Fabric Loader version override, e.g. 0.19.2
+        required: false
+        type: string
+      fabricApiVersion:
+        description: Fabric API version override, e.g. 0.148.0+26.1.2
+        required: false
+        type: string
+      modrinthGameVersion:
+        description: Modrinth game version filter, e.g. 26.1
+        required: false
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          show-progress: false
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: adopt
+          java-version: 25
+
+      - name: Download Mouse Tweaks
+        env:
+          GAME_VERSION: ${{ inputs.modrinthGameVersion }}
+        run: |
+          set -euo pipefail
+
+          curl_args=(--get 'https://api.modrinth.com/v2/project/mouse-tweaks/version' --data-urlencode 'loaders=["fabric"]')
+          [[ -n "$GAME_VERSION" ]] && curl_args+=(--data-urlencode "game_versions=[\"${GAME_VERSION}\"]")
+
+          url=$(curl -fsSL "${curl_args[@]}" | jq -er 'first(.[0].files[] | select(.primary)).url')
+          curl -fL "$url" -o fabric-compat-test/MouseTweaks.jar
+
+      - name: Run gametest
+        env:
+          FABRIC_MC_VERSION: ${{ inputs.fabricMcVersion }}
+          FABRIC_LOADER_VERSION: ${{ inputs.fabricLoaderVersion }}
+          FABRIC_API_VERSION: ${{ inputs.fabricApiVersion }}
+        run: |
+          set -euo pipefail
+
+          args=("-PfabricMcVersion=${FABRIC_MC_VERSION}")
+          [[ -n "$FABRIC_LOADER_VERSION" ]] && args+=("-PfabricLoaderVersion=${FABRIC_LOADER_VERSION}")
+          [[ -n "$FABRIC_API_VERSION" ]] && args+=("-PfabricApiVersion=${FABRIC_API_VERSION}")
+
+          ./gradlew -p fabric-compat-test prodClient "${args[@]}"
+
+      - name: Upload screenshot
+        uses: actions/upload-artifact@v6
+        with:
+          name: screenshot
+          path: fabric-compat-test/run/screenshots/
+          if-no-files-found: error
