@@ -43,7 +43,7 @@ jobs:
           curl_args=(--get 'https://api.modrinth.com/v2/project/mouse-tweaks/version' --data-urlencode 'loaders=["fabric"]')
           [[ -n "$GAME_VERSION" ]] && curl_args+=(--data-urlencode "game_versions=[\"${GAME_VERSION}\"]")
 
-          url=$(curl -fsSL "${curl_args[@]}" | jq -er 'first(.[0].files[] | select(.primary)).url')
+          url=$(curl -fsSL -A 'YaLTeR/MouseTweaks/ci' "${curl_args[@]}" | jq -er 'first(.[0].files[] | select(.primary)).url')
           curl -fL "$url" -o fabric-compat-test/MouseTweaks.jar
 
       - name: Run gametest
