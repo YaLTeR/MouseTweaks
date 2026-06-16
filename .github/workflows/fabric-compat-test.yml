@@ -31,7 +31,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 25
 
       - name: Download Mouse Tweaks
