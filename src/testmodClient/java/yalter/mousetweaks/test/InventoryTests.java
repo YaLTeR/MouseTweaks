@@ -58,7 +58,7 @@ class InventoryTests {
     void openPlayerInventory() {
         context.getInput().pressKey(options -> options.keyInventory);
         context.waitForScreen(AbstractContainerScreen.class);
-        screen = context.computeOnClient(mc -> (AbstractContainerScreen<?>) mc.screen);
+        screen = context.computeOnClient(mc -> (AbstractContainerScreen<?>) mc.gui.screen());
     }
 
     /**
@@ -74,7 +74,7 @@ class InventoryTests {
         context.waitTick();
         context.getInput().pressKey(options -> options.keyUse);
         context.waitForScreen(AbstractContainerScreen.class);
-        screen = context.computeOnClient(mc -> (AbstractContainerScreen<?>) mc.screen);
+        screen = context.computeOnClient(mc -> (AbstractContainerScreen<?>) mc.gui.screen());
     }
 
     /**

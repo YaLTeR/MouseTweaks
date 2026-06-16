@@ -76,7 +76,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void onClose() {
-        this.minecraft.setScreen(previous);
+        this.minecraft.gui.setScreen(previous);
     }
 
     @Override
