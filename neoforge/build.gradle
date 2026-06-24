@@ -1,14 +1,11 @@
 plugins {
     id 'java-library'
-    id 'net.neoforged.gradle.userdev' version '7.1.38'
+    id 'net.neoforged.moddev' version '2.0.141'
 }
 
 version = project.modVersion
 group = "yalter.mousetweaks"
-
-base {
-    archivesName = "MouseTweaks-neoforge-mc${project.neoMcVersion}"
-}
+base.archivesName = "MouseTweaks-neoforge-mc${project.neoMcVersion}"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(project.modJavaVersion)
 
@@ -41,34 +38,40 @@ processResources {
     }
 }
 
-runs {
-    configureEach {
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-        systemProperty 'forge.logging.console.level', 'debug'
+neoForge {
+    version = project.neoVersion
 
-        modSource project.sourceSets.main
+    runs {
+        client {
+            client()
+            systemProperty 'forge.enabledGameTestNamespaces', "mousetweaks"
+        }
+
+        server {
+            server()
+            systemProperty 'forge.enabledGameTestNamespaces', "mousetweaks"
+            programArgument '--nogui'
+        }
+
+        // For testing datagen.
+        clientData {
+            clientData()
+            programArguments.addAll '--mod', 'mousetweaks',
+                    '--all',
+                    '--output', layout.buildDirectory.dir('generated/resources').get().asFile.absolutePath,
+                    '--existing', file('../src/main/resources').absolutePath
+        }
+
+        configureEach {
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
     }
 
-    client {
-        systemProperty 'forge.enabledGameTestNamespaces', "mousetweaks"
+    mods {
+        mousetweaks {
+            sourceSet sourceSets.main
+        }
     }
-
-    server {
-        systemProperty 'forge.enabledGameTestNamespaces', "mousetweaks"
-        argument '--nogui'
-    }
-
-    // For testing datagen.
-    clientData {
-        arguments.addAll '--mod', 'mousetweaks',
-                '--all',
-                '--output', layout.buildDirectory.dir('generated/resources').get().asFile.absolutePath,
-                '--existing', file('../src/main/resources').absolutePath
-    }
-}
-
-dependencies {
-    implementation "net.neoforged:neoforge:${project.neoVersion}"
 }
 
 tasks.register('srcJar', Jar) {
