@@ -1,6 +1,9 @@
 package yalter.mousetweaks.forge;
 
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.ScreenEvent.MouseButtonPressed;
 import net.minecraftforge.client.event.ScreenEvent.MouseButtonReleased;
 import net.minecraftforge.client.event.ScreenEvent.MouseDragged;
@@ -13,7 +16,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.network.Channel;
+import net.minecraftforge.network.ChannelBuilder;
 import yalter.mousetweaks.*;
+import yalter.mousetweaks.ServerFeatureControl.ServerFeatureControlPayload;
 
 import java.lang.invoke.MethodHandles;
 
@@ -25,6 +31,7 @@ public class MouseTweaksForge {
             return;
         }
 
+        registerChannel();
         BusGroup.DEFAULT.register(MethodHandles.lookup(), this);
 
         MinecraftForge.registerConfigScreen(ConfigScreen::new);
@@ -89,5 +96,22 @@ public class MouseTweaksForge {
         }
 
         return false;
+    }
+
+    @SubscribeEvent
+    public void onClientLogout(ClientPlayerNetworkEvent.LoggingOut event) {
+        ServerFeatureControl.reset();
+    }
+
+    private void registerChannel() {
+        ChannelBuilder
+                .named(Identifier.fromNamespaceAndPath(Constants.MOD_ID, "network"))
+                .optional()
+                .payloadChannel()
+                .play()
+                .clientbound()
+                .addMain(ServerFeatureControlPayload.TYPE, ServerFeatureControlPayload.CODEC,
+                        (payload, context) -> ServerFeatureControl.apply(payload))
+                .build();
     }
 }

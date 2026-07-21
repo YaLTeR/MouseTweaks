@@ -100,7 +100,7 @@ public class Main {
      */
     public static boolean onMouseClicked(Screen screen, double x, double y, MouseButton button) {
         updateScreen(screen);
-        if (handler == null)
+        if (handler == null || ServerFeatureControl.isMouseDisabled())
             return false;
 
         // Store the currently selected slot.
@@ -181,7 +181,7 @@ public class Main {
      */
     public static boolean onMouseReleased(Screen screen, double x, double y, MouseButton button) {
         updateScreen(screen);
-        if (handler == null)
+        if (handler == null || ServerFeatureControl.isMouseDisabled())
             return false;
 
         // Reset the flags.
@@ -204,7 +204,7 @@ public class Main {
      */
     public static boolean onMouseDrag(Screen screen, double x, double y, MouseButton button) {
         updateScreen(screen);
-        if (handler == null)
+        if (handler == null || ServerFeatureControl.isMouseDisabled())
             return false;
 
         Slot selectedSlot = handler.getSlotUnderMouse(x, y);
