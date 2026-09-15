@@ -39,7 +39,6 @@ jobs:
         run: ./gradlew -p forge runData
 
   build-neoforge:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
