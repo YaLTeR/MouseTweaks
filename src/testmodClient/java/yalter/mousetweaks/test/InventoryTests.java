@@ -1,5 +1,6 @@
 package yalter.mousetweaks.test;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.gametest.v1.TestInput;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
@@ -7,7 +8,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.mixin.AbstractContainerScreenAccessor;
 
 import static yalter.mousetweaks.test.InventoryTestHelper.*;
@@ -48,7 +48,7 @@ class InventoryTests {
      */
     void leftClick(Slot slot) {
         setCursorTo(slot);
-        context.getInput().pressMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
         context.waitTick();
     }
 
@@ -132,7 +132,7 @@ class InventoryTests {
         // RMB drag: circle over 4 slots twice
         // First pass
         setCursorTo(slot0);
-        input.holdMouse(GLFW.GLFW_MOUSE_BUTTON_RIGHT);
+        input.holdMouse(InputConstants.MOUSE_BUTTON_RIGHT);
         context.waitTick();
 
         setCursorTo(slot1);
@@ -145,7 +145,7 @@ class InventoryTests {
         setCursorTo(slot2);
         setCursorTo(slot3);
 
-        input.releaseMouse(GLFW.GLFW_MOUSE_BUTTON_RIGHT);
+        input.releaseMouse(InputConstants.MOUSE_BUTTON_RIGHT);
         context.waitTick();
 
         // Verify each slot got exactly 2 items (one per pass)
@@ -186,7 +186,7 @@ class InventoryTests {
         // Pick up the stack from hotbar slot 0
         Slot sourceSlot = getSlot(36);
         setCursorTo(sourceSlot);
-        input.holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        input.holdMouse(InputConstants.MOUSE_BUTTON_LEFT);
         context.waitTick();
 
         // Verify we picked up 5 cobblestone
@@ -200,7 +200,7 @@ class InventoryTests {
         setCursorTo(invSlot0);
         setCursorTo(invSlot1);
         setCursorTo(invSlot2);
-        input.releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        input.releaseMouse(InputConstants.MOUSE_BUTTON_LEFT);
         context.waitTick();
 
         // Only cobblestone should be collected (5 + 10 + 10 = 25)
@@ -247,7 +247,7 @@ class InventoryTests {
         // For some reason, pressing Shift+LMB on a slot with item still picks it up?
         // As a workaround, press on en empty slot.
         setCursorTo(hotbarSlot0);
-        input.holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        input.holdMouse(InputConstants.MOUSE_BUTTON_LEFT);
         context.waitTick();
         assertCarriedEmpty();
 
@@ -255,7 +255,7 @@ class InventoryTests {
         setCursorTo(invSlot1);
         setCursorTo(invSlot2);
 
-        input.releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        input.releaseMouse(InputConstants.MOUSE_BUTTON_LEFT);
         input.releaseShift();
         context.waitTick();
 
@@ -705,7 +705,7 @@ class InventoryTests {
         // === Test 3: LMB drag with same item over crafting output ===
         // Start from invSlot which has planks
         setCursorTo(invSlot);
-        input.holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        input.holdMouse(InputConstants.MOUSE_BUTTON_LEFT);
         context.waitTick();
 
         assertCarried(Items.OAK_PLANKS, 8);
@@ -721,7 +721,7 @@ class InventoryTests {
         context.waitTick();
         assertSlotContains(outputSlot, Items.OAK_PLANKS, 4);
 
-        input.releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        input.releaseMouse(InputConstants.MOUSE_BUTTON_LEFT);
         context.waitTick();
 
         // Clean up: put items in an empty slot

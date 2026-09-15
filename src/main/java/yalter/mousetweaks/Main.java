@@ -8,7 +8,6 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
 import yalter.mousetweaks.handlers.GuiContainerCreativeHandler;
 import yalter.mousetweaks.handlers.GuiContainerHandler;
@@ -244,8 +243,8 @@ public class Main {
             if (selectedSlotStack.isEmpty())
                 return false;
 
-            boolean shiftIsDown = InputConstants.isKeyDown(mc.getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)
-                    || InputConstants.isKeyDown(mc.getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT);
+            boolean shiftIsDown = InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)
+                    || InputConstants.isKeyDown(InputConstants.KEY_RSHIFT);
 
             if (stackOnMouse.isEmpty()) {
                 // Shift-LMB drag without item.

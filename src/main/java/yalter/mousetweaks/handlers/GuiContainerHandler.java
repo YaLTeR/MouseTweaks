@@ -1,5 +1,6 @@
 package yalter.mousetweaks.handlers;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.*;
@@ -46,7 +47,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
     public boolean disableRMBDraggingFunctionality() {
         screenAccessor.mousetweaks$setSkipNextRelease(true);
 
-        if (screenAccessor.mousetweaks$getIsQuickCrafting() && screenAccessor.mousetweaks$getQuickCraftingButton() == 1) {
+        if (screenAccessor.mousetweaks$getIsQuickCrafting() && screenAccessor.mousetweaks$getQuickCraftingButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
             screenAccessor.mousetweaks$setIsQuickCrafting(false);
             return true;
         }

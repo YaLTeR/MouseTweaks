@@ -66,7 +66,7 @@ public interface IMTModGuiContainer3Ex {
      * <pre>
      * this.skipNextRelease = true;
      *
-     * if (this.isQuickCrafting && this.quickCraftingButton == 1) {
+     * if (this.isQuickCrafting && this.quickCraftingButton == InputConstants.MOUSE_BUTTON_RIGHT) {
      *     this.isQuickCrafting = false;
      *     return true;
      * }

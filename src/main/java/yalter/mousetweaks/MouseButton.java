@@ -1,6 +1,6 @@
 package yalter.mousetweaks;
 
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 public enum MouseButton {
     LEFT(0), RIGHT(1);
@@ -17,8 +17,8 @@ public enum MouseButton {
 
     public static MouseButton fromEventButton(int eventButton) {
         return switch (eventButton) {
-            case GLFW.GLFW_MOUSE_BUTTON_LEFT -> MouseButton.LEFT;
-            case GLFW.GLFW_MOUSE_BUTTON_RIGHT -> MouseButton.RIGHT;
+            case InputConstants.MOUSE_BUTTON_LEFT -> MouseButton.LEFT;
+            case InputConstants.MOUSE_BUTTON_RIGHT -> MouseButton.RIGHT;
             default -> null;
         };
     }
