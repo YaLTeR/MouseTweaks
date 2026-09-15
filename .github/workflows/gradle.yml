@@ -99,6 +99,8 @@ jobs:
           distribution: temurin
           java-version: 25
 
+      - run: sudo apt-get update -y; sudo apt-get install -y mesa-vulkan-drivers
+
       - name: Build testmod
         run: ./gradlew -p fabric testmodClientClasses
 
