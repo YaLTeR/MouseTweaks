@@ -19,6 +19,13 @@ public class MouseTweaksFabric implements ClientModInitializer {
                 return true;
             });
 
+            ScreenMouseEvents.allowMouseDrag(screen).register((_screen, context, dx, dy) -> {
+                MouseButton button = MouseButton.fromEventButton(context.button());
+                if (button != null)
+                    return !Main.onMouseDrag(screen, context.x(), context.y(), button);
+                return true;
+            });
+
             ScreenMouseEvents.allowMouseRelease(screen).register((_screen, context) -> {
                 MouseButton button = MouseButton.fromEventButton(context.button());
                 if (button != null)

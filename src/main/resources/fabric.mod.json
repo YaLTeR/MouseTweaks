@@ -33,8 +33,7 @@
     ]
   },
   "mixins": [
-    "mousetweaks.mixins.json",
-    "mousetweaks-fabric.mixins.json"
+    "mousetweaks.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${fabricLoaderVersion}",
