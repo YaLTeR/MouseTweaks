@@ -4,6 +4,7 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import yalter.mousetweaks.IGuiScreenHandler;
 import yalter.mousetweaks.MouseButton;
+import yalter.mousetweaks.ServerFeatureControl;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class IMTModGuiContainer3ExHandler implements IGuiScreenHandler {
 
     @Override
     public boolean isWheelTweakDisabled() {
-        return modGuiContainer.MT_isWheelTweakDisabled();
+        return modGuiContainer.MT_isWheelTweakDisabled() || ServerFeatureControl.isWheelDisabled();
     }
 
     @Override

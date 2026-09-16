@@ -1,11 +1,14 @@
 package yalter.mousetweaks.neoforge;
 
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent.MouseButtonPressed;
 import net.neoforged.neoforge.client.event.ScreenEvent.MouseButtonReleased;
 import net.neoforged.neoforge.client.event.ScreenEvent.MouseDragged;
 import net.neoforged.neoforge.client.event.ScreenEvent.MouseScrolled;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
@@ -16,6 +19,8 @@ import yalter.mousetweaks.Constants;
 import yalter.mousetweaks.Logger;
 import yalter.mousetweaks.Main;
 import yalter.mousetweaks.MouseButton;
+import yalter.mousetweaks.ServerFeatureControl;
+import yalter.mousetweaks.ServerFeatureControl.ServerFeatureControlPayload;
 
 @Mod(Constants.MOD_ID)
 public class MouseTweaksNeo {
@@ -26,6 +31,8 @@ public class MouseTweaksNeo {
         }
 
         modBus.addListener(this::onClientSetup);
+        modBus.addListener(this::registerPayloads);
+        modBus.addListener(this::registerClientHandlers);
         NeoForge.EVENT_BUS.register(this);
 
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, ClientHelper::new);
@@ -80,5 +87,18 @@ public class MouseTweaksNeo {
             if (Main.onMouseDrag(event.getScreen(), event.getMouseX(), event.getMouseY(), button))
                 event.setCanceled(true);
         }
+    }
+
+    public void registerPayloads(RegisterPayloadHandlersEvent event) {
+        event.registrar("1").optional().playToClient(ServerFeatureControlPayload.TYPE, ServerFeatureControlPayload.CODEC);
+    }
+
+    public void registerClientHandlers(RegisterClientPayloadHandlersEvent event) {
+        event.register(ServerFeatureControlPayload.TYPE, (payload, context) -> ServerFeatureControl.apply(payload));
+    }
+
+    @SubscribeEvent
+    public void onClientLogout(ClientPlayerNetworkEvent.LoggingOut event) {
+        ServerFeatureControl.reset();
     }
 }
