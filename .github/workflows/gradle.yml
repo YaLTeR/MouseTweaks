@@ -13,7 +13,6 @@ on:
 
 jobs:
   build-forge:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
