@@ -20,4 +20,6 @@ public interface IGuiScreenHandler {
     boolean isCraftingOutput(Slot slot);
 
     boolean isIgnored(Slot slot);
+
+    boolean isCrafterToggleableSlot(Slot slot);
 }
