@@ -10,7 +10,8 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(project.modJavaVersion)
 
 repositories {
     maven {
-        url = "https://maven.terraformersmc.com/releases"
+        // url = "https://maven.terraformersmc.com/releases"
+        url = "https://maven.gnomecraft.net/releases" // Official mirror from Terraformers while their system is down
     }
 }
 

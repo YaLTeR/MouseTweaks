@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.*;
 import yalter.mousetweaks.IGuiScreenHandler;
 import yalter.mousetweaks.MouseButton;
+import yalter.mousetweaks.ServerFeatureControl;
 import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 import yalter.mousetweaks.api.MouseTweaksIgnore;
 import yalter.mousetweaks.mixin.AbstractContainerScreenAccessor;
@@ -30,7 +31,7 @@ public class GuiContainerHandler implements IGuiScreenHandler {
 
     @Override
     public boolean isWheelTweakDisabled() {
-        return screen.getClass().isAnnotationPresent(MouseTweaksDisableWheelTweak.class);
+        return screen.getClass().isAnnotationPresent(MouseTweaksDisableWheelTweak.class) || ServerFeatureControl.isWheelDisabled();
     }
 
     @Override

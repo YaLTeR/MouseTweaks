@@ -41,6 +41,7 @@ public class MouseTweaksClientGameTest implements FabricClientGameTest {
             tests.testWheelTweakWithBundle();
             tests.testCraftingOutputSlot();
             tests.testFurnaceSmeltingPreserved();
+            tests.testServerFeatureControl();
         }
     }
 

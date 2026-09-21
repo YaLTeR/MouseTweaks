@@ -4,11 +4,14 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.gametest.v1.TestInput;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import yalter.mousetweaks.mixin.AbstractContainerScreenAccessor;
+import yalter.mousetweaks.ServerFeatureControl.ServerFeatureControlPayload;
 
 import static yalter.mousetweaks.test.InventoryTestHelper.*;
 
@@ -83,6 +86,21 @@ class InventoryTests {
     void closeScreen() {
         screen = null;
         context.setScreen(() -> null);
+        context.waitTick();
+    }
+
+    void sendServerFeatures(String options) {
+        world.getServer().runOnServer(server -> {
+            ServerPlayer player = server.getPlayerList().getPlayers().getFirst();
+
+            if (!ServerPlayNetworking.canSend(player, ServerFeatureControlPayload.TYPE)) {
+                throw new AssertionError("Client did not register " + ServerFeatureControlPayload.TYPE.id());
+            }
+
+            ServerPlayNetworking.send(player, new ServerFeatureControlPayload(options));
+        });
+
+        // Client processes messages at end of tick
         context.waitTick();
     }
 
@@ -797,4 +815,87 @@ class InventoryTests {
 
         closeScreen();
     }
+
+    void testServerFeatureControl() {
+        testServerDisablesWheel();
+        testServerDisablesMouse();
+
+        // Restore normal behavior
+        sendServerFeatures("mouse wheel");
+    }
+
+    private void testServerDisablesWheel() {
+        world.getServer().runCommand("clear @p");
+
+        sendServerFeatures("mouse !wheel");
+
+        placeAndOpenBlock("chest");
+
+        world.getServer().runCommand("item replace block 0 ~ 1 container.0 with minecraft:gold_ingot 8");
+        context.waitTick();
+
+        Slot chestSlot = getSlot(0);
+        Slot playerSlot = getSlot(27);
+
+        assertSlotContains(chestSlot, Items.GOLD_INGOT, 8);
+        assertSlotEmpty(playerSlot);
+
+        setCursorTo(chestSlot);
+        context.getInput().scroll(-1);
+        context.waitTick();
+
+        assertSlotContains(chestSlot, Items.GOLD_INGOT, 8);
+        assertSlotEmpty(playerSlot);
+
+        closeScreen();
+    }
+
+    private void testServerDisablesMouse() {
+        world.getServer().runCommand("clear @p");
+
+        world.getServer().runCommand("item replace entity @p inventory.0 with minecraft:dirt 16");
+        world.getServer().runCommand("item replace entity @p inventory.1 with minecraft:cobblestone 16");
+        world.getServer().runCommand("item replace entity @p inventory.2 with minecraft:dirt 16");
+        context.waitTick();
+
+        sendServerFeatures("!mouse wheel");
+
+        openPlayerInventory();
+
+        Slot invSlot0 = getSlot(9);
+        Slot invSlot1 = getSlot(10);
+        Slot invSlot2 = getSlot(11);
+
+        Slot hotbarSlot0 = getSlot(36);
+        Slot hotbarSlot1 = getSlot(37);
+
+        TestInput input = context.getInput();
+
+        input.holdShift();
+
+        // Begin on an empty slot so vanilla does not shift-click anything.
+        setCursorTo(hotbarSlot0);
+        input.holdMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        context.waitTick();
+
+        setCursorTo(invSlot0);
+        setCursorTo(invSlot1);
+        setCursorTo(invSlot2);
+
+        input.releaseMouse(GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        input.releaseShift();
+        context.waitTick();
+
+        // Mouse Tweaks was disabled, so the drag should do nothing.
+        assertSlotContains(invSlot0, Items.DIRT, 16);
+        assertSlotContains(invSlot1, Items.COBBLESTONE, 16);
+        assertSlotContains(invSlot2, Items.DIRT, 16);
+
+        assertSlotEmpty(hotbarSlot0);
+        assertSlotEmpty(hotbarSlot1);
+        assertCarriedEmpty();
+
+        closeScreen();
+    }
+
 }

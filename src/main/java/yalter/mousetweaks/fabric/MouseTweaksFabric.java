@@ -1,10 +1,15 @@
 package yalter.mousetweaks.fabric;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import yalter.mousetweaks.Main;
 import yalter.mousetweaks.MouseButton;
+import yalter.mousetweaks.ServerFeatureControl;
+import yalter.mousetweaks.ServerFeatureControl.ServerFeatureControlPayload;
 
 public class MouseTweaksFabric implements ClientModInitializer {
     @Override
@@ -39,5 +44,12 @@ public class MouseTweaksFabric implements ClientModInitializer {
                 return Main.onMouseScrolled(screen, x, y, vert);
             });
         });
+
+        PayloadTypeRegistry.clientboundPlay().register(ServerFeatureControlPayload.TYPE, ServerFeatureControlPayload.CODEC);
+        ClientPlayNetworking.registerGlobalReceiver(
+                ServerFeatureControlPayload.TYPE,
+                (payload, _) -> ServerFeatureControl.apply(payload)
+        );
+        ClientPlayConnectionEvents.DISCONNECT.register((_, _) -> ServerFeatureControl.reset());
     }
 }
