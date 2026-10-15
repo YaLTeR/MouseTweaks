@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.CrafterMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import yalter.mousetweaks.mixin.AbstractContainerScreenAccessor;
@@ -101,6 +102,52 @@ class InventoryTests {
     }
 
     // ---- Tests ----
+
+    /** Empty crafter inputs take the first slot's target state, even across mixed states. */
+    void testCrafterSlotDragToggle() {
+        world.getServer().runCommand("clear @p");
+        placeAndOpenBlock("crafter");
+        TestInput input = context.getInput();
+        CrafterMenu menu = (CrafterMenu) screen.getMenu();
+        Slot first = getSlot(0);
+        Slot second = getSlot(1);
+        Slot third = getSlot(2);
+        Slot fourth = getSlot(3);
+
+        leftClick(second);
+        leftClick(fourth);
+
+        setCursorTo(first);
+        input.holdMouse(InputConstants.MOUSE_BUTTON_LEFT);
+        context.waitTick();
+        setCursorTo(second);
+        setCursorTo(third);
+        setCursorTo(fourth);
+        setCursorTo(second);
+        input.releaseMouse(InputConstants.MOUSE_BUTTON_LEFT);
+        context.waitTick();
+
+        if (!menu.isSlotDisabled(0) || !menu.isSlotDisabled(1)
+                || !menu.isSlotDisabled(2) || !menu.isSlotDisabled(3))
+            throw new AssertionError("Dragging from an enabled input should disable all inputs crossed");
+        assertCarriedEmpty();
+
+        leftClick(third);
+
+        setCursorTo(first);
+        input.holdMouse(InputConstants.MOUSE_BUTTON_LEFT);
+        context.waitTick();
+        setCursorTo(second);
+        setCursorTo(third);
+        setCursorTo(fourth);
+        input.releaseMouse(InputConstants.MOUSE_BUTTON_LEFT);
+        context.waitTick();
+
+        if (menu.isSlotDisabled(0) || menu.isSlotDisabled(1)
+                || menu.isSlotDisabled(2) || menu.isSlotDisabled(3))
+            throw new AssertionError("Dragging from a disabled input should enable all inputs crossed");
+        closeScreen();
+    }
 
     /**
      * Tests the RMB tweak: right-click drag distributes one item per slot per pass.

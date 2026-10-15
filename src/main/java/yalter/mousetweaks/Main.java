@@ -5,7 +5,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.CrafterScreen;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.CrafterMenu;
 import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.ItemStack;
 import yalter.mousetweaks.api.IMTModGuiContainer3Ex;
@@ -16,6 +18,8 @@ import yalter.mousetweaks.handlers.IMTModGuiContainer3ExHandler;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
     public static Config config;
@@ -30,6 +34,9 @@ public class Main {
     private static boolean canDoLMBDrag = false;
     private static boolean canDoRMBDrag = false;
     private static boolean rmbTweakLeftOriginalSlot = false;
+    private static boolean canToggleCrafterSlots = false;
+    private static boolean crafterDragTargetDisabled = false;
+    private static final Set<Integer> crafterSlotsVisited = new HashSet<>();
 
     private static boolean initialized = false;
 
@@ -61,6 +68,8 @@ public class Main {
         canDoLMBDrag = false;
         canDoRMBDrag = false;
         rmbTweakLeftOriginalSlot = false;
+        canToggleCrafterSlots = false;
+        crafterSlotsVisited.clear();
 
         if (openScreen != null) {
             Logger.DebugLog("You have just opened a " + openScreen.getClass().getName() + ".");
@@ -113,6 +122,22 @@ public class Main {
             // interfere with that.
             if (stackOnMouse.isEmpty())
                 canDoLMBDrag = true;
+
+            // Vanilla toggles the initial empty crafter input on the click. Use its
+            // resulting state for the other inputs crossed during this drag.
+            canToggleCrafterSlots = screen instanceof CrafterScreen
+                    && stackOnMouse.isEmpty()
+                    && oldSelectedSlot != null
+                    && oldSelectedSlot.index < 9
+                    && oldSelectedSlot.getItem().isEmpty()
+                    && !InputConstants.isKeyDown(InputConstants.KEY_LSHIFT)
+                    && !InputConstants.isKeyDown(InputConstants.KEY_RSHIFT);
+            crafterSlotsVisited.clear();
+            if (canToggleCrafterSlots) {
+                CrafterMenu menu = (CrafterMenu) ((CrafterScreen) screen).getMenu();
+                crafterDragTargetDisabled = !menu.isSlotDisabled(oldSelectedSlot.index);
+                crafterSlotsVisited.add(oldSelectedSlot.index);
+            }
         } else if (button == MouseButton.RIGHT) {
             // We're only interested in the RMB tweak when there's something on the mouse.
             if (stackOnMouse.isEmpty())
@@ -184,8 +209,11 @@ public class Main {
             return false;
 
         // Reset the flags.
-        if (button == MouseButton.LEFT)
+        if (button == MouseButton.LEFT) {
             canDoLMBDrag = false;
+            canToggleCrafterSlots = false;
+            crafterSlotsVisited.clear();
+        }
         else if (button == MouseButton.RIGHT)
             canDoRMBDrag = false;
 
@@ -237,6 +265,16 @@ public class Main {
         if (button == MouseButton.LEFT) {
             if (!canDoLMBDrag)
                 return false;
+
+            if (canToggleCrafterSlots && selectedSlot.index < 9) {
+                if (stackOnMouse.isEmpty() && selectedSlot.getItem().isEmpty()
+                        && crafterSlotsVisited.add(selectedSlot.index)) {
+                    CrafterMenu menu = (CrafterMenu) ((CrafterScreen) screen).getMenu();
+                    if (menu.isSlotDisabled(selectedSlot.index) != crafterDragTargetDisabled)
+                        handler.clickSlot(selectedSlot, MouseButton.LEFT, false);
+                }
+                return false;
+            }
 
             // LMB tweaks don't do anything for empty slots.
             ItemStack selectedSlotStack = selectedSlot.getItem();
